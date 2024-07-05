@@ -1,4 +1,8 @@
 # frontend
+
 # gitflow 
-# branch
-## <main> <devleop> <feature>
+
+## branch
+1. <main> 
+2. <devleop> 
+3. <feature>
