@@ -34,7 +34,7 @@ function LoginPage() {
         localStorage.setItem('refresh_token', response.data.refresh);
 
         // 인증된 페이지로 리디렉션
-        navigate('/platform');
+        navigate('/dashboard');
       } else {
         console.error('Error:', response.data);
         setErrorMessage('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
