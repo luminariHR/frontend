@@ -15,6 +15,7 @@ import {
   Newspaper,
   Users,
   HeartHandshake,
+  MessageCircle,
 } from "lucide-react";
 import KanbanBoard from "./KanbanBoard.jsx";
 import DatePicker from "react-datepicker";
@@ -169,15 +170,15 @@ function DashboardPage() {
         style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
       >
         <Sidebar>
-          <SidebarItem icon={<Home size={20} />} text="Home" />
-          <SidebarItem icon={<Users size={20} />} text="Group" active />
-          <SidebarItem icon={<Laptop size={20} />} text="Attendance" />
-          <SidebarItem icon={<Clock size={20} />} text="Schedule" />
-          <SidebarItem icon={<Calendar size={20} />} text="Vacation" />
-          <SidebarItem icon={<Newspaper size={20} />} text="Approval" />
-          <SidebarItem icon={<HeartHandshake size={20} />} text="Mentoring" />
-          <SidebarItem icon={<Book size={20} />} text="DataBook" />
-          <SidebarItem icon={<Layers size={20} />} text="Used Items" />
+          <SidebarItem icon={<Home size={20} />} text="홈" />
+          <SidebarItem icon={<Users size={20} />} text="조직 관리" active />
+          <SidebarItem icon={<Laptop size={20} />} text="근태 관리" />
+          <SidebarItem icon={<Clock size={20} />} text="일정 관리" />
+          <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
+          <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
+          <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
+          <SidebarItem icon={<Book size={20} />} text="자료실" />
+          <SidebarItem icon={<MessageCircle size={20} />} text="메신저" />
         </Sidebar>
         <MainContent />
       </div>

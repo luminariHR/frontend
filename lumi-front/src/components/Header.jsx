@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SidebarContext } from "./Sidebar";
 import logoImg from "../assets/logo.png";
-
+import { Bell, LogOut, Settings, } from "lucide-react";
 const Header = () => {
   const { expanded } = useContext(SidebarContext);
   const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
@@ -25,13 +25,13 @@ const Header = () => {
         <div className="flex items-center gap-4 flex-1 justify-end">
           <ul className="flex gap-4">
             <li>
-              <Link to="/">settings</Link>
+              <Link to="/"><Settings className="h-8"/></Link>
             </li>
             <li>
-              <Link to="/">notifications</Link>
+              <Link to="/"><Bell className="h-8"/></Link>
             </li>
             <li>
-              <Link to="/">logout</Link>
+              <Link to="/"><LogOut className="h-8"/></Link>
             </li>
           </ul>
         </div>
