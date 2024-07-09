@@ -10,7 +10,7 @@ function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = async () => {
-    setErrorMessage('접속중...'); 
+    setErrorMessage(''); 
     try {
       const response = await axios.post('https://dev.luminari.kro.kr/api/v1/token/', {
         email: email,

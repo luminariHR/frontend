@@ -1,23 +1,3 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Header from "./Header";
-import { SidebarProvider, SidebarContext } from "./Sidebar";
-import "../App.css";
-import mainback from "../assets/mainback.jpg";
-import Sidebar, { SidebarItem } from "./Sidebar";
-import {
-  Book,
-  Calendar,
-  Clock,
-  Home,
-  Laptop,
-  Layers,
-  Newspaper,
-  Users,
-  HeartHandshake,
-  MessageCircle,
-} from "lucide-react";
-import KanbanBoard from "./KanbanBoard.jsx";
 import React, { useState, useEffect } from "react";
 import KanbanBoard from "./KanbanBoard";
 import DatePicker from "react-datepicker";
@@ -179,31 +159,6 @@ const DashboardPage = () => {
             </div>
           </div>
         </article>
-      </main>
-    </div>
-  );
-}
-
-function DashboardPage() {
-  return (
-    <SidebarProvider>
-      <div
-        className="flex h-screen w-full"
-        style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
-      >
-        <Sidebar>
-          <SidebarItem icon={<Home size={20} />} text="홈" />
-          <SidebarItem icon={<Users size={20} />} text="조직 관리" active />
-          <SidebarItem icon={<Laptop size={20} />} text="근태 관리" />
-          <SidebarItem icon={<Clock size={20} />} text="일정 관리" />
-          <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
-          <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
-          <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
-          <SidebarItem icon={<Book size={20} />} text="자료실" />
-          <SidebarItem icon={<MessageCircle size={20} />} text="메신저" />
-        </Sidebar>
-        <MainContent />
-      </div>
       </Layout>
     </SidebarProvider>
   );
