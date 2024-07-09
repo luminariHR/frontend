@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SidebarContext } from "./Sidebar";
 import logoImg from "../assets/logo.png";
 
 const Header = () => {
+  const navigate = useNavigate();
   const { expanded } = useContext(SidebarContext);
   const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
 
@@ -11,6 +12,12 @@ const Header = () => {
     setHeaderWidth(expanded ? "calc(100% - 256px)" : "calc(100% - 64px)");
   }, [expanded]);
 
+  const handleLogout=()=>{
+    localStorage.removeItem("access_token")
+    localStorage.removeItem("refresh_token")
+
+    navigate('/login')
+  }
   return (
     <header
       className="bg-[#F8F8FF] text-primary-foreground px-4 lg:px-6 py-4 fixed top-0 right-0 z-10 shadow"
@@ -31,7 +38,9 @@ const Header = () => {
               <Link to="/">notifications</Link>
             </li>
             <li>
-              <Link to="/">logout</Link>
+              <button onClick={handleLogout} className="text-sm">
+                logout
+              </button>
             </li>
           </ul>
         </div>
