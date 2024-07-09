@@ -18,18 +18,20 @@ import {
   MessageCircle,
 } from "lucide-react";
 import KanbanBoard from "./KanbanBoard.jsx";
+import React, { useState, useEffect } from "react";
+import KanbanBoard from "./KanbanBoard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Layout from "./Layout";
+import { SidebarProvider } from "./Sidebar";
+import { clockIn, clockOut } from "../api/attendanceApi.js";
 
-function MainContent() {
-  const { expanded } = useContext(SidebarContext);
-  const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
+const DashboardPage = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  useEffect(() => {
-    setHeaderWidth(expanded ? "calc(100% - 256px)" : "calc(100% - 64px)");
-  }, [expanded]);
+  const [clockInNote, setClockInNote] = useState("");
+  const [clockOutNote, setClockOutNote] = useState("");
+  // const [isClockedIn, setIsClockedIn] = useState(false);
 
   useEffect(() => {
     let animationFrameId;
@@ -43,14 +45,6 @@ function MainContent() {
 
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
-  //
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentDate(new Date());
-  //   }, 1000); // Update the date every second
-  //
-  //   return () => clearInterval(timer); // Clean up the interval on component unmount
-  // }, []);
 
   const getCurrentDateString = () => {
     return currentDate.toLocaleDateString("ko-KR", {
@@ -67,12 +61,27 @@ function MainContent() {
     return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 
+  const handleClockIn = async () => {
+    try {
+      const response = await clockIn(clockInNote);
+      alert(response.message);
+    } catch (error) {
+      alert(error.message || "출근 처리 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleClockOut = async () => {
+    try {
+      const response = await clockOut(clockOutNote);
+      alert(response.message);
+    } catch (error) {
+      alert(error.message || "출근 처리 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
-    <div
-      className={`flex-1 transition-all duration-300 ${expanded ? "ml-64" : "ml-16"}`}
-    >
-      <Header />
-      <main className="pt-20 px-4 w-full">
+    <SidebarProvider>
+      <Layout>
         <div className="flex justify-between pb-3">
           <div>안녕하세요 맛소금님!</div>
           <div className="flex flex-col text-xs items-end">
@@ -84,9 +93,19 @@ function MainContent() {
           <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
             <div className="flex h-8 items-center text-xs justify-between">
               <span className="">업무 현황</span>
-              <div>
-                <button className="text-xs">출근</button>
-                <button className="text-xs">퇴근</button>
+              <div className="text-xs font-semibold text-white">
+                <button
+                  className="bg-secondary rounded-lg px-3 py-1 mr-1"
+                  onClick={handleClockIn}
+                >
+                  출근
+                </button>
+                <button
+                  className="bg-[#392323] rounded-lg px-3 py-1"
+                  onClick={handleClockOut}
+                >
+                  퇴근
+                </button>
               </div>
             </div>
             <div>1시간 20분 36초</div>
@@ -137,12 +156,15 @@ function MainContent() {
           </div>
         </section>
         <article className="flex">
+          {/* 대시 보드 */}
           <div className="flex flex-col">
             <div className="mt-4">Dashboard</div>
             <div>
               <KanbanBoard />
             </div>
           </div>
+
+          {/* 월간 일정 캘린더 */}
           <div className="mt-4 ml-6">
             <div>Calendar</div>
             <div>
@@ -182,8 +204,9 @@ function DashboardPage() {
         </Sidebar>
         <MainContent />
       </div>
+      </Layout>
     </SidebarProvider>
   );
-}
+};
 
 export default DashboardPage;
