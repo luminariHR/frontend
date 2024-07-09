@@ -1,4 +1,3 @@
-// src/components/KanbanCreator.jsx
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { kanbanListState } from "../state/kanbanState";
@@ -6,9 +5,6 @@ import { createTask } from "../api/kanbanApi.js";
 
 export default function KanbanCreator({ title }) {
   const [kanbanList, setKanbanList] = useRecoilState(kanbanListState);
-
-  // const getId =
-  //   kanbanList.length > 0 ? kanbanList[kanbanList.length - 1].id + 1 : 0;
 
   const getCategoryFromTitle = (title) => {
     switch (title) {
@@ -23,19 +19,18 @@ export default function KanbanCreator({ title }) {
     }
   };
 
-  const addCard = useCallback(async () => {
+  const addCard = useCallback(() => {
     const newCard = {
+      id: `temp-${new Date().getTime()}`,
       title: "",
       content: "",
       start_date: new Date().toISOString(),
       end_date: new Date().toISOString(),
       status: getCategoryFromTitle(title),
+      isNew: true,
     };
 
-    const createdTask = await createTask(newCard);
-    if (createdTask) {
-      setKanbanList((prev) => [...prev, createdTask]);
-    }
+    setKanbanList((prev) => [...prev, newCard]);
   }, [setKanbanList, title]);
 
   return (

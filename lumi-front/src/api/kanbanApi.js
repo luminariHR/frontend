@@ -1,10 +1,12 @@
 import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
-const BASE_URL = "https://dev.luminari.kro.kr/api/v1";
+// const BASE_URL = "https://dev.luminari.kro.kr/api/v1";
 
 export const fetchTodoData = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/todo/board`);
+    const response = await axiosInstance.get(`/todo/board`);
+    console.log("fetchTododata 리스.data", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching kanban data: ", error);
@@ -14,8 +16,8 @@ export const fetchTodoData = async () => {
 
 export const createTask = async (task) => {
   try {
-    const response = await axios.post(`${BASE_URL}/todo/tasks`, task);
-    if (response.status === 201) {
+    const response = await axiosInstance.post(`/todo/tasks`, task);
+    if (response.status === 200) {
       return response.data;
     } else {
       console.error("Failed to create task: ", response.statusText);
@@ -26,11 +28,10 @@ export const createTask = async (task) => {
   }
 };
 
-export const updateTaskOrder = async (taskId, previousTaskId, status) => {
+export const updateTaskStatus = async (taskId, status) => {
   try {
-    const response = await axios.patch(`${BASE_URL}/todo/tasks/${taskId}`, {
-      previous_task_id: previousTaskId,
-      ...(status && { status }),
+    const response = await axiosInstance.patch(`/todo/tasks/${taskId}`, {
+      status: status,
     });
     if (response.status === 200) {
       return response.data;
@@ -46,7 +47,7 @@ export const updateTaskOrder = async (taskId, previousTaskId, status) => {
 
 export const deleteTask = async (taskId) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/todo/tasks/${taskId}`);
+    const response = await axiosInstance.delete(`/todo/tasks/${taskId}`);
     if (response.status === 200) {
       return response.data;
     } else {

@@ -1,4 +1,3 @@
-// src/components/MainPage.jsx
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
@@ -32,12 +31,25 @@ function MainContent() {
   }, [expanded]);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 1000); // Update the date every second
+    let animationFrameId;
 
-    return () => clearInterval(timer); // Clean up the interval on component unmount
+    const updateCurrentDate = () => {
+      setCurrentDate(new Date());
+      animationFrameId = requestAnimationFrame(updateCurrentDate);
+    };
+
+    animationFrameId = requestAnimationFrame(updateCurrentDate);
+
+    return () => cancelAnimationFrame(animationFrameId);
   }, []);
+  //
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setCurrentDate(new Date());
+  //   }, 1000); // Update the date every second
+  //
+  //   return () => clearInterval(timer); // Clean up the interval on component unmount
+  // }, []);
 
   const getCurrentDateString = () => {
     return currentDate.toLocaleDateString("ko-KR", {

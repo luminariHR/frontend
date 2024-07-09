@@ -52,10 +52,10 @@ const KanbanList = ({ title, children }) => {
       >
         <div className="flex justify-center align-middle items-center">
           <div
-            className={`mr-2 rounded rounded-[50%] w-2 h-2 ${getTitleBedgeStyle(title)} `}
+            className={`mr-2 rounded-[50%] w-2 h-2 ${getTitleBedgeStyle(title)} `}
           ></div>
           <div className="font-medium mr-2">{title}</div>
-          <div className="bg-gray-200 text-gray-500 text-center text-xs rounded rounded-[50%] w-5 h-5">
+          <div className="bg-gray-200 text-gray-500 text-center text-xs rounded-[50%] w-5 h-5">
             {React.Children.count(children)}
           </div>
         </div>
