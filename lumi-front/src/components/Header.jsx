@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SidebarContext } from "./Sidebar";
 import logoImg from "../assets/logo.png";
+import { Bell, LogOut, Settings } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,23 +24,23 @@ const Header = () => {
       className="bg-[#F8F8FF] text-primary-foreground px-4 lg:px-6 py-4 fixed top-0 right-0 z-10 shadow"
       style={{ width: headerWidth }}
     >
-      <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-between w-full h-4">
         <div className="flex items-center gap-4">
           <Link to="/">
             <img src={logoImg} className="h-6 w-auto" alt="Logo" />
           </Link>
         </div>
-        <div className="flex items-center gap-4 flex-1 justify-end">
-          <ul className="flex gap-4">
+        <div className="flex gap-4 flex-1 justify-end">
+          <ul className="flex gap-4 items-center">
             <li>
-              <Link to="/">settings</Link>
+              <Link to="/"><Settings className="h-5"/></Link>
             </li>
             <li>
-              <Link to="/">notifications</Link>
+              <Link to="/"><Bell className="h-5"/></Link>
             </li>
             <li>
               <button onClick={handleLogout} className="text-sm">
-                logout
+                <LogOut className="pt-1 h-6"/>
               </button>
             </li>
           </ul>

@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
         >
             <Sidebar>
                 <SidebarItem icon={<Home size={20} />} text="Home" />
-                <SidebarItem icon={<Users size={20} />} text="Group" active />
+                <SidebarItem icon={<Users size={20} />} text="Group" />
                 <SidebarItem icon={<Laptop size={20} />} text="Attendance" />
                 <SidebarItem icon={<Clock size={20} />} text="Schedule" />
                 <SidebarItem icon={<Calendar size={20} />} text="Vacation" />
