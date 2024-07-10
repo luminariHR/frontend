@@ -4,6 +4,7 @@ import MainPage from "./components/MainPage";
 import DashboardPage from "./components/DashboardPage.jsx";
 import LoginPage from './components/LoginPage';
 import PlatformPage from './components/PlatformPage';
+import ChattingPage from "./components/ChattingPage.jsx";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/platform" element={<PlatformPage />} />
+        <Route path="/chatting" element={<ChattingPage/>} />
       </Routes>
     </Router>
   );

@@ -1,5 +1,6 @@
 // src/components/Layout.jsx
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { SidebarContext } from "./Sidebar";
 import Header from "./Header";
 import Sidebar, { SidebarItem } from "./Sidebar";
@@ -10,13 +11,14 @@ import {
     Clock,
     Home,
     Laptop,
-    Layers,
     Newspaper,
     Users,
     HeartHandshake,
+    MessageCircle,
 } from "lucide-react";
 
 const Layout = ({ children }) => {
+    const navigate = useNavigate();
     const { expanded } = useContext(SidebarContext);
     const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
 
@@ -30,15 +32,15 @@ const Layout = ({ children }) => {
             style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
         >
             <Sidebar>
-                <SidebarItem icon={<Home size={20} />} text="Home" />
-                <SidebarItem icon={<Users size={20} />} text="Group" />
-                <SidebarItem icon={<Laptop size={20} />} text="Attendance" />
-                <SidebarItem icon={<Clock size={20} />} text="Schedule" />
-                <SidebarItem icon={<Calendar size={20} />} text="Vacation" />
-                <SidebarItem icon={<Newspaper size={20} />} text="Approval" />
-                <SidebarItem icon={<HeartHandshake size={20} />} text="Mentoring" />
-                <SidebarItem icon={<Book size={20} />} text="DataBook" />
-                <SidebarItem icon={<Layers size={20} />} text="Used Items" />
+                <SidebarItem icon={<Home size={20} />} text="홈" onClick={() => navigate('/dashboard')} />
+                <SidebarItem icon={<Users size={20} />} text="조직 관리" />
+                <SidebarItem icon={<Laptop size={20} />} text="근태 관리" />
+                <SidebarItem icon={<Clock size={20} />} text="일정 관리" />
+                <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
+                <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
+                <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
+                <SidebarItem icon={<Book size={20} />} text="자료실" />
+                <SidebarItem icon={<MessageCircle size={20} />} text="메신저"onClick={() => navigate('/chatting')} />
             </Sidebar>
             <div className={`flex-1 transition-all duration-300 ${expanded ? "ml-64" : "ml-16"}`}>
                 <Header />
