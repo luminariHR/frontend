@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 export const SidebarContext = createContext();
 
 export const SidebarProvider = ({ children }) => {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   return (
     <SidebarContext.Provider value={{ expanded, setExpanded }}>
       {children}
