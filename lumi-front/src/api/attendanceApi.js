@@ -25,3 +25,16 @@ export const clockOut = async (clockOutNote) => {
     throw error.response ? error.response.data : error;
   }
 };
+
+export const fetchMyAttendance = async (startDate, endDate) => {
+  try {
+    const response = await axiosInstance.get(
+      `/attendance/?startDate=${startDate}&endDate=${endDate}`,
+    );
+    console.log("내 근퇴 response", response);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching attendance data:", error);
+    return null;
+  }
+};

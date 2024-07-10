@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { AlignJustify, ArrowRightFromLine } from "lucide-react";
 import profile from "../assets/profile.png";
+import { Link, useLocation } from "react-router-dom";
 
 export const SidebarContext = createContext();
 
@@ -23,13 +24,13 @@ const Sidebar = ({ children }) => {
         } transition-width duration-300`}
       >
         <div
-          className={`pt-5 flex justify-between items-center text-[#979797] text-sm ${
-            expanded ? "px-8" : "px-6"
+          className={`pt-5 flex items-center text-[#979797] text-sm ${
+            expanded ? "justify-between pl-6 pr-3" : "justify-center px-3"
           }`}
         >
           <span
             className={`overflow-hidden transition-all ${
-              expanded ? "w-auto" : "w-0"
+              expanded ? "w-auto" : "hidden"
             }`}
           >
             NAVIGATION
@@ -75,25 +76,34 @@ const Sidebar = ({ children }) => {
 
 export default Sidebar;
 
-export function SidebarItem({ icon, text, active, alert, onClick }) {
+export function SidebarItem({ icon, text, active, alert, to }) {
   const { expanded } = useContext(SidebarContext);
+  const location = useLocation();
+  const isActive = location.pathname === to;
+
   return (
     <li
       className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors group ${
-        active
+        isActive
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
           : "hover:bg-indigo-50 text-gray-600"
       } ${expanded ? "" : "justify-center px-2"}`}
-      onClick={onClick} // onClick 핸들러 추가
     >
       {icon}
-      <span
+      <Link
         className={`overflow-hidden transition-all whitespace-nowrap ${
           expanded ? "w-52 ml-3" : "w-0"
         }`}
+        to={to}
       >
-        {text}
-      </span>
+        <span
+          className={`overflow-hidden transition-all whitespace-nowrap ${
+            expanded ? "w-52 ml-3" : "w-0"
+          }`}
+        >
+          {text}
+        </span>
+      </Link>
       {alert && (
         <div
           className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
