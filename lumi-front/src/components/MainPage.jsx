@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link as ScrollLink, Element } from 'react-scroll';
-import logo from "../assets/logo.png";
+import mainlogo from "../assets/mainlogo.png";
 import background from '../assets/introbackground.png';
 import { CircleArrowDown } from 'lucide-react';
 
@@ -27,7 +27,7 @@ function MainPage() {
         style={{ backgroundImage: `url(${background})` }}
       >
         <header className="flex items-center px-[250px] whitespace-nowrap fixed">
-          <img src={logo} alt="Logo" className="h-12 pt-4" />
+          <img src={mainlogo} alt="Logo" className="h-12 pt-4" />
           <nav className='pl-[250px]'>
             <ul className="flex space-x-8 pt-4">
               <li>

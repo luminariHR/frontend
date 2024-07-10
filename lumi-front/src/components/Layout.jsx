@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SidebarContext } from "./Sidebar";
 import Header from "./Header";
 import Sidebar, { SidebarItem } from "./Sidebar";
@@ -9,10 +10,10 @@ import {
   Clock,
   Home,
   Laptop,
-  Layers,
   Newspaper,
   Users,
   HeartHandshake,
+  MessageCircle,
 } from "lucide-react";
 
 const Layout = ({ children }) => {
@@ -29,19 +30,23 @@ const Layout = ({ children }) => {
       style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
     >
       <Sidebar>
-        <SidebarItem icon={<Home size={20} />} text="Home" to={"/dashboard"} />
-        <SidebarItem icon={<Users size={20} />} text="Group" />
+        <SidebarItem icon={<Home size={20} />} text="홈" to={"/dashboard"} />
+        <SidebarItem icon={<Users size={20} />} text="조직 관리" />
         <SidebarItem
           icon={<Laptop size={20} />}
-          text="Attendance"
+          text="근태 관리"
           to={"/attendance"}
         />
-        <SidebarItem icon={<Clock size={20} />} text="Schedule" />
-        <SidebarItem icon={<Calendar size={20} />} text="Vacation" />
-        <SidebarItem icon={<Newspaper size={20} />} text="Approval" />
-        <SidebarItem icon={<HeartHandshake size={20} />} text="Mentoring" />
-        <SidebarItem icon={<Book size={20} />} text="DataBook" />
-        <SidebarItem icon={<Layers size={20} />} text="Used Items" />
+        <SidebarItem icon={<Clock size={20} />} text="일정 관리" />
+        <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
+        <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
+        <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
+        <SidebarItem icon={<Book size={20} />} text="자료실" />
+        <SidebarItem
+          icon={<MessageCircle size={20} />}
+          text="메신저"
+          to={"/chatting"}
+        />
       </Sidebar>
       <div
         className={`flex-1 transition-all duration-300 ${expanded ? "ml-64" : "ml-16"}`}
