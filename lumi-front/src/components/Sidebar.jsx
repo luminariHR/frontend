@@ -75,7 +75,7 @@ const Sidebar = ({ children }) => {
 
 export default Sidebar;
 
-export function SidebarItem({ icon, text, active, alert }) {
+export function SidebarItem({ icon, text, active, alert, onClick }) {
   const { expanded } = useContext(SidebarContext);
   return (
     <li
@@ -84,6 +84,7 @@ export function SidebarItem({ icon, text, active, alert }) {
           ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
           : "hover:bg-indigo-50 text-gray-600"
       } ${expanded ? "" : "justify-center px-2"}`}
+      onClick={onClick} // onClick 핸들러 추가
     >
       {icon}
       <span
