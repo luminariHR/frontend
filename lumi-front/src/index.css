@@ -2,3 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+.react-datepicker {
+    @apply bg-white rounded-lg shadow-lg w-[300px] h-[250px];
+}
+
+.react-datepicker__header {
+    @apply bg-[#8583FD] text-white w-[300px] font-sans;
+}
+
+.react-datepicker__current-month {
+    @apply text-white;
+}
+
+.react-datepicker__day-names {
+    @apply text-[15px] ;
+}
+
+.react-datepicker__day-name {
+    @apply text-white ;
+}
+
+.react-datepicker__week {
+    @apply text-[15px]
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+    @apply bg-[#8583FD] text-white ;
+}
+
+.react-datepicker__day--today {
+    @apply font-bold text-[#ffffff];
+}
