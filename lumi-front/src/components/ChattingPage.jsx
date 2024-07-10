@@ -36,7 +36,7 @@ const ChattingPage = () => {
     <SidebarProvider>
       <Layout>
         <div className="flex pb-3">
-          <div className='ml-10 w-[250px] p-5 bg-[#DCDBFB] drop-shadow-xl'>
+          <div className='ml-10 w-[250px] p-5 bg-[#DCDBFB] shadow-2xl'>
             <div className="flex flex-col border-b border-gray-300 pb-3">
                 <div className="flex items-center">
                     <Mails className='text-xs font-bold text-[#6863f0] mr-2' />
