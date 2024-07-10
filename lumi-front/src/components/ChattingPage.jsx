@@ -22,9 +22,14 @@ const ChattingPage = () => {
 
   const handleSendMessage = () => {
     if (input.trim()) {
-      setMessages([...messages, { user: selectedUser, text: input }]);
+      setMessages([...messages, { user: selectedUser, text: input, time: new Date() }]);
       setInput('');
     }
+  };
+
+  const formatTime = (time) => {
+    if (!time) return ''; // 이거 빼먹으면 error
+    return `${('0' + time.getHours()).slice(-2)}:${('0' + time.getMinutes()).slice(-2)}`;
   };
 
   return (
@@ -62,7 +67,9 @@ const ChattingPage = () => {
             <div className='flex flex-col overflow-y-auto h-[400px]'>
               {messages.map((message, index) => (
                 <div key={index} className={`mb-2 ${message.user === selectedUser ? 'text-right' : 'text-left'}`}>
-                  <span className='text-xs font-medium inline-block p-2 bg-[#DCDBFB] rounded-l-full rounded-b-full'>{message.text}</span>
+                  <span className='text-[10px] text-gray-400'>{formatTime(message.time)}</span>
+                  <span className='ml-1 text-xs font-medium inline-block p-2 bg-[#DCDBFB] rounded-l-full rounded-b-full'>{message.text}
+                  </span>
                 </div>
               ))}
             </div>
