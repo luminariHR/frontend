@@ -37,7 +37,8 @@ const DashboardPage = () => {
   const getCurrentDayString = () => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
     const currentDay = days[currentDate.getDay()];
-    const weekOfMonth = Math.ceil(currentDate.getDate() / 7);
+    const weekOfMonthStr = ["첫","둘",'셋','넷'];
+    const weekOfMonth = weekOfMonthStr[Math.ceil(currentDate.getDate() / 7)-1];
     return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 

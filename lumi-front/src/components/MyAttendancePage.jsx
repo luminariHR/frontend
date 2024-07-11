@@ -9,13 +9,6 @@ import {
   TableBody,
   TableCell,
 } from "./ui/table";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "./ui/select";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import DatePicker from "react-datepicker";
