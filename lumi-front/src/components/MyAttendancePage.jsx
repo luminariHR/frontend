@@ -72,6 +72,14 @@ export default function MyAttendancePage() {
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
+  const dayClassName = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d.getTime() === today.getTime() ? "today-selected" : "";
+  };
+
   return (
     <SidebarProvider>
       <Layout>
@@ -92,6 +100,7 @@ export default function MyAttendancePage() {
                   onChange={(date) => setStartDate(date)}
                   dateFormat="yyyy-MM-dd"
                   className={"outline-none cursor-pointer caret-transparent"}
+                  dayClassName={dayClassName}
                 />
                 <CalendarDays />
               </label>
@@ -101,6 +110,7 @@ export default function MyAttendancePage() {
                   onChange={(date) => setEndDate(date)}
                   dateFormat="yyyy-MM-dd"
                   className={"outline-none cursor-pointer caret-transparent"}
+                  dayClassName={dayClassName}
                 />
                 <CalendarDays />
               </label>
