@@ -37,7 +37,11 @@ const Layout = ({ children }) => {
           text="근태 관리"
           to={"/attendance"}
         />
-        <SidebarItem icon={<Clock size={20} />} text="일정 관리" />
+        <SidebarItem
+         icon={<Clock size={20} />} 
+         text="일정 관리"
+         to={"/calendar"}
+          />
         <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
         <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
         <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
