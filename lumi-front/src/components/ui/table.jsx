@@ -19,7 +19,7 @@ export const TableHeader = ({ children, addClass, ...props }) => (
 );
 
 export const TableRow = ({ children, addClass, ...props }) => (
-  <tr {...props} className={`hover:bg-gray-100 ${addClass}`}>
+  <tr {...props} className={`${addClass}`}>
     {children}
   </tr>
 );
