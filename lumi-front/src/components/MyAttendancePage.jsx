@@ -14,6 +14,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarDays } from "lucide-react";
 import { fetchMyAttendance } from "../api/attendanceApi.js";
+import Button from "./ui/button.jsx";
 
 export default function MyAttendancePage() {
   // todo 최초 fetch 후 저장해서 reload 되지 않게 해야 됨
@@ -42,8 +43,9 @@ export default function MyAttendancePage() {
   const getCurrentDayString = () => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
     const currentDay = days[currentDate.getDay()];
-    const weekOfMonthStr = ["첫","둘",'셋','넷'];
-    const weekOfMonth = weekOfMonthStr[Math.ceil(currentDate.getDate() / 7)-1];
+    const weekOfMonthStr = ["첫", "둘", "셋", "넷"];
+    const weekOfMonth =
+      weekOfMonthStr[Math.ceil(currentDate.getDate() / 7) - 1];
     return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 
@@ -103,8 +105,23 @@ export default function MyAttendancePage() {
                 <CalendarDays />
               </label>
               <div>
-                <button onClick={handleSearchButtonClick}>검색</button>
+                <Button
+                  text={"검색"}
+                  size={"md"}
+                  variant={"primary"}
+                  onClick={handleSearchButtonClick}
+                />
               </div>
+            </div>
+
+            {/* todo 휴가 신청하기 기능 */}
+            <div>
+              <Button
+                text={"휴가 신청하기"}
+                size={"md"}
+                variant={"solid"}
+                addClass={"font-semibold"}
+              />
             </div>
           </div>
 
@@ -151,7 +168,11 @@ export default function MyAttendancePage() {
                         disabled
                       />
                     </TableCell>
-                    <TableCell>{item.hours_worked}</TableCell>
+                    <TableCell>
+                      {item.hours_worked
+                        ? `${Math.floor(item.hours_worked)}시간 ${Math.round((item.hours_worked - Math.floor(item.hours_worked)) * 60)}분`
+                        : "-"}
+                    </TableCell>
                     <TableCell addClass="truncate">
                       {item.clock_out_note
                         ? item.clock_out_note.length > 30
