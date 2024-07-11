@@ -1,4 +1,3 @@
-// src/components/MyAttendancePage.jsx
 import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input.jsx";
 import {
@@ -17,6 +16,7 @@ import { CalendarDays } from "lucide-react";
 import { fetchMyAttendance } from "../api/attendanceApi.js";
 
 export default function MyAttendancePage() {
+  // todo 최초 fetch 후 저장해서 reload 되지 않게 해야 됨
   const [currentDate, setCurrentDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -106,6 +106,7 @@ export default function MyAttendancePage() {
               </div>
             </div>
           </div>
+
           <div className="overflow-auto rounded-lg border">
             <Table>
               <TableHeader>
@@ -121,17 +122,31 @@ export default function MyAttendancePage() {
               <TableBody>
                 {attendance.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell>{item.date}</TableCell>
-                    <TableCell>-</TableCell>
+                    <TableCell>{item.date ? item.date : "-"}</TableCell>
+                    <TableCell>
+                      {item.is_late === true
+                        ? "지각"
+                        : item.is_early_leave === true
+                          ? "조퇴"
+                          : "-"}
+                    </TableCell>
                     <TableCell>
                       <Input
-                        value={item.clock_in.split("T")[1].slice(0, 8)}
+                        value={
+                          item.clock_in
+                            ? item.clock_in.split("T")[1].slice(0, 8)
+                            : ""
+                        }
                         disabled
                       />
                     </TableCell>
                     <TableCell>
                       <Input
-                        value={item.clock_out.split("T")[1].slice(0, 8)}
+                        value={
+                          item.clock_out
+                            ? item.clock_out.split("T")[1].slice(0, 8)
+                            : ""
+                        }
                         disabled
                       />
                     </TableCell>
