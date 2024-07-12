@@ -7,6 +7,7 @@ import PlatformPage from "./components/PlatformPage";
 import ChattingPage from "./components/ChattingPage.jsx";
 import MyAttendancePage from "./components/MyAttendancePage.jsx";
 import CalendarPage from "./components/CalendarPage.jsx";
+import AdminDepartmentsPage from "./components/AdminDepartmentsPage.jsx";
 import SignUp from "./components/SignUp.jsx";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/chatting" element={<ChattingPage/>} />
         <Route path="/calendar" element={<CalendarPage/>} />
         <Route path="/signup" element={<SignUp/>} />
+        <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
       </Routes>
     </Router>
   );
