@@ -19,7 +19,11 @@ const Calendar = ({ events, handleDateClick }) => {
       headerToolbar={{
         left: 'prev',
         center: 'title',
-        right: 'next'
+        right: 'next',
+      }}
+      buttonIcons={{
+        prev: 'chevrons-left',
+        next: 'chevrons-right'
       }}
     />
   );
