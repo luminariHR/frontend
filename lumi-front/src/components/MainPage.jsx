@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link as ScrollLink, Element } from 'react-scroll';
-import mainlogo from "../assets/mainlogo.png";
+import logo from "../assets/logo.png";
 import background from '../assets/introbackground.png';
-import { CircleArrowDown } from 'lucide-react';
+import {CircleChevronRight, CircleArrowDown, CircleArrowRight,ArrowUpLeft } from 'lucide-react';
+import Spline from '@splinetool/react-spline'; // Spline 라이브러리 import
+import gpticon from "../assets/gpticon.png"
 
 function MainPage() {
   const navigate = useNavigate();
@@ -15,133 +17,160 @@ function MainPage() {
 
   return (
     <>
-      <div className='bg-[#00759D] flex h-12 items-center justify-center'>
-        <div className="text-xs text-[#0A5C98] flex items-center justify-center px-8 bg-[#D2F1FF] w-12 h-6 rounded-lg font-bold">NOTICE</div>
-        <span className="ml-2 font-medium text-white">💫LUMINARI 1년 계약시 10% 할인💫</span>
-        <span className="px-5 font-medium text-white">|</span>
-        <span className="font-medium text-white">지금 계약하러 가기 +</span>
-      </div>
-
-      <div
-        className="h-[200vh] w-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${background})` }}
-      >
-        <header className="flex items-center px-[250px] whitespace-nowrap fixed">
-          <img src={mainlogo} alt="Logo" className="h-12 pt-4" />
-          <nav className='pl-[250px]'>
-            <ul className="flex space-x-8 pt-4">
-              <li>
+      <div className='flex bg-[#ECEFFF] h-screen'>
+        <div className='absolute flex items-center justify-center  mt-2 z-10 right-[600px] top-[450px]
+         text-3xl p-2 font-sans font-semibold rounded-full bg-[#ecefff]'>
+          <ArrowUpLeft className='mr-4'/> 무료 체험판
+        </div>
+        <div className='absolute flex items-center justify-center  mt-2 z-10 right-[640px] top-[500px]
+         text-xl p-1 font-sans font-semibold rounded-md bg-[#ecefff]'>
+          15일간 무료
+        </div>
+        <div className='w-[1000px] p-5 bg-[#ecefff] '>
+        <header className="flex items-center whitespace-nowrap">
+          <img src={logo} alt="Logo" className="h-8 " />
+          <nav className='ml-[300px] h-9 bg-[#E0E3F6] rounded-full w-[400px] mt-2 px-4 flex justify-center'>
+            <ul className="flex space-x-8">
+              <li className='flex items-center'>
                 <ScrollLink
                   to="service"
                   smooth={true}
                   duration={500}
-                  className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer"
+                  className="text-[12px]  text-gray-500 font-semibold hover:text-[#f8f8ff] cursor-pointer"
                 >
                   서비스
                 </ScrollLink>
               </li>
-              <li>
+              <li className='flex items-center'>
                 <ScrollLink
                   to="contact"
                   smooth={true}
                   duration={500}
-                  className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer"
+                  className="text-[12px]  text-gray-500 font-semibold hover:text-[#f8f8ff] cursor-pointer"
                 >
                   Video
                 </ScrollLink>
               </li>
-              <li>
+              <li className='flex items-center'>
                 <ScrollLink
                   to="team"
                   smooth={true}
                   duration={500}
-                  className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer"
+                  className="text-[12px]  text-gray-500 font-semibold hover:text-[#f8f8ff] cursor-pointer"
                 >
                   가격정책
                 </ScrollLink>
               </li>
-              <li>
+              <li className='flex items-center'>
                 <ScrollLink
                   to="team2"
                   smooth={true}
                   duration={500}
-                  className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer"
+                  className="text-[12px]  text-gray-500 font-semibold hover:text-[#f8f8ff] cursor-pointer"
                 >
                   Contact Us
                 </ScrollLink>
               </li>
-              <li>
+              <li className='flex items-center'>
                 <ScrollLink
                   to="team3"
                   smooth={true}
                   duration={500}
-                  className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer"
+                  className="text-[12px]  text-gray-500 font-semibold hover:text-[#f8f8ff] cursor-pointer"
                 >
                   FAQ
                 </ScrollLink>
               </li>
-              <li className='pl-[300px]'>
-                <button
-                  className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer"
-                  onClick={() => navigate('/login')}
-                >
-                  로그인
-                </button>
-              </li>
             </ul>
           </nav>
         </header>
-
-        <main className='h-full flex items-start justify-center text-white pt-52'>
-          <div className="text-center">
-            <h1 className="text-[50px] font-bold ">LUMINARI,</h1>
-            <h1 className="text-[50px] font-bold ">팀 성장을 만드는 유일한 AI HR 솔루션</h1>
-            <p className="text-xl mt-4 font-medium ">스타트업 / 중소기업을 위한 AI HRM 플랫폼</p>
-            <div className=''>
-              <input placeholder='이메일을 입력하세요' className='p-2 mt-14 w-[400px] h-14 rounded-l-lg ' ></input>
-              <button className=' rounded-r-lg h-14 w-[150px] bg-[#163F4D] font-bold'> 구독하기 </button>
-            </div>
-            <ScrollLink
-              to="service"
-              smooth={true}
-              duration={500}
-              className="text-sm font-semibold text-white hover:text-[#727171] cursor-pointer mt-8"
-            >
-              <div className="mt-24 animate-bounce w-8 h-16 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <CircleArrowDown />
-              </div>
-            </ScrollLink>
+        <div className='flex flex-row'>
+          <div className='mt-11 w-[100px] h-[30px] border-[1.5px] border-[#3a3a3f] rounded-full flex items-center justify-center text-[10px] font-bold text-[#3a3a3f]'>
+          <img src={gpticon} className='h-3 pr-1'/> GPT-3.5 기반 
           </div>
-        </main>
+          <div className='mt-11 w-[100px] h-[30px] border-[1.5px] border-[#3a3a3f] rounded-full flex items-center justify-center text-[10px] font-bold  text-[#3a3a3f] ml-2'>
+            🛡️ 안전한 보안
+          </div>
+        </div>
+        <main> </main>
+          <div className='mt-4 text-[50px] p-1 font-sans font-bold'>
+          ADLAKSDJVLK DA DFD F
+          </div>
+          <div className=' text-[50px] p-1 font-sans font-bold'>
+          FFJKKFJK ADS  
+          </div>
+          <div className=' text-[50px] p-1 font-sans font-semibold'>
+          ASD FLKSADJ 
+          </div>
+          <div className='ml-[382px] mt-4'>
+            <button className='h-14 w-[150px] font-bold text-[#3b3939] border-2 border-[#3a3844] rounded-full'
+            onClick={() => navigate('/signup')}> 
+              회원가입
+             </button>
+          </div>
+          <span className='absolute flex items-center justify-start pl-2 bottom-4 
+            left-4 w-[600px] h-6 rounded-full bg-[#f8f8ff] text-[10px] font-bold'>
+            ADF ;ALKD JFLSAKFEJ FLDKMF ELKDM FLEasdfasdIMLA KDF sadfsdMLKD AMFLAadsf asfKDM<CircleArrowRight className='h-3 mr-7'/>
+            </span>
+          </div>
+          <div className='w-[900px] p-2 m-5 bg-none rounded-3xl flex relative'>
+            <Spline scene="https://prod.spline.design/QBLiwdLOJjLOUALM/scene.splinecode" className='rounded-3xl z-0' />
+            <button className='absolute flex items-center text-[14px] top-4 right-4 z-10 px-6 py-1 bg-[#f8f8ff]
+            font-bold text-black rounded-full cursor-pointer'
+            onClick={() => navigate('/login')}
+              >
+              로그인<CircleChevronRight className='px-1'/>
+            </button>
+            <span className='absolute flex flex-col items-center justify-center bottom-0 right-0 w-20 h-20 rounded-xl text-[17px] 
+            bg-[#ecefff] text-gray-500 font-bold'>
+              Scroll
+              <ScrollLink
+                to="service"
+                smooth={true}
+                duration={500}
+                className="hover:text-[#727171] cursor-pointer mt-2 h-2"
+              >
+                <div className="animate-bounce text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <CircleArrowDown className='h-4' />
+                </div>
+              </ScrollLink>          
+            </span>
+            <span className='absolute flex items-center justify-start pl-2 bottom-4 
+            left-4 w-72 h-6 rounded-full bg-[#f8f8ff] text-[10px] font-bold'>
+            💫LUMINARI 1년 계약시 10% 할인 + 1개월 무료<CircleArrowRight className='h-3 mr-7'/>
+            </span>
+          </div>
+            {/* <Spline scene="https://prod.spline.design/0OsIiIsBhuFqKhXI/scene.splinecode" /> */}
+        </div>
 
         <Element name="service" className="h-[200vh] bg-white">
-        <h2 className="flex items-center justify-center pt-20 text-4xl font-bold text-black">LUMINARI 둘러보기</h2>
-        <div className="mt-4 pt-20 flex items-center justify-center">
-              <button
-                onClick={() => handleButtonClick('첫 번째 내용')}
-                className="px-4 py-2 text-black text-xs font-semibold rounded-l-lg border border-black h-14 w-24"
-              >
-                실시간 챗봇
-              </button>
-              <button
-                onClick={() => handleButtonClick('두 번째 내용')}
-                className="px-4 py-2 text-black text-xs font-semibold border border-black h-14 w-24"
-              >
-                멘토/멘티 추천시스템
-              </button>
-              <button
-                onClick={() => handleButtonClick('세 번째 내용')}
-                className="px-4 py-2 text-black text-xs font-semibold border border-black h-14 w-24"
-              >
-                이력서 스크리닝
-              </button>
-              <button
-                onClick={() => handleButtonClick('네 번째 내용')}
-                className="px-4 py-2  text-black text-xs font-semibold border rounded-r-lg border-black h-14 w-24"
-              >
-                전자결재 텍스트 추출
-              </button>
-            </div>
+          <h2 className="flex items-center justify-center pt-20 text-4xl font-bold text-black">LUMINARI 둘러보기</h2>
+          <div className="mt-4 pt-20 flex items-center justify-center">
+            <button
+              onClick={() => handleButtonClick('첫 번째 내용')}
+              className="px-4 py-2 text-black text-xs font-semibold rounded-l-lg border border-black h-14 w-24"
+            >
+              실시간 챗봇
+            </button>
+            <button
+              onClick={() => handleButtonClick('두 번째 내용')}
+              className="px-4 py-2 text-black text-xs font-semibold border border-black h-14 w-24"
+            >
+              멘토/멘티 추천시스템
+            </button>
+            <button
+              onClick={() => handleButtonClick('세 번째 내용')}
+              className="px-4 py-2 text-black text-xs font-semibold border border-black h-14 w-24"
+            >
+              이력서 스크리닝
+            </button>
+            <button
+              onClick={() => handleButtonClick('네 번째 내용')}
+              className="px-4 py-2  text-black text-xs font-semibold border rounded-r-lg border-black h-14 w-24"
+            >
+              전자결재 텍스트 추출
+            </button>
+          </div>
           <h2 className="flex items-center justify-center pt-20 text-5xl font-bold text-black">{currentContent}</h2>
           {/* 서비스 내용 */}
         </Element>
@@ -161,7 +190,6 @@ function MainPage() {
           <h2 className="text-3xl">FAQ</h2>
           {/* FAQ 내용 */}
         </Element>
-      </div>
     </>
   );
 }

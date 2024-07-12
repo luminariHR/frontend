@@ -89,7 +89,9 @@ export function SidebarItem({ icon, text, active, alert, to }) {
           : "hover:bg-indigo-50 text-gray-600"
       } ${expanded ? "" : "justify-center px-2"}`}
     >
+      <Link to={to}>
       {icon}
+      </Link>
       <Link
         className={`overflow-hidden transition-all whitespace-nowrap ${
           expanded ? "w-52 ml-3" : "w-0"
@@ -113,7 +115,10 @@ export function SidebarItem({ icon, text, active, alert, to }) {
       )}
       {!expanded && (
         <div
-          className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm whitespace-nowrap invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+          className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm 
+            whitespace-nowrap invisible opacity-20 -translate-x-3 transition-all 
+            group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+            
         >
           {text}
         </div>
