@@ -27,6 +27,7 @@ export const Button = ({
     default: "bg-white text-gray-700 border border-gray-300",
     primary: "bg-gray-800 text-white",
     solid: "bg-primary text-white",
+    teams: "bg-[#5d5bd4] text-white",
   };
 
   const stateStyles = {
@@ -40,6 +41,10 @@ export const Button = ({
     },
     solid: {
       normal: "hover:bg-[#FFCA27FF] active:bg-primary",
+      disabled: "bg-[#F0C84B99] text-white cursor-not-allowed",
+    },
+    teams: {
+      normal: "hover:bg-[#5553c1] active:bg-[#5553c1]",
       disabled: "bg-[#F0C84B99] text-white cursor-not-allowed",
     },
   };

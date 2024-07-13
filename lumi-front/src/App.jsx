@@ -6,6 +6,7 @@ import LoginPage from "./components/LoginPage";
 import PlatformPage from "./components/PlatformPage";
 import ChattingPage from "./components/ChattingPage.jsx";
 import MyAttendancePage from "./components/MyAttendancePage.jsx";
+import ApprovalPage from "./components/approval/ApprovalPage.jsx";
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
         <Route path="/" element={<MainPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/attendance" element={<MyAttendancePage />} />
+        <Route path="/approval" element={<ApprovalPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/platform" element={<PlatformPage />} />
-        <Route path="/chatting" element={<ChattingPage/>} />
+        <Route path="/chatting" element={<ChattingPage />} />
       </Routes>
     </Router>
   );
