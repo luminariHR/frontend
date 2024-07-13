@@ -38,7 +38,7 @@ function LoginPage() {
 
         // 유저 ID state로 저장
         const me = await fetchMyProfile();
-        setUser({ id: me.id });
+        setUser(me);
 
         // 인증된 페이지로 리디렉션
         navigate("/dashboard");

@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
 import { AlignJustify, ArrowRightFromLine } from "lucide-react";
-import profile from "../assets/profile.png";
+import Avatar from "boring-avatars";
 import { Link, useLocation } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { loggedInUserState } from "../state/userAtom.js";
 
 export const SidebarContext = createContext();
 
@@ -16,6 +18,7 @@ export const SidebarProvider = ({ children }) => {
 
 const Sidebar = ({ children }) => {
   const { expanded, setExpanded } = useContext(SidebarContext);
+  const user = useRecoilValue(loggedInUserState);
   return (
     <aside className="h-screen fixed top-0 left-0">
       <div
@@ -49,22 +52,30 @@ const Sidebar = ({ children }) => {
         <ul className="flex-1 px-3">{children}</ul>
         <div
           className={`flex ${
-            expanded ? "p-3" : "justify-center items-center p-1"
+            expanded ? "p-3" : "justify-center items-center p-3"
           }`}
         >
-          <img
-            src={profile}
-            className={`w-10 h-10 ${expanded ? "mr-3" : "mr-0"}`}
-          />
+          {user["profile_image"] ? (
+            <img
+              src={`${user["profile_image"]}`}
+              className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"}`}
+            />
+          ) : (
+            <Avatar
+              variant="beam"
+              name={`${user.name}`}
+              className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"}`}
+            />
+          )}
           <div
             className={`flex justify-between items-center overflow-hidden transition-all ${
               expanded ? "w-32 ml-3" : "w-0"
             }`}
           >
             <div className="leading-4">
-              <h4 className="font-semibold text-sm">Matsalt</h4>
-              <span className="font-light text-[#979797] text-xs">
-                Frontend Developer
+              <h4 className="font-semibold text-sm  whitespace-nowrap">{`${user.name}`}</h4>
+              <span className="font-light text-[#979797] text-xs  whitespace-nowrap">
+                {`${user["job_title"]}`}
               </span>
             </div>
           </div>
@@ -89,9 +100,7 @@ export function SidebarItem({ icon, text, active, alert, to }) {
           : "hover:bg-indigo-50 text-gray-600"
       } ${expanded ? "" : "justify-center px-2"}`}
     >
-      <Link to={to}>
-      {icon}
-      </Link>
+      <Link to={to}>{icon}</Link>
       <Link
         className={`overflow-hidden transition-all whitespace-nowrap ${
           expanded ? "w-52 ml-3" : "w-0"
@@ -118,7 +127,6 @@ export function SidebarItem({ icon, text, active, alert, to }) {
           className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm 
             whitespace-nowrap invisible opacity-20 -translate-x-3 transition-all 
             group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
-            
         >
           {text}
         </div>
