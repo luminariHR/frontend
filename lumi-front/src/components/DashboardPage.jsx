@@ -5,12 +5,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import { clockIn, clockOut } from "../api/attendanceApi.js";
+import { useRecoilValue } from "recoil";
+import { loggedInUserState } from "../state/userAtom.js";
 
 const DashboardPage = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
   const [clockInNote, setClockInNote] = useState("");
   const [clockOutNote, setClockOutNote] = useState("");
+  const user = useRecoilValue(loggedInUserState);
 
   useEffect(() => {
     let animationFrameId;
@@ -67,7 +70,7 @@ const DashboardPage = () => {
     <SidebarProvider>
       <Layout>
         <div className="flex justify-between pb-3">
-          <div>안녕하세요 맛소금님!</div>
+          <div>{`안녕하세요, ${user.name}님!`}</div>
           <div className="flex flex-col text-xs items-end">
             <div className="font-semibold">{getCurrentDateString()}</div>
             <div>{getCurrentDayString()}</div>
