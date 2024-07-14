@@ -212,8 +212,8 @@ export default function ApprovalPage() {
   const [activeTab, setActiveTab] = useState("sent");
 
   const tabs = [
-    { id: "sent", label: "보낸 문서함" },
-    { id: "received", label: "받은 문서함" },
+    { id: "sent", label: "보낸 결재함" },
+    { id: "received", label: "받은 결재함" },
     { id: "referenced", label: "참조 문서함" },
   ];
 
