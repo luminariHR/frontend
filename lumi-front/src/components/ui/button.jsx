@@ -45,7 +45,7 @@ export const Button = ({
     },
     teams: {
       normal: "hover:bg-[#5553c1] active:bg-[#5553c1]",
-      disabled: "bg-[#F0C84B99] text-white cursor-not-allowed",
+      disabled: "bg-gray-400 text-white cursor-not-allowed",
     },
   };
 

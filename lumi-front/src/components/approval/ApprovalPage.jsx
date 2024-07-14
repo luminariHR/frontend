@@ -18,6 +18,7 @@ import { fetchSentRequest } from "../../api/approvalApi.js";
 import { StatusPill } from "../ui/pill.jsx";
 import { ApproveRequestModal } from "./ApprovalRequest";
 
+// TODO: 데이터 구현 후 삭제
 const fakeData = [
   {
     id: 1,
@@ -206,34 +207,18 @@ const fakeData = [
 
 export default function ApprovalPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [approval, setApproval] = useState(fakeData);
-  // const [showModal, setShowModal] = useState(false);
-  //
-  // const openModal = () => setShowModal(true);
-  // const closeModal = () => setShowModal(false);
+  const [approval, setApproval] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("sent");
+
+  const tabs = [
+    { id: "sent", label: "보낸 문서함" },
+    { id: "received", label: "받은 문서함" },
+    { id: "referenced", label: "참조 문서함" },
+  ];
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  const handleSearchButtonClick = async () => {
-    // const start = startDate.toISOString().split("T")[0];
-    // const end = endDate.toISOString().split("T")[0];
-    // const data = await fetchMyAttendance(start, end);
-    // if (data) {
-    //   setApproval(data.data);
-    // }
-  };
-
-  const getCurrentDateString = () => {
-    return currentDate.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   const getDateString = (dateString) => {
     const date = new Date(dateString);
@@ -242,15 +227,6 @@ export default function ApprovalPage() {
       month: "long",
       day: "numeric",
     });
-  };
-
-  const getCurrentDayString = () => {
-    const days = ["일", "월", "화", "수", "목", "금", "토"];
-    const currentDay = days[currentDate.getDay()];
-    const weekOfMonthStr = ["첫", "둘", "셋", "넷"];
-    const weekOfMonth =
-      weekOfMonthStr[Math.ceil(currentDate.getDate() / 7) - 1];
-    return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 
   const getStatusPill = (status) => {
@@ -272,7 +248,7 @@ export default function ApprovalPage() {
     const fetchData = async () => {
       const data = await fetchSentRequest();
       if (data) {
-        // setApproval(data);
+        setApproval(data);
       }
     };
     fetchData();
@@ -294,94 +270,104 @@ export default function ApprovalPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">전자 결재 관리</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
+        <div className="flex justify-between justify-items-center mt-2 mb-12">
+          <div className="flex items-center justify-center">
+            <div className={"text-2xl font-bold"}>전자 결재 관리</div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="flex justify-evenly space-x-4 bg-white py-2.5 px-5 rounded-full">
+              {tabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`cursor-pointer px-4 py-2 rounded-full transition duration-300 ease-in-out ${
+                    activeTab === tab.id
+                      ? "bg-[#5d5bd4] text-white shadow-md font-medium"
+                      : "bg-white text-gray-600 font-medium"
+                  }`}
+                >
+                  <div className="flex items-center">
+                    {tab.label}
+                    {tab.count && (
+                      <span
+                        className={`ml-2 rounded-full px-2 py-1 text-xs transition duration-300 ease-in-out ${
+                          activeTab === tab.id
+                            ? "bg-yellow-500 text-white"
+                            : "bg-yellow-100 text-yellow-500"
+                        }`}
+                      >
+                        {tab.count}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className={"flex items-center justify-center"}>
+            <Button
+              text={"결재 기안하기"}
+              size={"lg"}
+              variant={"teams"}
+              addClass={"font-semibold"}
+              onClick={openModal}
+            />
           </div>
         </div>
 
         <div className="">
           <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <label className="flex p-2 border rounded bg-white">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  dateFormat="yyyy-MM-dd"
-                  className={"outline-none cursor-pointer caret-transparent"}
-                />
-                <CalendarDays />
-              </label>
-              <label className="flex p-2 border rounded bg-white">
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  dateFormat="yyyy-MM-dd"
-                  className={"outline-none cursor-pointer caret-transparent"}
-                />
-                <CalendarDays />
-              </label>
-              <div>
-                <Button
-                  text={"검색"}
-                  size={"md"}
-                  variant={"primary"}
-                  // onClick={handleSearchButtonClick}
-                />
-              </div>
-            </div>
-
-            {/* todo 결재 기안하기 기능 */}
-            <div>
-              <Button
-                text={"결재 기안하기"}
-                size={"md"}
-                variant={"solid"}
-                addClass={"font-semibold"}
-                onClick={openModal}
+            {isModalOpen && (
+              <ApproveRequestModal
+                onClose={closeModal}
+                onRequestSubmit={setApproval}
               />
-            </div>
-            {/*<ApprovalRequestModal show={showModal} onClose={closeModal} />*/}
-            {isModalOpen && <ApproveRequestModal onClose={closeModal} />}
+            )}
           </div>
 
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>상태</TableHead>
-                  <TableHead>이름</TableHead>
-                  <TableHead>요청</TableHead>
-                  <TableHead>결재 라인</TableHead>
-                  <TableHead>참조</TableHead>
-                  <TableHead>생성일</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {approval.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{getStatusPill(item.status)}</TableCell>
-                    <TableCell>{item.title}</TableCell>
-                    <TableCell>{item.drafter.name}</TableCell>
-                    <TableCell>
-                      {item.review_steps
-                        .map((step) => step.reviewer.name)
-                        .join(", ")}
-                    </TableCell>
-                    <TableCell>
-                      {item.references
-                        .map((step) => step.referrer.name)
-                        .join(", ")}
-                    </TableCell>
-                    <TableCell>
-                      {item.created_at ? getDateString(item.created_at) : "-"}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <div className="transition duration-300 ease-in-out">
+            {activeTab === "sent" && (
+              <div className="overflow-auto rounded-lg border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>상태</TableHead>
+                      <TableHead>이름</TableHead>
+                      <TableHead>요청</TableHead>
+                      <TableHead>결재 라인</TableHead>
+                      <TableHead>참조</TableHead>
+                      <TableHead>생성일</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {approval.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{getStatusPill(item.status)}</TableCell>
+                        <TableCell>{item.title}</TableCell>
+                        <TableCell>{item.drafter.name}</TableCell>
+                        <TableCell>
+                          {item.review_steps
+                            .map((step) => step.reviewer.name)
+                            .join(", ")}
+                        </TableCell>
+                        <TableCell>
+                          {item.references
+                            .map((step) => step.referrer.name)
+                            .join(", ")}
+                        </TableCell>
+                        <TableCell>
+                          {item.created_at
+                            ? getDateString(item.created_at)
+                            : "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+            {activeTab === "received" && <div>TODO: 받은 문서함</div>}
+            {activeTab === "referenced" && <div>TODO: 참조 문서함</div>}
           </div>
         </div>
       </Layout>

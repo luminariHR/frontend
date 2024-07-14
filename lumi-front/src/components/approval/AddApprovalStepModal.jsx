@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { fetchAllUsers } from "../../api/userApi.js";
 import { UserCard } from "../ui/userCard.jsx";
 import "../../styles/scrollbar.css";
+import { useRecoilValue } from "recoil";
+import { loggedInUserState } from "../../state/userAtom.js";
 
 export const AddApprovalStepModal = ({
   userData,
@@ -11,6 +13,7 @@ export const AddApprovalStepModal = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
+  const loggedInUser = useRecoilValue(loggedInUserState);
 
   const filteredData = searchTerm
     ? users.filter((item) => {
@@ -63,19 +66,21 @@ export const AddApprovalStepModal = ({
         <div className={"h-[80%] overflow-y-auto hide-scrollbar"}>
           <ul className={""}>
             {filteredData.map((item, index) => {
-              return (
-                <li
-                  key={index}
-                  className={`p-2 border-b border-gray-300 ${
-                    isUserSelected(item.id) || !item.department
-                      ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-                      : "hover:bg-gray-200 cursor-pointer"
-                  }`}
-                  onClick={() => handleItemSelect(item)}
-                >
-                  <UserCard userItem={item} />
-                </li>
-              );
+              if (loggedInUser.id != item.id) {
+                return (
+                  <li
+                    key={index}
+                    className={`p-2 border-b border-gray-300 ${
+                      isUserSelected(item.id) || !item.department
+                        ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                        : "hover:bg-gray-200 cursor-pointer"
+                    }`}
+                    onClick={() => handleItemSelect(item)}
+                  >
+                    <UserCard userItem={item} />
+                  </li>
+                );
+              }
             })}
           </ul>
         </div>
