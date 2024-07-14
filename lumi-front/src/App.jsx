@@ -1,3 +1,17 @@
+import React, { Suspense } from "react";
+import { RecoilRoot } from "recoil";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import MainPage from "./components/MainPage";
+const DashboardPage = React.lazy(() => import("./components/DashboardPage.jsx"));
+const LoginPage = React.lazy(() => import("./components/LoginPage"));
+const PlatformPage = React.lazy(() => import("./components/PlatformPage"));
+const ChattingPage = React.lazy(() => import("./components/ChattingPage.jsx"));
+const MyAttendancePage = React.lazy(() => import("./components/MyAttendancePage.jsx"));
+const ApprovalPage = React.lazy(() => import("./components/approval/ApprovalPage.jsx"));
+const CalendarPage = React.lazy(() => import("./components/CalendarPage.jsx"));
+const AdminDepartmentsPage = React.lazy(() => import("./components/AdminDepartmentsPage.jsx"));
+const SignUp = React.lazy(() => import("./components/SignUp.jsx"));
+
 function App() {
   return (
     <RecoilRoot>
