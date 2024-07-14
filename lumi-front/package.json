@@ -11,7 +11,14 @@
   },
   "dependencies": {
     "@toast-ui/react-editor": "^3.2.3",
+    "@fullcalendar/core": "^6.1.14",
+    "@fullcalendar/daygrid": "^6.1.14",
+    "@fullcalendar/interaction": "^6.1.14",
+    "@fullcalendar/react": "^6.1.14",
+    "@splinetool/react-spline": "^4.0.0",
+    "@splinetool/runtime": "^1.9.0",
     "axios": "^1.7.2",
+    "boring-avatars": "^1.10.2",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.401.0",
@@ -23,10 +30,13 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
     "react-quill": "^2.0.0",
+    "react-modal": "^3.16.1",
     "react-router-dom": "^6.24.1",
     "react-scroll": "^1.9.0",
+    "react-spline": "^1.2.1",
     "react-table": "^7.8.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "spline": "^0.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 기본 react-datepicker 스타일 */
 .react-datepicker {
     @apply bg-white rounded-lg shadow-lg w-[300px] h-[250px];
 }
@@ -15,22 +16,67 @@
 }
 
 .react-datepicker__day-names {
-    @apply text-[15px] ;
+    @apply text-[15px];
 }
 
 .react-datepicker__day-name {
-    @apply text-white ;
+    @apply text-white;
 }
 
 .react-datepicker__week {
-    @apply text-[15px]
+    @apply text-[15px];
 }
 
 .react-datepicker__day--selected,
 .react-datepicker__day--keyboard-selected {
-    @apply bg-[#8583FD] text-white ;
+    @apply bg-[#8583FD] text-white;
 }
 
 .react-datepicker__day--today {
     @apply font-bold text-[#ffffff];
 }
+
+/* dashboard 캘린더 디자인 변경 */
+.dashboard_calendar .react-datepicker__day {
+    pointer-events: none;
+}
+
+.dashboard_calendar .react-datepicker {
+    @apply w-full h-auto bg-[#F8F8FF] shadow-none border-none;
+}
+
+.dashboard_calendar .react-datepicker__header {
+    @apply bg-[#F8F8FF] w-full font-sans border-none shadow-none;
+}
+
+.dashboard_calendar .react-datepicker__current-month {
+    @apply border-none text-gray-800 mb-2;
+}
+
+.dashboard_calendar .react-datepicker__day-names {
+    @apply text-[15px] border-none text-gray-800;
+}
+
+.dashboard_calendar .react-datepicker__day-name {
+    @apply text-white border-none text-gray-800;
+}
+
+.dashboard_calendar .react-datepicker__week {
+    @apply text-[15px];
+}
+
+.dashboard_calendar .react-datepicker__day--selected,
+.dashboard_calendar .react-datepicker__day--keyboard-selected {
+    @apply bg-[#8583FD] text-white;
+}
+
+.dashboard_calendar .react-datepicker__day--today {
+    @apply font-bold text-[#ffffff];
+}
+
+/* 일반 DatePicker에서 오늘 날짜를 선택할 때 글자 검은색으로 뜨게 */
+.today-selected {
+    @apply text-black;
+}
+
+/* todo : 현재 월이 아닌 다른 월의 오늘 날짜가 강조표시돼있음 */

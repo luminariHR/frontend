@@ -5,13 +5,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import { clockIn, clockOut } from "../api/attendanceApi.js";
+import { useRecoilValue } from "recoil";
+import { loggedInUserState } from "../state/userAtom.js";
 
 const DashboardPage = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
   const [clockInNote, setClockInNote] = useState("");
   const [clockOutNote, setClockOutNote] = useState("");
-  // const [isClockedIn, setIsClockedIn] = useState(false);
+  const user = useRecoilValue(loggedInUserState);
 
   useEffect(() => {
     let animationFrameId;
@@ -37,8 +39,9 @@ const DashboardPage = () => {
   const getCurrentDayString = () => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
     const currentDay = days[currentDate.getDay()];
-    const weekOfMonthStr = ["첫","둘",'셋','넷'];
-    const weekOfMonth = weekOfMonthStr[Math.ceil(currentDate.getDate() / 7)-1];
+    const weekOfMonthStr = ["첫", "둘", "셋", "넷"];
+    const weekOfMonth =
+      weekOfMonthStr[Math.ceil(currentDate.getDate() / 7) - 1];
     return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 
@@ -60,16 +63,20 @@ const DashboardPage = () => {
     }
   };
 
+  const dayClassName = (date) => {
+    return "disabled-day";
+  };
   return (
     <SidebarProvider>
       <Layout>
         <div className="flex justify-between pb-3">
-          <div>안녕하세요 맛소금님!</div>
+          <div>{`안녕하세요, ${user.name}님!`}</div>
           <div className="flex flex-col text-xs items-end">
             <div className="font-semibold">{getCurrentDateString()}</div>
             <div>{getCurrentDayString()}</div>
           </div>
         </div>
+
         <section className="flex">
           <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
             <div className="flex h-8 items-center text-xs justify-between">
@@ -136,6 +143,7 @@ const DashboardPage = () => {
             </div>
           </div>
         </section>
+
         <article className="flex">
           {/* 대시 보드 */}
           <div className="flex flex-col">
@@ -146,15 +154,17 @@ const DashboardPage = () => {
           </div>
 
           {/* 월간 일정 캘린더 */}
-          <div className="mt-4 ml-6">
-            <div>Calendar</div>
-            <div>
-              <div className="mt-4">
+          <div className="flex flex-col ml-6">
+            <div className="mt-4">Calendar</div>
+            <div className="mt-2 w-[300px] mr-6 px-5 pt-5 pb-2 bg-[#F8F8FF] shadow flex justify-center">
+              <div className="dashboard_calendar flex justify-center">
                 <DatePicker
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={() => {}}
                   inline
                   dateFormat="yyyy년 MM월 dd일"
+                  calendarClassName={"dashboard_calendar"}
+                  weekDayClassName={dayClassName}
                 />
               </div>
             </div>

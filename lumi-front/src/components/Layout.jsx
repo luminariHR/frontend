@@ -14,6 +14,7 @@ import {
   Users,
   HeartHandshake,
   MessageCircle,
+  Network,
 } from "lucide-react";
 
 const Layout = ({ children }) => {
@@ -31,13 +32,22 @@ const Layout = ({ children }) => {
     >
       <Sidebar>
         <SidebarItem icon={<Home size={20} />} text="홈" to={"/dashboard"} />
-        <SidebarItem icon={<Users size={20} />} text="조직 관리" />
+        <SidebarItem icon={<Network size={20} />} text="조직 관리" />
+        <SidebarItem
+          icon={<Users size={20} />}
+          text="부서 관리"
+          to={"/admin/departments"}
+        />
         <SidebarItem
           icon={<Laptop size={20} />}
           text="근태 관리"
           to={"/attendance"}
         />
-        <SidebarItem icon={<Clock size={20} />} text="일정 관리" />
+        <SidebarItem
+          icon={<Clock size={20} />}
+          text="일정 관리"
+          to={"/calendar"}
+        />
         <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
         <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
         <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />

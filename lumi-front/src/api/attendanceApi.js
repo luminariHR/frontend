@@ -25,11 +25,17 @@ export const clockOut = async (clockOutNote) => {
     throw error.response ? error.response.data : error;
   }
 };
+const formatDate = (date) => {
+  return date.toISOString().split("T")[0];
+};
 
-export const fetchMyAttendance = async (startDate, endDate) => {
+export const fetchMyAttendance = async (
+  startDate = formatDate(new Date()),
+  endDate = formatDate(new Date()),
+) => {
   try {
     const response = await axiosInstance.get(
-      `/attendance/?startDate=${startDate}&endDate=${endDate}`,
+      `/attendance/?start_date=${startDate}&end_date=${endDate}`,
     );
     console.log("내 근퇴 response", response);
     return response.data;

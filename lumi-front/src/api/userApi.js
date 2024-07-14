@@ -5,7 +5,17 @@ export const fetchAllUsers = async () => {
     const response = await axiosInstance.get(`/accounts/`);
     return response.data;
   } catch (error) {
-    console.error("에러러러러러ㅓ러러ㅓ러러러ㅓ러러", error);
+    console.error("에러 발생", error);
     return [];
+  }
+};
+
+export const fetchMyProfile = async () => {
+  try {
+    const response = await axiosInstance.get(`/me/`);
+    return response.data;
+  } catch (error) {
+    console.error("에러 발생", error);
+    return null;
   }
 };
