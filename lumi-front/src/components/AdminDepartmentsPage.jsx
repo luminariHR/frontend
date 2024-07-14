@@ -25,7 +25,7 @@ export default function AdminDepartmentsPage() {
   const [selectedParentDepartment, setSelectedParentDepartment] =
     useState(null);
 
-  const handleSearchButtonClick = async () => {
+  const getDepartments = async () => {
     const data = await fetchDepartments();
     if (data) {
       setDepartments(data.sort((a, b) => a.id - b.id));
@@ -99,7 +99,7 @@ export default function AdminDepartmentsPage() {
       );
       alert(response.message);
       setIsEditModalOpen(false);
-      handleSearchButtonClick();
+      getDepartments();
     } catch (error) {
       console.error("Error updating department:", error);
       alert("부서 수정 중 오류가 발생했습니다.");
@@ -118,25 +118,7 @@ export default function AdminDepartmentsPage() {
         </div>
 
         <div className="">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div>
-                <Input
-                  placeholder={"부서명을 입력하세요."}
-                  value={departmentName}
-                  onChange={(e) => setDepartmentName(e.target.value)}
-                />
-              </div>
-              <div>
-                <Button
-                  text={"검색"}
-                  size={"md"}
-                  variant={"primary"}
-                  onClick={handleSearchButtonClick}
-                />
-              </div>
-            </div>
-          </div>
+          <div className="mb-6 flex items-center justify-between"></div>
 
           <div className="overflow-auto rounded-lg border">
             <Table>
