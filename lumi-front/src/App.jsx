@@ -7,6 +7,7 @@ import LoginPage from "./components/LoginPage";
 import PlatformPage from "./components/PlatformPage";
 import ChattingPage from "./components/ChattingPage.jsx";
 import MyAttendancePage from "./components/MyAttendancePage.jsx";
+import ApprovalPage from "./components/approval/ApprovalPage.jsx";
 import CalendarPage from "./components/CalendarPage.jsx";
 import AdminDepartmentsPage from "./components/AdminDepartmentsPage.jsx";
 import SignUp from "./components/SignUp.jsx";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/attendance" element={<MyAttendancePage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/approval" element={<ApprovalPage />} />
           <Route path="/platform" element={<PlatformPage />} />
           <Route path="/chatting" element={<ChattingPage />} />
           <Route path="/calendar" element={<CalendarPage />} />

@@ -49,7 +49,11 @@ const Layout = ({ children }) => {
           to={"/calendar"}
         />
         <SidebarItem icon={<Calendar size={20} />} text="휴가 관리" />
-        <SidebarItem icon={<Newspaper size={20} />} text="전자 결재" />
+        <SidebarItem
+          icon={<Newspaper size={20} />}
+          text="전자 결재"
+          to={"/approval"}
+        />
         <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
         <SidebarItem icon={<Book size={20} />} text="자료실" />
         <SidebarItem
