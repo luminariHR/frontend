@@ -28,7 +28,7 @@ export default function AdminDepartmentsPage() {
   const handleSearchButtonClick = async () => {
     const data = await fetchDepartments();
     if (data) {
-      setDepartments(data);
+      setDepartments(data.sort((a, b) => a.id - b.id));
     }
   };
 
@@ -53,7 +53,7 @@ export default function AdminDepartmentsPage() {
     const fetchData = async () => {
       const data = await fetchDepartments();
       if (data) {
-        setDepartments(data);
+        setDepartments(data.sort((a, b) => a.id - b.id));
       }
     };
     fetchData();
