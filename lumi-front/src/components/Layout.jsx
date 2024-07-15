@@ -54,7 +54,11 @@ const Layout = ({ children }) => {
           text="전자 결재"
           to={"/approval"}
         />
-        <SidebarItem icon={<HeartHandshake size={20} />} text="멘토링" />
+        <SidebarItem 
+        icon={<HeartHandshake size={20} />} 
+        text="멘토링" 
+        to={"/mentoring"}
+        />
         <SidebarItem icon={<Book size={20} />} text="자료실" />
         <SidebarItem
           icon={<MessageCircle size={20} />}
