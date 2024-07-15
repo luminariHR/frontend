@@ -6,8 +6,11 @@ export const loggedInUserState = atom({
   default: selector({
     key: "loggedInUserState/Default",
     get: async () => {
-      const me = await fetchMyProfile();
-      return me;
+      if (localStorage.getItem("access_token")) {
+        const me = await fetchMyProfile();
+        return me;
+      }
+      return null;
     },
   }),
 });
