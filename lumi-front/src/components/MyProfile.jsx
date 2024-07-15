@@ -198,7 +198,7 @@ const MyProfile = () => {
                         <div className="">
                             <h2 className="flex justify-start text-2xl font-semibold ml-4 text-[#373844]">{profileData.name}</h2>
                             <div className="flex justify-center ">
-                            <button className="flex justify-center items-center bg-[#5d5bd4] shadow-lg w-4/5 h-[30px] mt-4
+                            <button className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4
                             cursor-pointer font-semibold text-white">
                                 프로필 수정하기
                             </button>
