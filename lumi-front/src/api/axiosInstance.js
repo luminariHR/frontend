@@ -23,15 +23,16 @@ axiosInstance.interceptors.request.use(
   },
 );
 
-// 401 에러 뜰 때 로그인페이지로 redirect
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;
