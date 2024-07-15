@@ -105,6 +105,7 @@ function LoginPage() {
           </div>
           <div className="mt-8 flex flex-col gap-y-4">
             <button
+              type="button"
               className="active:duration-75 hover:scale-[1.01] ease-in-out transition-all sacle-[.98]
             py-3 rounded-[100px] bg-[#ffffff] text-black text-lg font-bold px-[100px] w-[350px] h-12"
               onClick={handleLogin}
