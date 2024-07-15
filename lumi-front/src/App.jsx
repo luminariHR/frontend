@@ -2,15 +2,26 @@ import React, { Suspense } from "react";
 import { RecoilRoot } from "recoil";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./components/MainPage";
-const DashboardPage = React.lazy(() => import("./components/DashboardPage.jsx"));
+const DashboardPage = React.lazy(
+  () => import("./components/DashboardPage.jsx"),
+);
 const LoginPage = React.lazy(() => import("./components/LoginPage"));
 const PlatformPage = React.lazy(() => import("./components/PlatformPage"));
 const ChattingPage = React.lazy(() => import("./components/ChattingPage.jsx"));
-const MyAttendancePage = React.lazy(() => import("./components/MyAttendancePage.jsx"));
-const ApprovalPage = React.lazy(() => import("./components/approval/ApprovalPage.jsx"));
+const MyAttendancePage = React.lazy(
+  () => import("./components/MyAttendancePage.jsx"),
+);
+const ApprovalPage = React.lazy(
+  () => import("./components/approval/ApprovalPage.jsx"),
+);
 const CalendarPage = React.lazy(() => import("./components/CalendarPage.jsx"));
-const AdminDepartmentsPage = React.lazy(() => import("./components/AdminDepartmentsPage.jsx"));
+const AdminDepartmentsPage = React.lazy(
+  () => import("./components/AdminDepartmentsPage.jsx"),
+);
 const SignUp = React.lazy(() => import("./components/SignUp.jsx"));
+const AdminRecruitmentPage = React.lazy(
+  () => import("./components/AdminRecruitmentPage.jsx"),
+);
 const MentoringPage = React.lazy(() => import("./components/MentoringPage.jsx"));
 const MyProfile = React.lazy(() => import("./components/MyProfile.jsx"));
 
@@ -75,6 +86,14 @@ function App() {
               <MyProfile/>
             </Suspense>
           } />          
+            <Route
+            path="/admin/recruitment"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminRecruitmentPage />
+              </Suspense>
+            }
+          />
         </Routes>
       </Router>
     </RecoilRoot>
