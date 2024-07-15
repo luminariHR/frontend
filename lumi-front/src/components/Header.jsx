@@ -33,7 +33,7 @@ const Header = () => {
         <div className="flex gap-4 flex-1 justify-end">
           <ul className="flex gap-4 items-center">
             <li>
-              <Link to="/"><Settings className="h-5"/></Link>
+              <Link to={"/myprofile"}><Settings className="h-5"/></Link>
             </li>
             <li>
               <Link to="/"><Bell className="h-5"/></Link>
