@@ -11,7 +11,12 @@ import {
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import "react-datepicker/dist/react-datepicker.css";
-import { fetchDepartments, updateDepartment } from "../api/departmentApi.js";
+import {
+  fetchDepartments,
+  updateDepartment,
+  createDepartment,
+  getLastDepartmentId,
+} from "../api/departmentApi.js";
 import Button from "./ui/button.jsx";
 import { CustomModal2 } from "./ui/modal.jsx";
 import CustomSelectButton from "./ui/select.jsx";
@@ -20,15 +25,17 @@ export default function AdminDepartmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
-  const [departmentName, setDepartmentName] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedParentDepartment, setSelectedParentDepartment] =
     useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newDepartmentName, setNewDepartmentName] = useState("");
+  const [newDepartmentAddress, setNewDepartmentAddress] = useState("");
 
-  const handleSearchButtonClick = async () => {
+  const getDepartments = async () => {
     const data = await fetchDepartments();
     if (data) {
-      setDepartments(data);
+      setDepartments(data.sort((a, b) => a.id - b.id));
     }
   };
 
@@ -53,7 +60,7 @@ export default function AdminDepartmentsPage() {
     const fetchData = async () => {
       const data = await fetchDepartments();
       if (data) {
-        setDepartments(data);
+        setDepartments(data.sort((a, b) => a.id - b.id));
       }
     };
     fetchData();
@@ -99,10 +106,31 @@ export default function AdminDepartmentsPage() {
       );
       alert(response.message);
       setIsEditModalOpen(false);
-      handleSearchButtonClick();
+      getDepartments();
     } catch (error) {
       console.error("Error updating department:", error);
       alert("부서 수정 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleCreateDepartment = async () => {
+    const newDepartmentData = {
+      department_id: getLastDepartmentId(departments),
+      name: newDepartmentName,
+      address: newDepartmentAddress,
+      parent_department_id: selectedParentDepartment
+        ? selectedParentDepartment.department_id
+        : null,
+    };
+
+    try {
+      const response = await createDepartment(newDepartmentData);
+      alert(response.message);
+      setIsCreateModalOpen(false);
+      getDepartments();
+    } catch (error) {
+      console.error("Error creating department:", error);
+      alert("부서 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -118,24 +146,14 @@ export default function AdminDepartmentsPage() {
         </div>
 
         <div className="">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div>
-                <Input
-                  placeholder={"부서명을 입력하세요."}
-                  value={departmentName}
-                  onChange={(e) => setDepartmentName(e.target.value)}
-                />
-              </div>
-              <div>
-                <Button
-                  text={"검색"}
-                  size={"md"}
-                  variant={"primary"}
-                  onClick={handleSearchButtonClick}
-                />
-              </div>
-            </div>
+          <div className="mb-3 flex items-center justify-end">
+            <Button
+              text={"부서 생성하기"}
+              variant={"solid"}
+              onClick={() => {
+                setIsCreateModalOpen(true);
+              }}
+            />
           </div>
 
           <div className="overflow-auto rounded-lg border">
@@ -254,6 +272,57 @@ export default function AdminDepartmentsPage() {
             text={"저장하기"}
             variant={"solid"}
             onClick={handleSaveEdit}
+          />
+        </div>
+      </CustomModal2>
+
+      {/* 신규 부서 생성 모달 */}
+      <CustomModal2
+        isOpen={isCreateModalOpen}
+        closeModal={() => setIsCreateModalOpen(false)}
+        title="신규 부서 생성"
+      >
+        <div className="flex flex-col gap-5">
+          <div>
+            <div className="mb-2">부서명</div>
+            <Input
+              addClass="w-full text-sm"
+              value={newDepartmentName}
+              onChange={(e) => setNewDepartmentName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <div className="mb-2">상위부서</div>
+            <CustomSelectButton
+              options={departments}
+              selectedOption={selectedParentDepartment}
+              onSelect={setSelectedParentDepartment}
+              defaultText={"상위부서를 선택하세요."}
+            />
+          </div>
+          <div>
+            <div className="mb-2">주소</div>
+            <Input
+              addClass="w-full text-sm"
+              value={newDepartmentAddress}
+              onChange={(e) => setNewDepartmentAddress(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex justify-center pt-8">
+          <Button
+            addClass="mr-2"
+            text={"취소"}
+            variant={"default"}
+            onClick={() => {
+              setIsCreateModalOpen(false);
+            }}
+          />
+          <Button
+            text={"저장하기"}
+            variant={"solid"}
+            onClick={handleCreateDepartment}
           />
         </div>
       </CustomModal2>

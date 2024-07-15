@@ -28,6 +28,7 @@ export const fetchDepartmentMembers = async (departmentId) => {
   }
 };
 
+// 관리자용
 export const updateDepartment = async (departmentId, updatedData) => {
   try {
     const response = await axiosInstance.patch(
@@ -39,4 +40,26 @@ export const updateDepartment = async (departmentId, updatedData) => {
     console.error("Error updating department:", error);
     throw error;
   }
+};
+
+export const createDepartment = async (newDepartmentData) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/v1/admin/departments/`,
+      newDepartmentData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating department:", error);
+    throw error;
+  }
+};
+
+// 현재 있는 마지막 department_id+1 한 값 return
+export const getLastDepartmentId = (departments) => {
+  const departmentIds = departments.map((dept) =>
+    parseInt(dept.department_id.split("-")[1], 10),
+  );
+  const maxId = Math.max(...departmentIds);
+  return `DEPT-${maxId + 1}`;
 };
