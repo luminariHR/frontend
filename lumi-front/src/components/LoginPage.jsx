@@ -61,8 +61,16 @@ function LoginPage() {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleLogin();
+    }
+  };
+
   return (
     <>
+      <form onKeyDown={handleKeyDown}>
       <div
         className="h-screen w-full bg-cover bg-center flex items-center justify-center "
         style={{ backgroundImage: `url(${loginbackground})` }}
@@ -117,6 +125,7 @@ function LoginPage() {
           </div>
         </div>
       </div>
+      </form>
     </>
   );
 }
