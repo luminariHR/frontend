@@ -80,3 +80,12 @@
 }
 
 /* todo : 현재 월이 아닌 다른 월의 오늘 날짜가 강조표시돼있음 */
+
+
+.truncate-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
