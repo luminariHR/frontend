@@ -15,6 +15,7 @@ import {
   HeartHandshake,
   MessageCircle,
   Network,
+  FileText,
 } from "lucide-react";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
@@ -106,6 +107,11 @@ const Layout = ({ children }) => {
               icon={<HeartHandshake size={20} />}
               text="멘토링 관리"
               to={"/admin/mentoring"}
+            />
+            <SidebarItem
+              icon={<FileText size={20} />}
+              text="채용 관리"
+              to={"/admin/recruitment"}
             />
             <SidebarItem
               icon={<MessageCircle size={20} />}
