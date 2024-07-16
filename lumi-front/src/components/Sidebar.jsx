@@ -55,10 +55,11 @@ const Sidebar = ({ children }) => {
             expanded ? "p-3" : "justify-center items-center p-3"
           }`}
         >
+          <Link to={'/myprofile'}>
           {user["profile_image"] ? (
             <img
               src={`${user["profile_image"]}`}
-              className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"}`}
+              className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"} cursor-pointer`}
             />
           ) : (
             <Avatar
@@ -67,6 +68,7 @@ const Sidebar = ({ children }) => {
               className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"}`}
             />
           )}
+          </Link>
           <div
             className={`flex justify-between items-center overflow-hidden transition-all ${
               expanded ? "w-32 ml-3" : "w-0"

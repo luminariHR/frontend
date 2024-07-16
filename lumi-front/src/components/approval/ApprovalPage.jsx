@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "../ui/input.jsx";
+import { useNavigate } from "react-router-dom";
 import {
   Table,
   TableHeader,
@@ -10,210 +10,31 @@ import {
 } from "../ui/table.jsx";
 import Layout from "../Layout.jsx";
 import { SidebarProvider } from "../Sidebar.jsx";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CalendarDays } from "lucide-react";
 import Button from "../ui/button.jsx";
-import { fetchSentRequest } from "../../api/approvalApi.js";
+import {
+  fetchReceivedRequest,
+  fetchReferencedRequest,
+  fetchSentRequest,
+} from "../../api/approvalApi.js";
 import { StatusPill } from "../ui/pill.jsx";
 import { ApproveRequestModal } from "./ApprovalRequest";
-
-// TODO: 데이터 구현 후 삭제
-const fakeData = [
-  {
-    id: 1,
-    created_at: "2024-07-10T23:43:07.673871",
-    updated_at: "2024-07-10T23:55:18.537660",
-    title: "테스트 결재",
-    content: "테스트 결재",
-    drafter: {
-      id: 3,
-      name: "변시영",
-    },
-    department: {
-      id: 3,
-      name: "개발팀",
-    },
-    status: "approved",
-    review_steps: [
-      {
-        id: 1,
-        created_at: "2024-07-10T23:43:07.676413",
-        updated_at: "2024-07-10T23:52:09.159758",
-        status: "approved",
-        reviewer: {
-          id: 5,
-          name: "김철수",
-        },
-        department: {
-          id: 14,
-          name: "AI/데이터팀",
-        },
-      },
-      {
-        id: 2,
-        created_at: "2024-07-10T23:43:07.678871",
-        updated_at: "2024-07-10T23:55:18.534025",
-        status: "approved",
-        reviewer: {
-          id: 2,
-          name: "루미나리",
-        },
-        department: {
-          id: 1,
-          name: "HQ",
-        },
-      },
-    ],
-    references: [
-      {
-        id: 1,
-        created_at: "2024-07-10T23:43:07.688437",
-        updated_at: "2024-07-10T23:43:07.688478",
-        referrer: {
-          id: 3,
-          name: "변시영",
-        },
-        department: {
-          id: 3,
-          name: "개발팀",
-        },
-      },
-    ],
-  },
-  {
-    id: 2,
-    created_at: "2024-07-10T23:43:07.673871",
-    updated_at: "2024-07-10T23:55:18.537660",
-    title: "테스트 결재",
-    content: "테스트 결재",
-    drafter: {
-      id: 3,
-      name: "변시영",
-    },
-    department: {
-      id: 3,
-      name: "개발팀",
-    },
-    status: "pending",
-    review_steps: [
-      {
-        id: 1,
-        created_at: "2024-07-10T23:43:07.676413",
-        updated_at: "2024-07-10T23:52:09.159758",
-        status: "approved",
-        reviewer: {
-          id: 5,
-          name: "김철수",
-        },
-        department: {
-          id: 14,
-          name: "AI/데이터팀",
-        },
-      },
-      {
-        id: 2,
-        created_at: "2024-07-10T23:43:07.678871",
-        updated_at: "2024-07-10T23:55:18.534025",
-        status: "approved",
-        reviewer: {
-          id: 2,
-          name: "루미나리",
-        },
-        department: {
-          id: 1,
-          name: "HQ",
-        },
-      },
-    ],
-    references: [
-      {
-        id: 1,
-        created_at: "2024-07-10T23:43:07.688437",
-        updated_at: "2024-07-10T23:43:07.688478",
-        referrer: {
-          id: 3,
-          name: "변시영",
-        },
-        department: {
-          id: 3,
-          name: "개발팀",
-        },
-      },
-    ],
-  },
-  {
-    id: 3,
-    created_at: "2024-07-10T23:43:07.673871",
-    updated_at: "2024-07-10T23:55:18.537660",
-    title: "테스트 결재",
-    content: "테스트 결재",
-    drafter: {
-      id: 3,
-      name: "변시영",
-    },
-    department: {
-      id: 3,
-      name: "개발팀",
-    },
-    status: "rejected",
-    review_steps: [
-      {
-        id: 1,
-        created_at: "2024-07-10T23:43:07.676413",
-        updated_at: "2024-07-10T23:52:09.159758",
-        status: "approved",
-        reviewer: {
-          id: 5,
-          name: "김철수",
-        },
-        department: {
-          id: 14,
-          name: "AI/데이터팀",
-        },
-      },
-      {
-        id: 2,
-        created_at: "2024-07-10T23:43:07.678871",
-        updated_at: "2024-07-10T23:55:18.534025",
-        status: "approved",
-        reviewer: {
-          id: 2,
-          name: "루미나리",
-        },
-        department: {
-          id: 1,
-          name: "HQ",
-        },
-      },
-    ],
-    references: [
-      {
-        id: 1,
-        created_at: "2024-07-10T23:43:07.688437",
-        updated_at: "2024-07-10T23:43:07.688478",
-        referrer: {
-          id: 3,
-          name: "변시영",
-        },
-        department: {
-          id: 3,
-          name: "개발팀",
-        },
-      },
-    ],
-  },
-];
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function ApprovalPage() {
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [approval, setApproval] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("sent");
+  const [activeTab, setActiveTab] = useState("received");
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const handleRowClick = (id) => {
+    navigate(`/approval/details/${id}`);
+  };
 
   const tabs = [
-    { id: "sent", label: "보낸 결재함" },
     { id: "received", label: "받은 결재함" },
+    { id: "sent", label: "보낸 결재함" },
     { id: "referenced", label: "참조 문서함" },
   ];
 
@@ -246,26 +67,22 @@ export default function ApprovalPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchSentRequest();
-      if (data) {
+      setApproval([]);
+      let data;
+      if (activeTab === "sent") {
+        data = await fetchSentRequest();
+      } else if (activeTab == "received") {
+        data = await fetchReceivedRequest();
+      } else {
+        data = await fetchReferencedRequest();
+      }
+      if (data.length >= 0) {
         setApproval(data);
       }
+      setLoading(false);
     };
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    let animationFrameId;
-
-    const updateCurrentDate = () => {
-      setCurrentDate(new Date());
-      animationFrameId = requestAnimationFrame(updateCurrentDate);
-    };
-
-    animationFrameId = requestAnimationFrame(updateCurrentDate);
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+  }, [activeTab]);
 
   return (
     <SidebarProvider>
@@ -279,7 +96,10 @@ export default function ApprovalPage() {
               {tabs.map((tab) => (
                 <div
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => {
+                    setLoading(true);
+                    setActiveTab(tab.id);
+                  }}
                   className={`cursor-pointer px-4 py-2 rounded-full transition duration-300 ease-in-out ${
                     activeTab === tab.id
                       ? "bg-[#5d5bd4] text-white shadow-md font-medium"
@@ -326,8 +146,22 @@ export default function ApprovalPage() {
           </div>
 
           <div className="transition duration-300 ease-in-out">
-            {activeTab === "sent" && (
-              <div className="overflow-auto rounded-lg border">
+            <div className="overflow-auto rounded-lg">
+              {loading ? (
+                <div
+                  className={
+                    "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                  }
+                >
+                  <ClipLoader
+                    color={"#5d5bd4"}
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                </div>
+              ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -341,7 +175,11 @@ export default function ApprovalPage() {
                   </TableHeader>
                   <TableBody>
                     {approval.map((item) => (
-                      <TableRow key={item.id}>
+                      <TableRow
+                        key={item.id}
+                        addClass={"hover:bg-gray-100 cursor-pointer"}
+                        onClick={() => handleRowClick(item.id)}
+                      >
                         <TableCell>{getStatusPill(item.status)}</TableCell>
                         <TableCell>{item.title}</TableCell>
                         <TableCell>{item.drafter.name}</TableCell>
@@ -364,10 +202,8 @@ export default function ApprovalPage() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
-            )}
-            {activeTab === "received" && <div>TODO: 받은 문서함</div>}
-            {activeTab === "referenced" && <div>TODO: 참조 문서함</div>}
+              )}
+            </div>
           </div>
         </div>
       </Layout>

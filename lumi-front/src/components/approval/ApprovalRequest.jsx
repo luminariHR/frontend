@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import Button from "../ui/button.jsx";
-import { TextEditor } from "../ui/editor.jsx";
-import { ApprovalSteps } from "./ApprovalSteps.jsx";
-import { fetchSentRequest, requestReview } from "../../api/approvalApi.js";
+import { CircleX } from "lucide-react";
+import Button from "../ui/button";
+import { useDropzone } from "react-dropzone";
+import { TextEditor } from "../ui/editor";
+import { ApprovalSteps } from "./ApprovalSteps";
+import {
+  fetchSentRequest,
+  previewReceipt,
+  requestReview,
+} from "../../api/approvalApi.js";
 
 export function ApproveRequestModal({ onClose, onRequestSubmit }) {
   const [isSidenavOpen, setIsSidenavOpen] = useState(true);
@@ -10,6 +16,40 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
   const [editorValue, setEditorValue] = useState("");
   const [reviewers, setReviewers] = useState([]);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showOCRHelper, setShowOCRHelper] = useState(true);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const onDrop = (acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      setSelectedFile(file);
+      setShowOCRHelper(true);
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    maxFiles: 1,
+  });
+
+  const handleOCRClick = async () => {
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    const response = await previewReceipt(formData);
+    if (response) {
+      const template = `<p>다음과 같이 경비 처리를 위한 결재를 요청드립니다.</p><br/><ul>
+    <li>판매처: ${response.preview["store_name"]}</li>
+    <li>사업자 번호: ${response.preview["store_business_number"]}</li>
+    <li>매출일: ${response.preview["transaction_time"]}</li>
+    <li>카드 정보:</li>
+    <li class="ql-indent-1">카드 회사: ${response.preview["card_info"]["company"]}</li>
+    <li class="ql-indent-1">카드 번호: ${response.preview["card_info"]["number"]}</li>
+    <li>판매금액: ${response.preview["total_price"]}</li>
+</ul><br/><p>위와 같은 내용으로 경비 처리를 요청드리오니, 검토 후 결재 부탁드립니다.</p><br/><p>감사합니다.</p>`;
+      setEditorValue(editorValue + template);
+    }
+    setShowOCRHelper(false);
+  };
 
   const toggleSidenav = () => setIsSidenavOpen(!isSidenavOpen);
 
@@ -18,13 +58,14 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
   };
 
   const handleSubmit = async () => {
-    const data = {
-      title,
-      content: editorValue,
-      referrer_ids: [],
-      reviewer_ids: reviewers.map((item) => item.id),
-    };
-    await requestReview(data);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", editorValue);
+    reviewers.map((item) => formData.append("reviewer_ids", item.id));
+    if (selectedFile) {
+      formData.append("file", selectedFile);
+    }
+    await requestReview(formData);
     const refreshedSentRequest = await fetchSentRequest();
     if (refreshedSentRequest) {
       onRequestSubmit(refreshedSentRequest);
@@ -42,11 +83,11 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
       <div
         className={`relative flex bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ${
           isSidenavOpen ? "w-11/12 max-w-6xl" : "w-11/12 max-w-4xl"
-        } h-3/4`}
+        } h-[90%]`}
       >
         <div className="flex flex-row w-full h-full">
-          <div className="flex-grow p-8 overflow-auto">
-            <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between">
+          <div className="flex-grow p-8 overflow-auto ">
+            <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between hide-scrollbar">
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold">결재 기안하기</h2>
                 <button
@@ -68,6 +109,90 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
                     className="shadow appearance-none border rounded w-full py-2 px-3 mt-4 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
+                </div>
+              </div>
+              <div>
+                <h3 className="text-l font-semibold">파일 첨부</h3>
+                <div className={"bg-gray-100 p-5 my-5 rounded-lg"}>
+                  <div className="max-w-md mx-auto">
+                    {!selectedFile && (
+                      <div
+                        {...getRootProps()}
+                        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer ${
+                          isDragActive
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-300 bg-gray-50"
+                        }`}
+                      >
+                        <input {...getInputProps()} />
+                        {isDragActive ? (
+                          <p className="text-blue-500">
+                            파일을 여기에 드랍해주세요.
+                          </p>
+                        ) : (
+                          <p className="text-gray-500">
+                            Drag & drop a file here, or click to select a file
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    {selectedFile && (
+                      <div>
+                        <div className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow-md">
+                          <div className="flex-shrink-0">
+                            <div className="w-12 h-12 bg-orange-200 rounded-lg flex items-center justify-center">
+                              <img
+                                src={`https://img.icons8.com/color/48/000000/${selectedFile.type === "image/jpeg" ? "image/jpg" : selectedFile.type}.png`}
+                                alt={`doc`}
+                                className="w-6 h-6"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {selectedFile.name}
+                            </p>
+                          </div>
+                          <div
+                            className={"cursor-pointer"}
+                            onClick={() => setSelectedFile(null)}
+                          >
+                            <CircleX />
+                          </div>
+                        </div>
+                        {[
+                          "image/jpeg",
+                          "image/png",
+                          "image/jpg",
+                          "image/tiff",
+                        ].includes(selectedFile.type) &&
+                          showOCRHelper && (
+                            <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
+                              <div
+                                className={"flex items-center justify-between"}
+                              >
+                                <p className="text-gray-700">
+                                  혹시 영수증을 첨부하셨나요?
+                                </p>
+                                <div
+                                  className={"cursor-pointer"}
+                                  onClick={() => setShowOCRHelper(false)}
+                                >
+                                  <CircleX />
+                                </div>
+                              </div>
+                              <button
+                                onClick={handleOCRClick}
+                                className="mt-2 w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                              >
+                                OCR 분석하기
+                              </button>
+                            </div>
+                          )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div>

@@ -75,7 +75,7 @@ export const Button = ({
 
 Button.propTypes = {
   size: PropTypes.oneOf(["sm", "md", "lg"]),
-  variant: PropTypes.oneOf(["default", "primary", "solid"]),
+  variant: PropTypes.oneOf(["default", "primary", "solid", "teams"]),
   block: PropTypes.bool,
   text: PropTypes.string.isRequired,
   onClick: PropTypes.func,

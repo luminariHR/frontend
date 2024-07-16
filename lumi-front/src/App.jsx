@@ -15,6 +15,9 @@ const MyAttendancePage = React.lazy(
 const ApprovalPage = React.lazy(
   () => import("./components/approval/ApprovalPage.jsx"),
 );
+const ApprovalDetails = React.lazy(
+  () => import("./components/approval/ApprovalDetails.jsx"),
+);
 const CalendarPage = React.lazy(() => import("./components/CalendarPage.jsx"));
 const AdminDepartmentsPage = React.lazy(
   () => import("./components/AdminDepartmentsPage.jsx"),
@@ -43,6 +46,14 @@ function App() {
             }
           />
           <Route
+            path="approval/details/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ApprovalDetails />
+              </Suspense>
+            }
+          />
+          <Route
             path="/attendance"
             element={
               <Suspense fallback={<div>Loading...</div>}>
@@ -59,6 +70,7 @@ function App() {
             }
           />
           <Route
+            exact
             path="/approval"
             element={
               <Suspense fallback={<div>Loading...</div>}>
