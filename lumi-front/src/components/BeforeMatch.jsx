@@ -70,8 +70,21 @@ const BeforeMatch = () => {
                             location :'서울',
                             mbti : 'ENFJ',
                             joined : '2000',
-                            hobby:'골프',
+                            hobby:['골프'],
                             email:'ccccc@gmail.com'
+                        },
+                        {
+                            profile_img:"https://search.pstatic.net/common?type=n&size=234x312&quality=100&direct=true&src=https%3A%2F%2Fcsearch-phinf.pstatic.net%2F20240306_192%2F170968580104768V15_JPEG%2F60_main_image_new_1709685801019.jpg",
+                            mentor_name: "홍수철 멘토",
+                            ID: 8,
+                            recommendation_reason: "홍수철 멘토님은 근속 연수가 15년으로 많은 경험을 가지고 계시며, 멘티님께 다양한 경력 개발 조언을 제공할 수 있습니다. ENFJ 성격은 사교적이고 리더십이 뛰어나며, 멘티님의 성격과도 잘 맞습니다.",
+                            score: 5.0,
+                            score_explanation: "주된 관심사가 다소 차이가 있으나, 경험 많은 멘토로서의 역할을 충분히 해낼 수 있습니다.",
+                            location :'시흥',
+                            mbti : 'ENNN',
+                            joined : '3000',
+                            hobby:'낙타',
+                            email:'ddddd@gmail.com'
                         }
                     ]
                 };
@@ -123,7 +136,7 @@ const BeforeMatch = () => {
                         {mentorRecommendations.map((mentor, index) => (
                             <div 
                                 key={mentor.ID} 
-                                className='border bg-white rounded-3xl w-1/3 h-[350px] mx-8 flex flex-col items-center'
+                                className='border bg-white rounded-3xl w-1/4 h-[350px] mx-8 flex flex-col items-center'
                                 onMouseEnter={() => handleMouseEnter(mentor)}
                                 onMouseLeave={handleMouseLeave}
                             >
@@ -135,26 +148,26 @@ const BeforeMatch = () => {
                                 <div className="font-semibold text-2xl">{mentor.mentor_name}</div>
                                 <div className='font-semibold text-gray-400 text-sm pt-1'>{mentor.email}</div>
                                 <div className='mt-4 text-lg font-bold'>⭐ {mentor.score}</div>
-                                <div className='flex flex-row pt-4 '>
+                                <div className='flex flex-row pt-4 whitespace-nowrap'>
                                     <div className='flex flex-col items-center px-4'>
-                                        <p className='font-bold text-2xl pb-4'>{mentor.location}</p>
+                                        <p className='font-bold text-lg pb-1'>{mentor.location}</p>
                                         <p className='text-gray-500'>지역</p>
                                     </div>
                                     <div className='flex flex-col items-center px-4'>
-                                        <p className='font-bold text-2xl pb-4'>{mentor.hobby}</p>
+                                        <p className='font-bold text-lg pb-1'>{mentor.hobby}</p>
                                         <p className='text-gray-500'>취미</p>
                                     </div>
                                     <div className='flex flex-col items-center px-4'>
-                                        <p className='font-bold text-2xl pb-4'>{mentor.mbti}</p>
+                                        <p className='font-bold text-lg pb-1'>{mentor.mbti}</p>
                                         <p className='text-gray-500'>MBTI</p>
                                     </div>
                                     <div className='flex flex-col items-center px-4'>
-                                        <p className='font-bold text-2xl pb-4'>{mentor.joined}</p>
+                                        <p className='font-bold text-lg pb-1'>{mentor.joined}</p>
                                         <p className='text-gray-500'>입사</p>
                                     </div>
                                 </div>
                                 <button
-                                    className="mt-10 px-4 py-2 
+                                    className="mt-20 px-4 py-2 
                                     bg-[#dcdceb] font-bold text-black rounded-full hover:bg-[#6f6ed3]"
                                     onClick={() => handleSelectMentor(mentor)}
                                 >
