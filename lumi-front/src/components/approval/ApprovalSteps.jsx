@@ -4,7 +4,7 @@ import { UserAvatar } from "../ui/avatar.jsx";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../../state/userAtom.js";
 
-export const ApprovalSteps = ({ data, setData }) => {
+export const ApprovalSteps = ({ data, setData, isEditable = true }) => {
   const [isAddApprovalModalOpen, setIsAddApprovalModalOpen] = useState(false);
   const [selectedReviewer, setSelectedReviewer] = useState(null);
   const user = useRecoilValue(loggedInUserState);
@@ -48,37 +48,50 @@ export const ApprovalSteps = ({ data, setData }) => {
         아래 순서대로 결재가 요청됩니다.
       </h3>
       <div className="relative mt-4">
-        {data.map((item, index) => (
-          <div className="flex items-center mb-6 relative" key={index}>
-            <div className="bg-gray-200 flex-shrink-0 overflow-hidden rounded-full mr-4 w-12 h-12">
-              <UserAvatar
-                userProfileImg={item["profile_image"]}
-                userName={item.name}
-              />
-            </div>
-            <div className="flex-grow">
-              <div className="font-bold">{item.name}</div>
-              <div className="text-gray-600">{item.department}</div>
-              {item.date && (
-                <div className="text-gray-400 text-sm">{item.date}</div>
+        {data.map((item, index) => {
+          return (
+            <div className="flex items-center mb-6 relative" key={index}>
+              <div className="bg-gray-200 flex-shrink-0 overflow-hidden rounded-full mr-4 w-12 h-12">
+                <UserAvatar
+                  userProfileImg={item["profile_image"]}
+                  userName={item.name}
+                />
+              </div>
+              <div className="flex-grow">
+                <div className="font-bold">{item.name}</div>
+                <div className="text-gray-600">{item.department}</div>
+                {item.date && (
+                  <div className="text-gray-400 text-sm">{item.date}</div>
+                )}
+              </div>
+              {isEditable && (
+                <div
+                  onClick={() => removeItem(item.id)}
+                  className={`cursor-pointer flex-shrink-0 w-16 text-center py-1 rounded-full text-sm font-bold bg-red-500 text-white`}
+                >
+                  {"삭제"}
+                </div>
+              )}
+              {!isEditable && (
+                <div
+                  className={`flex-shrink-0 w-16 text-center py-1 rounded-full text-sm font-bold bg-red-500 text-white`}
+                >
+                  {item.status}
+                </div>
               )}
             </div>
-            <div
-              onClick={() => removeItem(item.id)}
-              className={`cursor-pointer flex-shrink-0 w-16 text-center py-1 rounded-full text-sm font-bold bg-red-500 text-white`}
+          );
+        })}
+        {isEditable && (
+          <div className="flex items-center mb-6 relative">
+            <button
+              onClick={() => setIsAddApprovalModalOpen(true)}
+              className="bg-[#5d5bd4] hover:bg-[#5553c1] text-white font-bold py-2 px-4 rounded-full flex items-center justify-center w-12 h-12"
             >
-              {"삭제"}
-            </div>
+              +
+            </button>
           </div>
-        ))}
-        <div className="flex items-center mb-6 relative">
-          <button
-            onClick={() => setIsAddApprovalModalOpen(true)}
-            className="bg-[#5d5bd4] hover:bg-[#5553c1] text-white font-bold py-2 px-4 rounded-full flex items-center justify-center w-12 h-12"
-          >
-            +
-          </button>
-        </div>
+        )}
       </div>
     </div>
   );
