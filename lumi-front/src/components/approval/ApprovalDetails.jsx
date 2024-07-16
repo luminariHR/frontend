@@ -61,7 +61,7 @@ export default function ApprovalDetails() {
         const reviewersData = await Promise.all(reviewerPromises);
         setIsReviewer(
           reviewersData.some(
-            (obj) => obj.id === user.id && obj.status === "pending",
+            (obj) => obj.id === user.id && obj.status === "검토중",
           ),
         );
         setReviewers(reviewersData);
