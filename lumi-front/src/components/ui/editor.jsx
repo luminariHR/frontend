@@ -21,7 +21,7 @@ const formats = [
   "h1",
 ];
 
-export const TextEditor = ({ value, onChange }) => {
+export const TextEditor = ({ value, onChange, ...props }) => {
   const quillRef = useRef(null);
 
   return (
@@ -33,6 +33,7 @@ export const TextEditor = ({ value, onChange }) => {
         value={value}
         onChange={onChange}
         placeholder="내용을 입력하세요."
+        {...props}
       />
     </div>
   );
