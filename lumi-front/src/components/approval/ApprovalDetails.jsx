@@ -69,7 +69,7 @@ export default function ApprovalDetails() {
     };
 
     fetchDetail();
-  }, [id]);
+  }, [id, detail]);
 
   const handleBackClick = () => {
     navigate(-1);
@@ -164,14 +164,18 @@ export default function ApprovalDetails() {
                         <div className={"mx-1"}>
                           <Button
                             text={"반려"}
-                            onClick={() => setStatus("rejected")}
+                            onClick={() => {
+                              setStatus("rejected");
+                            }}
                           />
                         </div>
                         <div className={"mx-1"}>
                           <Button
                             variant="teams"
                             text={"승인"}
-                            onClick={() => setStatus("approved")}
+                            onClick={() => {
+                              setStatus("approved");
+                            }}
                           />
                         </div>
                       </div>
