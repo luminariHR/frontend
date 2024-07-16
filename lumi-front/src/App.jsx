@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { RecoilRoot } from "recoil";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./components/MainPage";
+import AdminAnalysisPage from "./components/AdminAnalysisPage.jsx";
 const DashboardPage = React.lazy(
   () => import("./components/DashboardPage.jsx"),
 );
@@ -138,6 +139,14 @@ function App() {
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AdminRecruitmentPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/recruitment/analysis/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminAnalysisPage />
               </Suspense>
             }
           />
