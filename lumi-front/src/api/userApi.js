@@ -10,6 +10,16 @@ export const fetchAllUsers = async () => {
   }
 };
 
+export const fetchOneUser = async (userId) => {
+  try {
+    const response = await axiosInstance.get(`/accounts/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error("에러 발생", error);
+    return null;
+  }
+};
+
 export const fetchMyProfile = async () => {
   try {
     const response = await axiosInstance.get(`/me/`);
