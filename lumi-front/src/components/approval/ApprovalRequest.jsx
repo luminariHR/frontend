@@ -62,7 +62,9 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
     formData.append("title", title);
     formData.append("content", editorValue);
     reviewers.map((item) => formData.append("reviewer_ids", item.id));
-    formData.append("file", selectedFile);
+    if (selectedFile) {
+      formData.append("file", selectedFile);
+    }
     await requestReview(formData);
     const refreshedSentRequest = await fetchSentRequest();
     if (refreshedSentRequest) {
