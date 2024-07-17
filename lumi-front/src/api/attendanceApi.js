@@ -1,4 +1,5 @@
 import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 // baseURL: "https://dev.luminari.kro.kr/api/v1"
 
@@ -41,6 +42,18 @@ export const fetchMyAttendance = async (
     return response.data;
   } catch (error) {
     console.error("Error fetching attendance data:", error);
+    return null;
+  }
+};
+
+// 관리자용
+export const fetchOneAttendance = async (user_id) => {
+  try {
+    const response = await axios.get(`/admin/attendance/users/${user_id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log("Error fetching one attendance data:", error);
     return null;
   }
 };
