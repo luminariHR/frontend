@@ -1,8 +1,9 @@
 import React from 'react'
+import maincontent3 from '../../assets/maincontent3.png';
 
 const MainPageContent3 = () => {
   return (
-    <div>MainPageContent3</div>
+    <img src={maincontent3}/>
   )
 }
 

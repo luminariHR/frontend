@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link as ScrollLink, Element } from 'react-scroll';
 import mainlogo from "../assets/mainlogo.png";
 import background from '../assets/introbackground.png';
-import { CircleChevronRight, CircleArrowDown, ChevronsRight, Paperclip, BadgeCheck, Speech, Calendar, MessageCircle } from 'lucide-react';
+import { CircleChevronRight, CircleArrowDown, ChevronsRight, Paperclip, BadgeCheck, Speech, Calendar, MessageCircle, PersonStanding, Link2, Computer } from 'lucide-react';
 import Spline from '@splinetool/react-spline'; // Spline 라이브러리 import
 import mainback from "../assets/mainback2.png"
 import MainPageContent1 from './mainpagecontent/MainPageContent1';
@@ -13,7 +13,7 @@ import MainPageContent4 from './mainpagecontent/MainPageContent4';
 
 function MainPage() {
   const navigate = useNavigate();
-  const [currentContent, setCurrentContent] = useState(null);
+  const [currentContent, setCurrentContent] = useState(<MainPageContent1 />);
   const [selectedButton, setSelectedButton] = useState(null);
 
   const handleButtonClick = (content, index) => {
@@ -80,22 +80,22 @@ function MainPage() {
             onClick={() => handleButtonClick(<MainPageContent2 />, 2)}
             className={`rounded-xl text-[#4c4a4a] text-sm font-semibold h-20 w-24 ml-4 ${selectedButton === 2 ? 'bg-gray-100' : ''}`}
           >
-            <Speech className='w-24 mb-2 text-[#93cff2]'/>
+            <Link2 className='w-24 mb-2 text-[#FADB7A]'/>
             인사
           </button>
           <button
             onClick={() => handleButtonClick(<MainPageContent3 />, 3)}
             className={`rounded-xl text-[#4c4a4a] text-sm font-semibold h-20 w-24 ml-4 ${selectedButton === 3 ? 'bg-gray-100' : ''}`}
           >
-            <Calendar className='w-24 mb-2 text-[#f19898]'/>
+            <Calendar className='w-24 mb-2 text-[#93cff2]'/>
             근태
           </button>
           <button
             onClick={() => handleButtonClick(<MainPageContent4 />, 4)}
             className={`rounded-xl text-[#4c4a4a] text-sm font-semibold h-20 w-24 ml-4 ${selectedButton === 4 ? 'bg-gray-100' : ''}`}
           >
-            <MessageCircle className='w-24 mb-2 text-[#697cf6]'/>
-            메신저
+            <Computer className='w-24 mb-2 text-[#697cf6]'/>
+            AI
           </button>
         </div>
         <div className="flex items-center justify-center pt-20">
