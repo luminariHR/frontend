@@ -19,10 +19,12 @@ import {
 } from "lucide-react";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
+import Chatbot from "./chatbot/Chatbot.jsx";
 
 const Layout = ({ children }) => {
   const { expanded } = useContext(SidebarContext);
   const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
+  const [chatbotOpen, setChatbotOpen] = useState(false);
   const user = useRecoilValue(loggedInUserState);
 
   useEffect(() => {
@@ -67,10 +69,11 @@ const Layout = ({ children }) => {
               text="전자 결재"
               to={"/approval"}
             />
-            <SidebarItem 
-            icon={<HeartHandshake size={20} />} 
-            text="멘토링"
-            to={"/mentoring"} />
+            <SidebarItem
+              icon={<HeartHandshake size={20} />}
+              text="멘토링"
+              to={"/mentoring"}
+            />
             <SidebarItem icon={<Book size={20} />} text="자료실" />
             <SidebarItem
               icon={<MessageCircle size={20} />}
@@ -129,6 +132,13 @@ const Layout = ({ children }) => {
       >
         <Header />
         <main className="pt-20 px-4 w-full">{children}</main>
+        <button
+          onClick={() => setChatbotOpen(true)}
+          className="fixed bottom-4 right-4 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
+        >
+          루미와 대화하기
+        </button>
+        <Chatbot isOpen={chatbotOpen} onClose={() => setChatbotOpen(false)} />
       </div>
     </div>
   );
