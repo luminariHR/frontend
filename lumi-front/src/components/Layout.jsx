@@ -67,10 +67,11 @@ const Layout = ({ children }) => {
               text="전자 결재"
               to={"/approval"}
             />
-            <SidebarItem 
-            icon={<HeartHandshake size={20} />} 
-            text="멘토링"
-            to={"/mentoring"} />
+            <SidebarItem
+              icon={<HeartHandshake size={20} />}
+              text="멘토링"
+              to={"/mentoring"}
+            />
             <SidebarItem icon={<Book size={20} />} text="자료실" />
             <SidebarItem
               icon={<MessageCircle size={20} />}
@@ -98,7 +99,7 @@ const Layout = ({ children }) => {
             />
             <SidebarItem
               icon={<Users size={20} />}
-              text="플랫폼 유저 관리"
+              text="인사 관리"
               to={"/admin/users"}
             />
             <SidebarItem
