@@ -30,6 +30,12 @@ const MentoringPage = React.lazy(
   () => import("./components/MentoringPage.jsx"),
 );
 const MyProfile = React.lazy(() => import("./components/MyProfile.jsx"));
+const AdminAttendancePage = React.lazy(
+  () => import("./components/AdminAttendancePage.jsx"),
+);
+const AdminAttendanceDetailPage = React.lazy(
+  () => import("./components/AdminAttendanceDetailPage.jsx"),
+);
 
 function App() {
   return (
@@ -147,6 +153,22 @@ function App() {
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AdminAnalysisPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/attendance"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminAttendancePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/attendance/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminAttendanceDetailPage />
               </Suspense>
             }
           />
