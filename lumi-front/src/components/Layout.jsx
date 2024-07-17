@@ -16,6 +16,7 @@ import {
   MessageCircle,
   Network,
   FileText,
+  Building2,
 } from "lucide-react";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
@@ -37,65 +38,58 @@ const Layout = ({ children }) => {
       style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
     >
       <Sidebar>
-        {!user?.is_hr_admin && (
-          <>
-            <SidebarItem
-              icon={<Home size={20} />}
-              text="홈"
-              to={"/dashboard"}
-            />
-            <SidebarItem
-              icon={<Network size={20} />}
-              text="조직도"
-              to={"/organization"}
-            />
-            <SidebarItem
-              icon={<Laptop size={20} />}
-              text="근태 관리"
-              to={"/attendance"}
-            />
-            <SidebarItem
-              icon={<Clock size={20} />}
-              text="일정 관리"
-              to={"/calendar"}
-            />
-            <SidebarItem
-              icon={<Calendar size={20} />}
-              text="휴가 관리"
-              to={"vacation"}
-            />
-            <SidebarItem
-              icon={<Newspaper size={20} />}
-              text="전자 결재"
-              to={"/approval"}
-            />
-            <SidebarItem
-              icon={<HeartHandshake size={20} />}
-              text="멘토링"
-              to={"/mentoring"}
-            />
-            <SidebarItem icon={<Book size={20} />} text="자료실" />
-            <SidebarItem
-              icon={<MessageCircle size={20} />}
-              text="메신저"
-              to={"/chatting"}
-            />
-          </>
-        )}
+        <>
+          <SidebarItem icon={<Home size={20} />} text="홈" to={"/dashboard"} />
+          <SidebarItem
+            icon={<Network size={20} />}
+            text="조직도"
+            to={"/organization"}
+          />
+          <SidebarItem
+            icon={<Laptop size={20} />}
+            text="내 근태 현황"
+            to={"/attendance"}
+          />
+          <SidebarItem
+            icon={<Clock size={20} />}
+            text="일정 관리"
+            to={"/calendar"}
+          />
+          <SidebarItem
+            icon={<Calendar size={20} />}
+            text="휴가 관리"
+            to={"vacation"}
+          />
+          <SidebarItem
+            icon={<Newspaper size={20} />}
+            text="전자 결재"
+            to={"/approval"}
+          />
+          <SidebarItem
+            icon={<HeartHandshake size={20} />}
+            text="멘토링"
+            to={"/mentoring"}
+          />
+          <SidebarItem icon={<Book size={20} />} text="자료실" />
+          <SidebarItem
+            icon={<MessageCircle size={20} />}
+            text="메신저"
+            to={"/chatting"}
+          />
+        </>
         {user?.is_hr_admin && (
           <>
+            <div className={"h-9 pt-3 pl-3 pb-1 flex items-center "}>
+              <span
+                className={`text-[#979797] text-sm overflow-hidden transition-all ${
+                  expanded ? "w-auto" : "hidden"
+                }`}
+              >
+                플랫폼 관리
+              </span>
+            </div>
             <SidebarItem
-              icon={<Home size={20} />}
-              text="홈"
-              to={"/dashboard"}
-            />
-            <SidebarItem
-              icon={<Clock size={20} />}
-              text="일정 관리"
-              to={"/calendar"}
-            />
-            <SidebarItem
-              icon={<Network size={20} />}
+              icon={<Building2 size={20} />}
               text="부서 관리"
               to={"/admin/departments"}
             />
