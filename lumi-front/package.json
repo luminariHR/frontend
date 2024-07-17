@@ -20,6 +20,7 @@
     "add": "^2.0.6",
     "axios": "^1.7.2",
     "boring-avatars": "^1.10.2",
+    "build": "^0.1.4",
     "classnames": "^2.5.1",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.401.0",
