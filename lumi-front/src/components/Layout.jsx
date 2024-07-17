@@ -101,7 +101,7 @@ const Layout = ({ children }) => {
             />
             <SidebarItem
               icon={<Users size={20} />}
-              text="플랫폼 유저 관리"
+              text="인사 관리"
               to={"/admin/users"}
             />
             <SidebarItem

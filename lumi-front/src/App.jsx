@@ -36,6 +36,9 @@ const AdminAttendancePage = React.lazy(
 const AdminAttendanceDetailPage = React.lazy(
   () => import("./components/AdminAttendanceDetailPage.jsx"),
 );
+const AdminUsersPage = React.lazy(
+  () => import("./components/AdminUsersPage.jsx"),
+);
 
 function App() {
   return (
@@ -169,6 +172,14 @@ function App() {
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AdminAttendanceDetailPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminUsersPage />
               </Suspense>
             }
           />
