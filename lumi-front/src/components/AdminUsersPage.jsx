@@ -27,7 +27,10 @@ export default function AdminUsersPage() {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const handleEditClick = (employee) => {
-    setSelectedEmployee(employee);
+    setSelectedEmployee({
+      ...employee,
+      is_department_head: employee.is_department_head,
+    });
     setIsModalOpen(true);
   };
 
@@ -46,7 +49,10 @@ export default function AdminUsersPage() {
   };
 
   const handleCheckboxChange = (e) => {
-    setSelectedEmployee((prev) => ({ ...prev, is_head: e.target.checked }));
+    setSelectedEmployee((prev) => ({
+      ...prev,
+      is_department_head: e.target.checked,
+    }));
   };
 
   const handleSaveClick = async () => {
@@ -54,7 +60,7 @@ export default function AdminUsersPage() {
       employee_id: selectedEmployee.id,
       new_department_id: selectedEmployee.department.id,
       new_job_title: selectedEmployee.job_title,
-      is_department_head: selectedEmployee.is_head,
+      is_department_head: selectedEmployee.is_department_head,
     };
 
     try {
@@ -238,12 +244,12 @@ export default function AdminUsersPage() {
                     <input
                       type="checkbox"
                       name="is_head"
-                      checked={selectedEmployee.is_head}
+                      checked={selectedEmployee.is_department_head}
                       onChange={handleCheckboxChange}
                       className="mr-2 h-4 w-4 rounded-lg checked:rounded-lg"
                       style={{
                         backgroundImage: `url(${
-                          selectedEmployee.is_head
+                          selectedEmployee.is_department_head
                             ? "src/assets/checkbox-checked.png"
                             : "src/assets/checkbox.png"
                         })`,
