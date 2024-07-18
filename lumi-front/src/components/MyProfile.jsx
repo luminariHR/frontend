@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
-import { useRecoilValue } from "recoil";
-import { loggedInUserState } from "../state/userAtom.js";
 import { Bike, BookHeart, HomeIcon, Mail, MapPinned, PlaneTakeoff } from "lucide-react";
+import defaultprofile from "../assets/defaultprofile.png";
 
 const MyProfile = () => {
     const [profileData, setProfileData] = useState(null);
     const [currentContent, setCurrentContent] = useState('Skills');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const handleButtonClick = (content) => {
         setCurrentContent(content);
@@ -15,66 +17,25 @@ const MyProfile = () => {
 
     useEffect(() => {
         const fetchUserProfile = async () => {
+            const token = localStorage.getItem('access_token');
             try {
-                // 임시 데이터 
-                const UserData = {
-                    profile_image: "https://contents-cdn.viewus.co.kr/image/2024/04/CP-2023-0018/image-673a08d3-df24-476e-b590-31cb4377e45c.jpeg",
-                    name: "맛소금",
-                    email: "matsalt@gmail.com",
-                    department : "개발부서",
-                    skill : ["pytorch", "tensorflow", "keras", "mysql","python","react",
-                        "django","java","c","spring","typescript","vuejs"],
-                    certification :["AICE ASSOCIATE", "Sqld", "정보처리기사"],
-                    project : [
-                        {
-                            title: "스마트 hr 프로젝트 '루미나리'",
-                            role: "백엔드 개발자",
-                            duration: "2020.01 - 2021.06",
-                            description: "스마트 HR 시스템 개발 및 유지보수"
-                        },
-                        {
-                            title: "공공데이터 활용 어쩌구",
-                            role: "프론트엔드 개발자",
-                            duration: "2021.07 - 2022.12",
-                            description: "공공데이터를 활용한 웹 애플리케이션 개발"
-                        },
-                        {
-                            title: "따릉이 수요예측",
-                            role: "프론트엔드 개발자",
-                            duration: "2021.07 - 2022.12",
-                            description: "따릉이 데이터를 활용한 웹 애플리케이션 개발"
-                        },
-                        {
-                            title: "챗봇 만들기",
-                            role: "프론트엔드 개발자",
-                            duration: "2021.07 - 2022.12",
-                            description: "챗봇 데이터를 활용한 웹 애플리케이션 개발"
-                        },
-                        {
-                            title: "홈쇼핑 홈페이지 구성",
-                            role: "프론트엔드 개발자",
-                            duration: "2021.07 - 2022.12",
-                            description: "홈쇼핑 데이터를 활용한 웹 애플리케이션 개발"
-                        }
-                    ],
-                    location : ["서울", "서초구"],
-                    mbti : "ENFP",
-                    joined : "2019",
-                    hobby : ["수영", "축구"]
-                };
-                setProfileData(UserData);
-
-                // 실제 API 요청할때
-                // const response = await fetch('https://dev.luminari.kro.kr/api/v1/me/');
-                // const data = await response.json();
-                // setProfileData(data);
+                const response = await axios.get('https://dev.luminari.kro.kr/api/v1/me/',
+                     {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Authorization 헤더에 토큰 포함
+                    }
+                });
+                setProfileData(response.data);
             } catch (error) {
-                console.error("Failed to fetch profile data", error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchUserProfile();
     }, []);
+
 
     const skillColors = {
         pytorch: "EE4C2C",
@@ -133,8 +94,12 @@ const MyProfile = () => {
         // 계속 추가..?
     };
 
-    if (!profileData) {
+    if (loading) {
         return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
     }
 
     const renderContent = () => {
@@ -143,7 +108,7 @@ const MyProfile = () => {
                 return (
                     <div>
                         <div className="flex flex-wrap mt-4">
-                            {profileData.skill.map((skill, index) => (
+                            {profileData.skill && profileData.skill.map((skill, index) => (
                                 <img
                                     key={index}
                                     src={`https://img.shields.io/badge/${skill}-${skillColors[skill]}.svg?&style=for-the-badge&logo=${skill}&logoColor=white`}
@@ -155,30 +120,30 @@ const MyProfile = () => {
                         
                         <div className="mt-4">
                             <ul className="list-disc list-inside">
-                                {profileData.certification.map((cert, index) => (
+                                {profileData.skill && profileData.certification.map((cert, index) => (
                                     <li key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">{cert}</li>
                                 ))}
                             </ul>
                         </div>
                     </div>
                 );
-                case '프로젝트':
-                    return (
-                        <div className="mt-4 flex flex-wrap ">
-                            {profileData.project.map((project, index) => (
-                                <div key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">
-                                    <h3 className="text-lg font-semibold">{project.title}</h3>
-                                    <p className="text-sm text-gray-500">역할: {project.role}</p>
-                                    <p className="text-sm text-gray-500">기간: {project.duration}</p>
-                                    <p className="text-sm text-gray-500">설명: {project.description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    );
-                default:
-                    return null;
-            }
-        };
+            case '프로젝트':
+                return (
+                    <div className="mt-4 flex flex-wrap">
+                        {profileData.skill && profileData.project.map((project, index) => (
+                            <div key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">
+                                <h3 className="text-lg font-semibold">{project.title}</h3>
+                                <p className="text-sm text-gray-500">역할: {project.role}</p>
+                                <p className="text-sm text-gray-500">기간: {project.duration}</p>
+                                <p className="text-sm text-gray-500">설명: {project.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
 
     return (
         <SidebarProvider>
@@ -190,58 +155,58 @@ const MyProfile = () => {
                     <div className="w-1/4 h-[550px] bg-[#f8f8ff]">
                         <div className="flex justify-center items-center mx-4">
                             <img
-                                src={`${profileData.profile_image}`}
+                                src={`${profileData?.profile_image || defaultprofile}`}
                                 alt="Profile"
                                 className='mt-2 w-[250px] h-[250px] rounded-full'
                             />
                         </div>
-                        <div className="">
-                            <h2 className="flex justify-start text-2xl font-semibold ml-4 text-[#373844]">{profileData.name}</h2>
-                            <div className="flex justify-center ">
-                            <button className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4
-                            cursor-pointer font-semibold text-white">
-                                프로필 수정하기
-                            </button>
+                        <div>
+                            <h2 className="flex justify-start text-2xl font-semibold ml-4 text-[#373844]">{profileData?.name || 'N/A'}</h2>
+                            <div className="flex justify-center">
+                                <button className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4
+                                cursor-pointer font-semibold text-white">
+                                    프로필 수정하기
+                                </button>
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-4 text-gray-500 text-sm">
                                 <Mail className="mr-2" />
-                                <p>{profileData.email}</p>
+                                <p>{profileData?.email || 'N/A'}</p>
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <HomeIcon className="mr-2" />
-                                <p>{profileData.department}</p>
+                                <p>{profileData?.department || 'N/A'}</p>
                             </div>
-                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
+                            <div className="flex justify-start items_center ml-4 mt-2 text-gray-500 text-sm">
                                 <MapPinned className="mr-2" />
-                                <p>{profileData.location.join(' ')}</p>
+                                <p>{(profileData?.location || []).join(' ') || 'N/A'}</p>
                             </div>
-                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
+                            <div className="flex justify_start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <BookHeart className="mr-2" />
-                                <p>{profileData.mbti}</p>
+                                <p>{profileData?.mbti || 'N/A'}</p>
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <PlaneTakeoff className="mr-2" />
-                                <p>{profileData.joined}년에 입사</p>
+                                <p>{profileData?.joined ? `${profileData.joined}년에 입사` : 'N/A'}</p>
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <Bike className="mr-2" />
-                                <p>{profileData.hobby.join(', ')}</p>
+                                <p>{(profileData?.hobby || []).join(', ') || 'N/A'}</p>
                             </div>
                         </div>
                     </div>
                     <div className="w-3/4 h-[550px] bg-[#f8f8ff]">
                         <div className="mt-4 flex items-center justify-start space-x-4">
                             <button
-                            onClick={() => handleButtonClick('Skills')}
-                            className={`px-4 py-2 text-xs font-semibold ${currentContent === 'Skills' ? 'bg-[#5d5bd4] text-white' : 'text-black'}`}
+                                onClick={() => handleButtonClick('Skills')}
+                                className={`px-4 py-2 text-xs font-semibold ${currentContent === 'Skills' ? 'bg-[#5d5bd4] text-white' : 'text-black'}`}
                             >
-                            Skills
+                                Skills
                             </button>
                             <button
-                            onClick={() => handleButtonClick('프로젝트')}
-                            className={`px-4 py-2 text-xs font-semibold ${currentContent === '프로젝트' ? 'bg-[#5d5bd4] text-white' : 'text-black'}`}
+                                onClick={() => handleButtonClick('프로젝트')}
+                                className={`px-4 py-2 text-xs font-semibold ${currentContent === '프로젝트' ? 'bg-[#5d5bd4] text-white' : 'text-black'}`}
                             >
-                            프로젝트
+                                프로젝트
                             </button>
                         </div>
                         <div className="flex items-center justify-center pt-10 text-black">
