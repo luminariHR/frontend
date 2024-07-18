@@ -19,10 +19,9 @@ const MyProfile = () => {
         const fetchUserProfile = async () => {
             const token = localStorage.getItem('access_token');
             try {
-                const response = await axios.get('https://dev.luminari.kro.kr/api/v1/me/',
-                     {
+                const response = await axios.get('https://dev.luminari.kro.kr/api/v1/me/', {
                     headers: {
-                        Authorization: `Bearer ${token}` // Authorization 헤더에 토큰 포함
+                        Authorization: `Bearer ${token}`
                     }
                 });
                 setProfileData(response.data);
@@ -35,7 +34,6 @@ const MyProfile = () => {
 
         fetchUserProfile();
     }, []);
-
 
     const skillColors = {
         pytorch: "EE4C2C",
@@ -91,7 +89,7 @@ const MyProfile = () => {
         terraform: "623CE4",
         prometheus: "E6522C",
         grafana: "F46800"
-        // 계속 추가..?
+        // 추가 필요
     };
 
     if (loading) {
@@ -174,9 +172,9 @@ const MyProfile = () => {
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <HomeIcon className="mr-2" />
-                                <p>{profileData?.department.name || 'N/A'}</p>
+                                <p>{profileData?.department?.name || 'N/A'}</p> 
                             </div>
-                            <div className="flex justify-start items_center ml-4 mt-2 text-gray-500 text-sm">
+                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <MapPinned className="mr-2" />
                                 <p>{(profileData?.location || []).join(' ') || 'N/A'}</p>
                             </div>
