@@ -120,7 +120,7 @@ const MyProfile = () => {
                         
                         <div className="mt-4">
                             <ul className="list-disc list-inside">
-                                {profileData.skill && profileData.certification.map((cert, index) => (
+                                {profileData.certification && profileData.certification.map((cert, index) => (
                                     <li key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">{cert}</li>
                                 ))}
                             </ul>
@@ -130,7 +130,7 @@ const MyProfile = () => {
             case '프로젝트':
                 return (
                     <div className="mt-4 flex flex-wrap">
-                        {profileData.skill && profileData.project.map((project, index) => (
+                        {profileData.project && profileData.project.map((project, index) => (
                             <div key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">
                                 <h3 className="text-lg font-semibold">{project.title}</h3>
                                 <p className="text-sm text-gray-500">역할: {project.role}</p>
@@ -174,7 +174,7 @@ const MyProfile = () => {
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <HomeIcon className="mr-2" />
-                                <p>{profileData?.department || 'N/A'}</p>
+                                <p>{profileData?.department.name || 'N/A'}</p>
                             </div>
                             <div className="flex justify-start items_center ml-4 mt-2 text-gray-500 text-sm">
                                 <MapPinned className="mr-2" />
