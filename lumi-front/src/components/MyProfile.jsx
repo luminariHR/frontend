@@ -53,6 +53,10 @@ const MyProfile = () => {
         setNewStart_Date(event.target.value);
     };
 
+    // 프로필 사진 변경
+    const handleProfileImageChange = (event) => {
+        setNewProfileImage(event.target.files[0]);
+    };
 
     const handleSave = async () => {
         const token = localStorage.getItem('access_token');
@@ -84,6 +88,32 @@ const MyProfile = () => {
         }
     };
 
+    // 프로필사진 핸들러 => 폼데이터로 따로 나감
+    const handleProfileImageUpload = async () => {
+        const token = localStorage.getItem('access_token');
+        const formData = new FormData();
+        if (newProfileImage) {
+            formData.append('profile_image', newProfileImage);
+        }
+    
+        try {
+            await axios.patch(`https://dev.luminari.kro.kr/api/v1/accounts/${profileData.id}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setProfileData({ 
+                ...profileData, 
+                profile_image: URL.createObjectURL(newProfileImage),
+            });
+        } 
+        catch (error) {
+            console.error("Error uploading profile image:", error);
+        }
+    };
+
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             const token = localStorage.getItem('access_token');
@@ -100,6 +130,7 @@ const MyProfile = () => {
                 setNewHobbies(response.data.hobbies ? response.data.hobbies.join(", ") : "");
                 setNewCertifications(response.data.certifications ? response.data.certifications.join(", ") : "");
                 setNewStart_Date(response.data.start_date || "");
+                setNewProfileImage(response.data.profile_image || "");
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -173,36 +204,6 @@ const MyProfile = () => {
     if (error) {
         return <div>Error: {error}</div>;
     }
-
-    // 프로필 사진 변경
-    const handleProfileImageChange = (event) => {
-        setNewProfileImage(event.target.files[-1]);
-    };
-
-    // 프로필사진 핸들러 => 폼데이터로 따로 나감
-    const handleProfileImageUpload = async () => {
-        const token = localStorage.getItem('access_token');
-        const formData = new FormData();
-        if (newProfileImage) {
-            formData.append('profile_image', newProfileImage);
-        }
-    
-        try {
-            const response = await axios.patch(`https://dev.luminari.kro.kr/api/v1/accounts/${profileData.id}`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            setProfileData({ 
-                ...profileData, 
-                profile_image: URL.createObjectURL(newProfileImage),
-            });
-        } 
-        catch (error) {
-            console.error("Error uploading profile image:", error);
-        }
-    };
 
     const renderContent = () => {
         switch(currentContent) {
