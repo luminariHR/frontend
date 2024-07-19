@@ -10,9 +10,78 @@ const MyProfile = () => {
     const [currentContent, setCurrentContent] = useState('Skills');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newMbti, setNewMbti] = useState("");
+    const [newSkills, setNewSkills] = useState("");
+    const [newLocation, setNewLocation] = useState("");
+    const [newHobbies, setNewHobbies] = useState("");
+    const [newCertifications, setNewCertifications] = useState([]);
+    const [newStart_Date, setNewStart_Date] = useState("");
+    const [newProfileImage, setNewProfileImage] = useState(null);
+    
+
 
     const handleButtonClick = (content) => {
         setCurrentContent(content);
+    };
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
+
+    const handleMbtiChange = (event) => {
+        setNewMbti(event.target.value);
+    };
+
+    const handleSkillsChange = (event) => {
+        setNewSkills(event.target.value);
+    };
+
+    const handleLocationChange = (event) => {
+        setNewLocation(event.target.value);
+    };
+
+    const handleHobbiesChange = (event) => {
+        setNewHobbies(event.target.value);
+    };
+
+    const handleCertificationChange = (event) => {
+        setNewCertifications(event.target.value);
+    };
+
+    const handleStart_DateChange = (event) => {
+        setNewStart_Date(event.target.value);
+    };
+
+
+    const handleSave = async () => {
+        const token = localStorage.getItem('access_token');
+        try {
+            await axios.patch(`https://dev.luminari.kro.kr/api/v1/accounts/${profileData.id}/`, {
+                mbti: newMbti,
+                skills: newSkills.split(',').map(skill => skill.trim()), // 콤마로 구분
+                location: newLocation,
+                hobbies: newHobbies.split(',').map(hobby => hobby.trim()),
+                certifications: newCertifications.split(',').map(certification => certification.trim()),
+                start_date: newStart_Date,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setProfileData({ 
+                ...profileData, 
+                mbti: newMbti,
+                skills: newSkills.split(',').map(skill => skill.trim()), // 배열로 설정
+                location: newLocation,
+                hobbies: newHobbies.split(',').map(hobby => hobby.trim()),
+                certifications: newCertifications.split(',').map(certification => certification.trim()),
+                start_date: newStart_Date,      
+            });
+            toggleModal();
+        } catch (error) {
+            console.error("Error updating:", error);
+        }
     };
 
     useEffect(() => {
@@ -25,6 +94,12 @@ const MyProfile = () => {
                     }
                 });
                 setProfileData(response.data);
+                setNewMbti(response.data.mbti || "");
+                setNewSkills(response.data.skills ? response.data.skills.join(", ") : "");
+                setNewLocation(response.data.location || "");
+                setNewHobbies(response.data.hobbies ? response.data.hobbies.join(", ") : "");
+                setNewCertifications(response.data.certifications ? response.data.certifications.join(", ") : "");
+                setNewStart_Date(response.data.start_date || "");
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -89,7 +164,6 @@ const MyProfile = () => {
         terraform: "623CE4",
         prometheus: "E6522C",
         grafana: "F46800"
-        // 추가 필요
     };
 
     if (loading) {
@@ -100,13 +174,43 @@ const MyProfile = () => {
         return <div>Error: {error}</div>;
     }
 
+    // 프로필 사진 변경
+    const handleProfileImageChange = (event) => {
+        setNewProfileImage(event.target.files[-1]);
+    };
+
+    // 프로필사진 핸들러 => 폼데이터로 따로 나감
+    const handleProfileImageUpload = async () => {
+        const token = localStorage.getItem('access_token');
+        const formData = new FormData();
+        if (newProfileImage) {
+            formData.append('profile_image', newProfileImage);
+        }
+    
+        try {
+            const response = await axios.patch(`https://dev.luminari.kro.kr/api/v1/accounts/${profileData.id}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setProfileData({ 
+                ...profileData, 
+                profile_image: URL.createObjectURL(newProfileImage),
+            });
+        } 
+        catch (error) {
+            console.error("Error uploading profile image:", error);
+        }
+    };
+
     const renderContent = () => {
         switch(currentContent) {
             case 'Skills':
                 return (
                     <div>
                         <div className="flex flex-wrap mt-4">
-                            {profileData.skill && profileData.skill.map((skill, index) => (
+                            {profileData.skills && profileData.skills.map((skill, index) => (
                                 <img
                                     key={index}
                                     src={`https://img.shields.io/badge/${skill}-${skillColors[skill]}.svg?&style=for-the-badge&logo=${skill}&logoColor=white`}
@@ -118,7 +222,7 @@ const MyProfile = () => {
                         
                         <div className="mt-4">
                             <ul className="list-disc list-inside">
-                                {profileData.certification && profileData.certification.map((cert, index) => (
+                                {profileData.certifications && profileData.certifications.map((cert, index) => (
                                     <li key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">{cert}</li>
                                 ))}
                             </ul>
@@ -128,7 +232,7 @@ const MyProfile = () => {
             case '프로젝트':
                 return (
                     <div className="mt-4 flex flex-wrap">
-                        {profileData.project && profileData.project.map((project, index) => (
+                        {profileData.projects && profileData.projects.map((project, index) => (
                             <div key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">
                                 <h3 className="text-lg font-semibold">{project.title}</h3>
                                 <p className="text-sm text-gray-500">역할: {project.role}</p>
@@ -156,15 +260,31 @@ const MyProfile = () => {
                                 src={`${profileData?.profile_image || defaultprofile}`}
                                 alt="Profile"
                                 className='mt-2 w-[250px] h-[250px] rounded-full'
-                            />
+                            /> 
+                            {/*1300px * 1500px 사이의 가로세로 이미지가 예쁘게 잘나옴 */}
                         </div>
                         <div>
                             <h2 className="flex justify-start text-2xl font-semibold ml-4 text-[#373844]">{profileData?.name || 'N/A'}</h2>
                             <div className="flex justify-center">
-                                <button className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4
-                                cursor-pointer font-semibold text-white">
+                                <button
+                                    onClick={toggleModal}
+                                    className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4 cursor-pointer font-semibold text-white"
+                                >
                                     프로필 수정하기
                                 </button>
+                            </div>
+                            <div className="flex justify-center">
+                            <input
+                                type="file"
+                                onChange={handleProfileImageChange}
+                                className="border p-2 mb-4 w-full"
+                            />
+                            <button
+                                onClick={handleProfileImageUpload}
+                                className="flex justify-center items-center bg-blue-500 shadow-lg w-4/5 h-[30px] mt-4 cursor-pointer font-semibold text-white"
+                            >
+                                프로필 사진 업로드
+                            </button>
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-4 text-gray-500 text-sm">
                                 <Mail className="mr-2" />
@@ -172,11 +292,11 @@ const MyProfile = () => {
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <HomeIcon className="mr-2" />
-                                <p>{profileData?.department?.name || 'N/A'}</p> 
+                                <p>{profileData?.department?.name || 'N/A'}</p> {/* department가 null이 아닌 경우에 접근 */}
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <MapPinned className="mr-2" />
-                                <p>{(profileData?.location || []).join(' ') || 'N/A'}</p>
+                                <p>{profileData?.location || 'N/A'}</p>
                             </div>
                             <div className="flex justify_start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <BookHeart className="mr-2" />
@@ -184,11 +304,11 @@ const MyProfile = () => {
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <PlaneTakeoff className="mr-2" />
-                                <p>{profileData?.joined ? `${profileData.joined}년에 입사` : 'N/A'}</p>
+                                <p>{profileData?.start_date ? `${profileData.start_date.slice(0,4)}년에 입사` : 'N/A'}</p>
                             </div>
                             <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
                                 <Bike className="mr-2" />
-                                <p>{(profileData?.hobby || []).join(', ') || 'N/A'}</p>
+                                <p>{Array.isArray(profileData?.hobbies) ? profileData.hobbies.join(', ') : 'N/A'}</p> {/* hobbies를 배열로 처리 */}
                             </div>
                         </div>
                     </div>
@@ -212,6 +332,70 @@ const MyProfile = () => {
                         </div>
                     </div>
                 </div>
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white p-4 rounded shadow-lg">
+                            <h2 className="text-xl font-semibold mb-4">개인정보 수정</h2>
+                            <input
+                                type="text"
+                                value={newMbti}
+                                onChange={handleMbtiChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="MBTI"
+                            />
+                            <input
+                                type="text"
+                                value={newSkills}
+                                onChange={handleSkillsChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="Skill"
+                            />
+                            <input
+                                type="text"
+                                value={newLocation}
+                                onChange={handleLocationChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="사는곳"
+                            />
+                            <input
+                                type="text"
+                                value={newHobbies}
+                                onChange={handleHobbiesChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="취미"
+                            />
+                            <input
+                                type="text"
+                                value={newCertifications}
+                                onChange={handleCertificationChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="자격증"
+                            />
+                            <input
+                                type="Date"
+                                value={newStart_Date}
+                                onChange={handleStart_DateChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="입사연월"
+                            />
+
+                            <div className="flex justify-end space-x-2">
+                                <button
+                                    onClick={toggleModal}
+                                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                                >
+                                    취소
+                                </button>
+                                <button
+                                    onClick={handleSave}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                                >
+                                    저장
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </Layout>
         </SidebarProvider>
     );
