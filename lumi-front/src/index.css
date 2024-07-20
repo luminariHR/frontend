@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-custom-gradient {
+    background-image: linear-gradient(to bottom right, #e0f7fa, #e1bee7, #ffebee);
+  }
 /* 기본 react-datepicker 스타일 */
 .react-datepicker {
     @apply bg-white rounded-lg shadow-lg w-[300px] h-[250px];
@@ -89,3 +92,4 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
