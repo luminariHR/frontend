@@ -1,23 +1,21 @@
 import React, { useState } from "react";
-import { Calendar, CalendarDays, CircleX } from "lucide-react";
+import { CalendarDays, CircleX } from "lucide-react";
 import Button from "../ui/button";
 import { useDropzone } from "react-dropzone";
 import { TextEditor } from "../ui/editor";
 import DatePicker from "react-datepicker";
+import { requestPTO } from "../../api/ptoApi.js";
 
-export function VacationRequestModal({ onClose, onRequestSubmit, category }) {
-  const [title, setTitle] = useState("");
+export function VacationRequestModal({ onClose, category, onRequestSubmit }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [editorValue, setEditorValue] = useState("");
-  const [showOCRHelper, setShowOCRHelper] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const onDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       setSelectedFile(file);
-      setShowOCRHelper(true);
     }
   };
 
@@ -32,24 +30,18 @@ export function VacationRequestModal({ onClose, onRequestSubmit, category }) {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("content", editorValue);
+    formData.append("pto_type", category.category);
+    formData.append("message", editorValue);
     formData.append("start_date", startDate.toISOString().split("T")[0]);
-    formData.append(("end_date", endDate.toISOString().split("T")[0]));
+    formData.append("end_date", endDate.toISOString().split("T")[0]);
     if (selectedFile) {
       formData.append("file", selectedFile);
     }
-    console.log("formdata", formData);
-    // await requestReview(formData);
-    // const refreshedSentRequest = await fetchSentRequest();
-    // if (refreshedSentRequest) {
-    //   onRequestSubmit(refreshedSentRequest);
-    // }
+    const response = await requestPTO(formData);
+    if (response) {
+      onRequestSubmit("sent");
+    }
     onClose();
-  };
-
-  const isSubmittable = () => {
-    if (title && editorValue && reviewers.length > 0) return true;
-    return false;
   };
 
   const dayClassName = (date) => {
@@ -69,14 +61,16 @@ export function VacationRequestModal({ onClose, onRequestSubmit, category }) {
           <div className="flex-grow p-8 overflow-auto ">
             <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between hide-scrollbar">
               <div className="flex justify-between mb-6">
-                <h2 className="text-xl font-semibold">{category} 신청하기</h2>
+                <h2 className="text-xl font-semibold">
+                  {category.label} 신청하기
+                </h2>
               </div>
 
               <div className="mb-5">
                 <h3 className="text-l font-semibold">날짜 선택</h3>
                 <div className="my-3">
                   <div className="flex items-center gap-4">
-                    <label className="flex p-2 border rounded bg-white">
+                    <label className="flex p-2 border rounded bg-white cursor-pointer">
                       <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
@@ -89,7 +83,7 @@ export function VacationRequestModal({ onClose, onRequestSubmit, category }) {
                       <CalendarDays />
                     </label>
                     <span className="mx-1 font-semibold">~</span>
-                    <label className="flex p-2 border rounded bg-white">
+                    <label className="flex p-2 border rounded bg-white cursor-pointer">
                       <DatePicker
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}
@@ -155,12 +149,6 @@ export function VacationRequestModal({ onClose, onRequestSubmit, category }) {
                             <CircleX />
                           </div>
                         </div>
-                        {[
-                          "image/jpeg",
-                          "image/png",
-                          "image/jpg",
-                          "image/tiff",
-                        ].includes(selectedFile.type)}
                       </div>
                     )}
                   </div>
