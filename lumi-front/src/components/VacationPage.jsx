@@ -24,9 +24,12 @@ import emoji_beach_with_umbrella from "../assets/emoji_beach_with_umbrella_.png"
 import emoji_party_popper from "../assets/emoji_party_popper_.png";
 import emoji_person_in_bed from "../assets/emoji_person_in_bed_.png";
 import { VacationRequestModal } from "./vacation/VacationRequest.jsx";
+import { fetchAllPTORecords } from "../api/ptoApi.js";
+import { vacationCategoryEnums } from "../enums/vacation.js";
 
 export default function VacationPage() {
   const [vacation, setVacation] = useState([]);
+  const [defaultPTOCount, setDefaultPTOCount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("status");
   const [loading, setLoading] = useState(true);
@@ -41,6 +44,7 @@ export default function VacationPage() {
     {
       id: 1,
       label: "연차",
+      category: "default",
       emoji: emoji_beach_with_umbrella,
       days_left: 3,
       request_first: false,
@@ -48,6 +52,7 @@ export default function VacationPage() {
     {
       id: 2,
       label: "병가",
+      category: "sick_leave",
       emoji: emoji_pill,
       days_left: null,
       request_first: true,
@@ -55,6 +60,7 @@ export default function VacationPage() {
     {
       id: 3,
       label: "리프레시 휴가",
+      category: "refresh_leave",
       emoji: emoji_party_popper,
       days_left: null,
       request_first: true,
@@ -62,6 +68,7 @@ export default function VacationPage() {
     {
       id: 4,
       label: "생리 휴가",
+      category: "menstrual_period_leave",
       emoji: emoji_person_in_bed,
       days_left: null,
       request_first: true,
@@ -69,6 +76,7 @@ export default function VacationPage() {
     {
       id: 5,
       label: "출산 휴가",
+      category: "maternity_leave",
       emoji: emoji_baby,
       days_left: null,
       request_first: true,
@@ -76,6 +84,7 @@ export default function VacationPage() {
     {
       id: 6,
       label: "배우자 출산 휴가",
+      category: "paternity_leave",
       emoji: emoji_baby_bottle,
       days_left: null,
       request_first: true,
@@ -83,6 +92,7 @@ export default function VacationPage() {
     {
       id: 7,
       label: "가족 돌봄 휴가",
+      category: "family_care",
       emoji: emoji_family,
       days_left: null,
       request_first: true,
@@ -90,6 +100,7 @@ export default function VacationPage() {
     {
       id: 8,
       label: "기타",
+      category: "others",
       emoji: emoji_musical_keyboard,
       days_left: null,
       request_first: true,
@@ -130,15 +141,10 @@ export default function VacationPage() {
     const fetchData = async () => {
       setVacation([]);
       let data;
-      if (activeTab === "sent") {
-        // 휴가 신청 현황
-        // data = await fetchSentRequest();
-      } else {
-        // 휴가 신청하기
-        // data = await fetchReferencedRequest();
-      }
-      if (data && data.length >= 0) {
-        setVacation(data);
+      data = await fetchAllPTORecords();
+      if (data) {
+        setVacation(data.records);
+        setDefaultPTOCount(data.default_pto_left);
       }
       setLoading(false);
     };
@@ -160,6 +166,14 @@ export default function VacationPage() {
       hour12: true,
     };
     return date.toLocaleString("ko-KR", options);
+  };
+
+  const calculateDeltaInDays = (startDateString, endDateString) => {
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+    const differenceInMilliseconds = startDate - endDate;
+    const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+    return Math.round(differenceInDays);
   };
 
   return (
@@ -208,7 +222,11 @@ export default function VacationPage() {
         <div className="">
           <div className="flex items-center justify-between">
             {isModalOpen && (
-              <VacationRequestModal onClose={closeModal} category={category} />
+              <VacationRequestModal
+                onClose={closeModal}
+                category={category}
+                onRequestSubmit={setActiveTab}
+              />
             )}
           </div>
 
@@ -233,8 +251,8 @@ export default function VacationPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>상태</TableHead>
-                      <TableHead>이름</TableHead>
-                      <TableHead>참조</TableHead>
+                      <TableHead>휴가 종류</TableHead>
+                      <TableHead>승인권자</TableHead>
                       <TableHead>기간</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -246,25 +264,15 @@ export default function VacationPage() {
                         onClick={() => handleRowClick(item.id)}
                       >
                         <TableCell>{getStatusPill(item.status)}</TableCell>
-                        <TableCell>{item.title}</TableCell>
                         <TableCell>
-                          {item.references
-                            .map((step) => step.referrer.name)
-                            .join(", ")}
+                          {vacationCategoryEnums[item.pto_type]}
                         </TableCell>
+                        <TableCell>{item.authorizer.name}</TableCell>
                         <TableCell>
-                          <span>
-                            {item.start_date
-                              ? getFormattedDate(item.start_date)
-                              : "-"}
-                          </span>
+                          <span>{item.start_date ? item.start_date : "-"}</span>
                           <span> ~ </span>
-                          <span>
-                            {item.end_date
-                              ? getFormattedDate(item.end_date)
-                              : "-"}
-                          </span>
-                          <span>{` (${item.hours}시간)`}</span>
+                          <span>{item.end_date ? item.end_date : "-"}</span>
+                          <span>{` (${calculateDeltaInDays(item.start_date, item.end_date) + 1}일)`}</span>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -279,7 +287,7 @@ export default function VacationPage() {
                         key={item.id}
                         className="h-auto border border-gray-200 rounded-md flex flex-col justify-between hover:shadow-xl pt-6 pb-4 px-4 cursor-pointer"
                         onClick={() => {
-                          handleModalOpen(item.label);
+                          handleModalOpen(item);
                         }}
                       >
                         <div className="">
@@ -291,7 +299,7 @@ export default function VacationPage() {
                         </div>
                         <div className="font-semibold text-gray-500">
                           <div className="text-sm">{item.label}</div>
-                          {item.days_left && <span>{item.days_left}일</span>}
+                          {item.days_left && <span>{defaultPTOCount}일</span>}
                           {item.request_first && <span>신청시 지급</span>}
                         </div>
                       </div>

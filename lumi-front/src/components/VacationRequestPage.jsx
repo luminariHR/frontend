@@ -16,6 +16,8 @@ import {
 } from "./ui/table.jsx";
 import { Input } from "./ui/input.jsx";
 import CustomSelectButton from "./ui/select.jsx";
+import { fetchReceivedPTORequests, reviewPTORequest } from "../api/ptoApi.js";
+import { vacationCategoryEnums } from "../enums/vacation.js";
 
 const dummyVacationData = [
   {
@@ -52,9 +54,16 @@ export default function VacationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("status");
   const [loading, setLoading] = useState(true);
+  const [selectedVacationId, setSelectedVacationId] = useState(null);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const openModal = (id) => {
+    setSelectedVacationId(id);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setSelectedVacationId(null);
+    setIsModalOpen(false);
+  };
 
   const getDateString = (dateString) => {
     const date = new Date(dateString);
@@ -67,6 +76,14 @@ export default function VacationPage() {
 
   const handleRowClick = (id) => {
     openModal(id);
+  };
+
+  const calculateDeltaInDays = (startDateString, endDateString) => {
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+    const differenceInMilliseconds = startDate - endDate;
+    const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+    return Math.round(differenceInDays);
   };
 
   const getStatusPill = (status) => {
@@ -84,14 +101,19 @@ export default function VacationPage() {
     }
   };
 
+  const handleReviewSubmit = async (status) => {
+    await reviewPTORequest(selectedVacationId, status);
+    closeModal();
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      // todo 실제 api 연결
-      setVacationRequest(dummyVacationData);
+      const response = await fetchReceivedPTORequests();
+      setVacationRequest(response);
       setLoading(false);
     };
     fetchData();
-  }, [activeTab]);
+  }, [selectedVacationId]);
 
   const getFormattedDate = (dateString) => {
     const date = new Date(dateString);
@@ -124,8 +146,14 @@ export default function VacationPage() {
               >
                 <div>휴가 신청 내역</div>
                 <div>
-                  <Button text={"반려"} />
-                  <Button text={"승인"} />
+                  <Button
+                    text={"반려"}
+                    onClick={() => handleReviewSubmit("rejected")}
+                  />
+                  <Button
+                    text={"승인"}
+                    onClick={() => handleReviewSubmit("approved")}
+                  />
                 </div>
               </CustomModal2>
             )}
@@ -152,8 +180,8 @@ export default function VacationPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>상태</TableHead>
-                      <TableHead>이름</TableHead>
                       <TableHead>휴가 유형</TableHead>
+                      <TableHead>신청자</TableHead>
                       <TableHead>기간</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -165,25 +193,15 @@ export default function VacationPage() {
                         onClick={() => handleRowClick(item.id)}
                       >
                         <TableCell>{getStatusPill(item.status)}</TableCell>
-                        <TableCell>{item.title}</TableCell>
                         <TableCell>
-                          {item.references
-                            .map((step) => step.referrer.name)
-                            .join(", ")}
+                          {vacationCategoryEnums[item.pto_type]}
                         </TableCell>
+                        <TableCell>{item.employee.name}</TableCell>
                         <TableCell>
-                          <span>
-                            {item.start_date
-                              ? getFormattedDate(item.start_date)
-                              : "-"}
-                          </span>
+                          <span>{item.start_date ? item.start_date : "-"}</span>
                           <span> ~ </span>
-                          <span>
-                            {item.end_date
-                              ? getFormattedDate(item.end_date)
-                              : "-"}
-                          </span>
-                          <span>{` (${item.hours}시간)`}</span>
+                          <span>{item.end_date ? item.start_date : "-"}</span>
+                          <span>{` (${calculateDeltaInDays(item.start_date, item.end_date) + 1}일)`}</span>
                         </TableCell>
                       </TableRow>
                     ))}

@@ -65,9 +65,7 @@ const Layout = ({ children }) => {
             )}
             <SidebarSubmenu text="내 휴가 관리" to={"/vacation"} />
             <SidebarSubmenu text="사내 휴가자 현황" to={"/vacation/overview"} />
-            {user?.is_department_head && (
-              <SidebarSubmenu text="휴가 신청 관리" to={"/vacation/request"} />
-            )}
+            <SidebarSubmenu text="휴가 신청 관리" to={"/vacation/request"} />
           </SidebarItem>
           <SidebarItem
             icon={<Clock size={20} />}
