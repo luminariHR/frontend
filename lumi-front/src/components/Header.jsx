@@ -34,17 +34,17 @@ const Header = () => {
           <ul className="flex gap-4 items-center">
             <li>
               <Link to={"/myprofile"}>
-                <Settings className="h-5" />
+                <Settings className="h-8 mx-2" />
               </Link>
             </li>
             <li>
               <Link to="/">
-                <Bell className="h-5" />
+                <Bell className="h-8 mx-2" />
               </Link>
             </li>
             <li>
               <button onClick={handleLogout} className="text-sm">
-                <LogOut className="pt-1 h-6" />
+                <LogOut className="pt-1 mx-2 h-8" />
               </button>
             </li>
           </ul>
