@@ -69,107 +69,110 @@ const DashboardPage = () => {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div>{`안녕하세요, ${user.name}님!`}</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
+        <div className="flex flex-col p-5">
+          <div className="flex justify-between pb-3">
+            <div>{`안녕하세요, ${user.name}님!`}</div>
+            <div className="flex flex-col text-xs items-end">
+              <div className="font-semibold">{getCurrentDateString()}</div>
+              <div>{getCurrentDayString()}</div>
+            </div>
+          </div>
+          <div className="flex flex-col justify-center items-center pb-3 w-full">
+            <section className="flex">
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+                <div className="flex h-8 items-center text-xs justify-between">
+                  <span className="">업무 현황</span>
+                  <div className="text-xs font-semibold text-white">
+                    <button
+                      className="bg-secondary rounded-lg px-3 py-1 mr-1"
+                      onClick={handleClockIn}
+                    >
+                      출근
+                    </button>
+                    <button
+                      className="bg-[#392323] rounded-lg px-3 py-1"
+                      onClick={handleClockOut}
+                    >
+                      퇴근
+                    </button>
+                  </div>
+                </div>
+                <div>1시간 20분 36초</div>
+              </div>
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+                <div className="flex h-8 items-center text-xs justify-between">
+                  <span className="">연차 사용 계획일 알림</span>
+                </div>
+                <div>금일 연차 촉진 알림이 없습니다.</div>
+              </div>
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+                <div className="flex h-8 items-center justify-between">
+                  <span className="text-xs">전자 결제 현황</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <p>대기</p>
+                    <p>2</p>
+                  </div>
+                  <div>
+                    <p>승인</p>
+                    <p>2</p>
+                  </div>
+                  <div>
+                    <p>반려</p>
+                    <p>2</p>
+                  </div>
+                </div>
+              </div>
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+                <div className="flex h-8 text-xs items-center justify-between">
+                  <span className="">팀원 근태 현황</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <p>휴가</p>
+                    <p>2</p>
+                  </div>
+                  <div>
+                    <p>출장</p>
+                    <p>2</p>
+                  </div>
+                  <div>
+                    <p>재택</p>
+                    <p>2</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <article className="flex">
+              {/* 대시 보드 */}
+              <div className="flex flex-col">
+                <div className="mt-4">Dashboard</div>
+                <div>
+                  <KanbanBoard />
+                </div>
+              </div>
+
+              {/* 월간 일정 캘린더 */}
+              <div className="flex flex-col ml-6">
+                <div className="mt-4">Calendar</div>
+                <div className="mt-2 w-[300px] mr-6 px-5 pt-5 pb-2 bg-[#F8F8FF] shadow flex justify-center">
+                  <div className="dashboard_calendar flex justify-center">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={() => {}}
+                      inline
+                      dateFormat="yyyy년 MM월 dd일"
+                      calendarClassName={"dashboard_calendar"}
+                      weekDayClassName={dayClassName}
+                    />
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
-
-        <section className="flex">
-          <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
-            <div className="flex h-8 items-center text-xs justify-between">
-              <span className="">업무 현황</span>
-              <div className="text-xs font-semibold text-white">
-                <button
-                  className="bg-secondary rounded-lg px-3 py-1 mr-1"
-                  onClick={handleClockIn}
-                >
-                  출근
-                </button>
-                <button
-                  className="bg-[#392323] rounded-lg px-3 py-1"
-                  onClick={handleClockOut}
-                >
-                  퇴근
-                </button>
-              </div>
-            </div>
-            <div>1시간 20분 36초</div>
-          </div>
-          <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
-            <div className="flex h-8 items-center text-xs justify-between">
-              <span className="">연차 사용 계획일 알림</span>
-            </div>
-            <div>금일 연차 촉진 알림이 없습니다.</div>
-          </div>
-          <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
-            <div className="flex h-8 items-center justify-between">
-              <span className="text-xs">전자 결제 현황</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <div>
-                <p>대기</p>
-                <p>2</p>
-              </div>
-              <div>
-                <p>승인</p>
-                <p>2</p>
-              </div>
-              <div>
-                <p>반려</p>
-                <p>2</p>
-              </div>
-            </div>
-          </div>
-          <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
-            <div className="flex h-8 text-xs items-center justify-between">
-              <span className="">팀원 근태 현황</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <div>
-                <p>휴가</p>
-                <p>2</p>
-              </div>
-              <div>
-                <p>출장</p>
-                <p>2</p>
-              </div>
-              <div>
-                <p>재택</p>
-                <p>2</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <article className="flex">
-          {/* 대시 보드 */}
-          <div className="flex flex-col">
-            <div className="mt-4">Dashboard</div>
-            <div>
-              <KanbanBoard />
-            </div>
-          </div>
-
-          {/* 월간 일정 캘린더 */}
-          <div className="flex flex-col ml-6">
-            <div className="mt-4">Calendar</div>
-            <div className="mt-2 w-[300px] mr-6 px-5 pt-5 pb-2 bg-[#F8F8FF] shadow flex justify-center">
-              <div className="dashboard_calendar flex justify-center">
-                <DatePicker
-                  selected={startDate}
-                  onChange={() => {}}
-                  inline
-                  dateFormat="yyyy년 MM월 dd일"
-                  calendarClassName={"dashboard_calendar"}
-                  weekDayClassName={dayClassName}
-                />
-              </div>
-            </div>
-          </div>
-        </article>
       </Layout>
     </SidebarProvider>
   );
