@@ -33,7 +33,7 @@ export default function NotificationModal({
             <a
               key={index}
               className="flex items-start p-2 border-b cursor-pointer hover:bg-gray-300"
-              href={notification.context.path}
+              href={notification.context.path ? notification.context.path : ""}
               onClick={() => {
                 sendMessage({
                   message: "Notification marked as read",
@@ -47,10 +47,12 @@ export default function NotificationModal({
                 ></span>
               )}
               <div className="bg-gray-200 flex-shrink-0 overflow-hidden rounded-full mr-4 w-10 h-10">
-                <UserAvatar
-                  userProfileImg={notification.context.from.profile_image}
-                  userName={notification.context.from.name}
-                />
+                {notification.context ? (
+                  <UserAvatar
+                    userProfileImg={notification.context.from.profile_image}
+                    userName={notification.context.from.name}
+                  />
+                ) : null}
               </div>
               <div className="flex-grow">
                 <p className="text-sm">{notification.message}</p>
