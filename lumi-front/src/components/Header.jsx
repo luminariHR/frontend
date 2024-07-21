@@ -13,15 +13,15 @@ const Header = () => {
     setHeaderWidth(expanded ? "calc(100% - 256px)" : "calc(100% - 64px)");
   }, [expanded]);
 
-  const handleLogout=()=>{
-    localStorage.removeItem("access_token")
-    localStorage.removeItem("refresh_token")
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
 
-    navigate('/login')
-  }
+    navigate("/login");
+  };
   return (
     <header
-      className="bg-[#F8F8FF] text-primary-foreground px-4 lg:px-6 py-4 fixed top-0 right-0 z-10 shadow"
+      className="bg-[#F8F8FF] text-primary-foreground px-4 lg:px-6 py-6 fixed top-0 right-0 z-10 shadow"
       style={{ width: headerWidth }}
     >
       <div className="flex items-center justify-between w-full h-4">
@@ -33,14 +33,18 @@ const Header = () => {
         <div className="flex gap-4 flex-1 justify-end">
           <ul className="flex gap-4 items-center">
             <li>
-              <Link to={"/myprofile"}><Settings className="h-5"/></Link>
+              <Link to={"/myprofile"}>
+                <Settings className="h-5" />
+              </Link>
             </li>
             <li>
-              <Link to="/"><Bell className="h-5"/></Link>
+              <Link to="/">
+                <Bell className="h-5" />
+              </Link>
             </li>
             <li>
               <button onClick={handleLogout} className="text-sm">
-                <LogOut className="pt-1 h-6"/>
+                <LogOut className="pt-1 h-6" />
               </button>
             </li>
           </ul>

@@ -27,7 +27,7 @@ const Sidebar = ({ children }) => {
         } transition-width duration-300`}
       >
         <div
-          className={`pt-5 flex items-center text-[#979797] text-sm ${
+          className={`py-6 flex items-center text-[#979797] text-sm ${
             expanded ? "justify-between pl-6 pr-3" : "justify-center px-3"
           }`}
         >
@@ -55,19 +55,19 @@ const Sidebar = ({ children }) => {
             expanded ? "p-3" : "justify-center items-center p-3"
           }`}
         >
-          <Link to={'/myprofile'}>
-          {user["profile_image"] ? (
-            <img
-              src={`${user["profile_image"]}`}
-              className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"} cursor-pointer`}
-            />
-          ) : (
-            <Avatar
-              variant="beam"
-              name={`${user.name}`}
-              className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"}`}
-            />
-          )}
+          <Link to={"/myprofile"}>
+            {user["profile_image"] ? (
+              <img
+                src={`${user["profile_image"]}`}
+                className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"} cursor-pointer`}
+              />
+            ) : (
+              <Avatar
+                variant="beam"
+                name={`${user.name}`}
+                className={`w-10 h-10 rounded-full ${expanded ? "mr-3" : "mr-0"}`}
+              />
+            )}
           </Link>
           <div
             className={`flex justify-between items-center overflow-hidden transition-all ${
