@@ -86,7 +86,7 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
         } h-[90%]`}
       >
         <div className="flex flex-row w-full h-full">
-          <div className="flex-grow p-8 overflow-auto ">
+          <div className="flex-grow p-8 overflow-auto">
             <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between hide-scrollbar">
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold">결재 기안하기</h2>

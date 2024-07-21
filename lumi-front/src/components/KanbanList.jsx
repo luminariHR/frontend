@@ -45,7 +45,7 @@ const KanbanList = ({ title, children }) => {
   return (
     <div
       ref={drop}
-      className={`shadow p-4 w-[300px] h-fit ${isOver ? "bg-blue-100" : "bg-[#F8F8FF]"}`}
+      className={`rounded-lg shadow p-4 w-[300px] h-fit ${isOver ? "bg-blue-100" : "bg-[#F8F8FF]"}`}
     >
       <div
         className={`flex py-3 justify-between space-x-2 items-center border-b-[3px] ${getTitleStyle(title)}`}
