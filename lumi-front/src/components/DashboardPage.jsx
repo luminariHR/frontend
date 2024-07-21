@@ -79,7 +79,7 @@ const DashboardPage = () => {
           </div>
           <div className="flex flex-col justify-center items-center pb-3 w-full">
             <section className="flex">
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
                 <div className="flex h-8 items-center text-xs justify-between">
                   <span className="">업무 현황</span>
                   <div className="text-xs font-semibold text-white">
@@ -99,13 +99,13 @@ const DashboardPage = () => {
                 </div>
                 <div>1시간 20분 36초</div>
               </div>
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
                 <div className="flex h-8 items-center text-xs justify-between">
                   <span className="">연차 사용 계획일 알림</span>
                 </div>
                 <div>금일 연차 촉진 알림이 없습니다.</div>
               </div>
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
                 <div className="flex h-8 items-center justify-between">
                   <span className="text-xs">전자 결제 현황</span>
                 </div>
@@ -124,7 +124,7 @@ const DashboardPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow">
+              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
                 <div className="flex h-8 text-xs items-center justify-between">
                   <span className="">팀원 근태 현황</span>
                 </div>
@@ -148,7 +148,7 @@ const DashboardPage = () => {
             <article className="flex">
               {/* 대시 보드 */}
               <div className="flex flex-col">
-                <div className="mt-4">Dashboard</div>
+                <div className="mt-4">할 일</div>
                 <div>
                   <KanbanBoard />
                 </div>
@@ -157,7 +157,7 @@ const DashboardPage = () => {
               {/* 월간 일정 캘린더 */}
               <div className="flex flex-col ml-6">
                 <div className="mt-4">Calendar</div>
-                <div className="mt-2 w-[300px] mr-6 px-5 pt-5 pb-2 bg-[#F8F8FF] shadow flex justify-center">
+                <div className="mt-2 w-[300px] mr-6 px-5 pt-5 pb-2 bg-[#F8F8FF] shadow flex justify-center rounded-lg">
                   <div className="dashboard_calendar flex justify-center">
                     <DatePicker
                       selected={startDate}
