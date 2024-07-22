@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "./Layout.jsx";
-import { SidebarProvider } from "./Sidebar.jsx";
+import Layout from "../Layout.jsx";
+import { SidebarProvider } from "../Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
-import Button from "./ui/button.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
-import { CustomModal2 } from "./ui/modal.jsx";
-import { StatusPill } from "./ui/pill.jsx";
+import { StatusPill } from "../ui/pill.jsx";
 import {
   Table,
   TableBody,
@@ -14,18 +12,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table.jsx";
-import emoji_pill from "../assets/emoji_pill_.png";
-import emoji_baby from "../assets/emoji_baby_.png";
-import emoji_family from "../assets/emoji_family_.png";
-import emoji_baby_bottle from "../assets/emoji_baby_bottle_.png";
-import emoji_musical_keyboard from "../assets/emoji_musical_keyboard_.png";
-import emoji_beach_with_umbrella from "../assets/emoji_beach_with_umbrella_.png";
-import emoji_party_popper from "../assets/emoji_party_popper_.png";
-import emoji_person_in_bed from "../assets/emoji_person_in_bed_.png";
-import { VacationRequestModal } from "./vacation/VacationRequest.jsx";
-import { fetchAllPTORecords } from "../api/ptoApi.js";
-import { vacationCategoryEnums } from "../enums/vacation.js";
+} from "../ui/table.jsx";
+import emoji_pill from "../../assets/emoji_pill_.png";
+import emoji_baby from "../../assets/emoji_baby_.png";
+import emoji_family from "../../assets/emoji_family_.png";
+import emoji_baby_bottle from "../../assets/emoji_baby_bottle_.png";
+import emoji_musical_keyboard from "../../assets/emoji_musical_keyboard_.png";
+import emoji_beach_with_umbrella from "../../assets/emoji_beach_with_umbrella_.png";
+import emoji_party_popper from "../../assets/emoji_party_popper_.png";
+import emoji_person_in_bed from "../../assets/emoji_person_in_bed_.png";
+import { VacationRequestModal } from "./VacationRequest.jsx";
+import { fetchAllPTORecords } from "../../api/ptoApi.js";
+import { vacationCategoryEnums } from "../../enums/vacation.js";
 
 export default function VacationPage() {
   const [vacation, setVacation] = useState([]);
@@ -34,6 +32,7 @@ export default function VacationPage() {
   const [activeTab, setActiveTab] = useState("status");
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("");
+  const navigate = useNavigate();
 
   const tabs = [
     { id: "status", label: "휴가 신청하기" },
@@ -109,17 +108,8 @@ export default function VacationPage() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const getDateString = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const handleRowClick = (id) => {
-    openModal(id);
+    navigate(`/vacation/details/${id}`);
   };
 
   const getStatusPill = (status) => {
@@ -154,18 +144,6 @@ export default function VacationPage() {
   const handleModalOpen = (category) => {
     setCategory(category);
     openModal();
-  };
-
-  const getFormattedDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return date.toLocaleString("ko-KR", options);
   };
 
   const calculateDeltaInDays = (startDateString, endDateString) => {
