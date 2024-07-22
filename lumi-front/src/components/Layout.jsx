@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
           <SidebarItem
             icon={<Network size={20} />}
             text="조직도"
-            to={"/organization"}
+            to={"/org-chart"}
           />
           <SidebarItem
             icon={<Laptop size={20} />}
