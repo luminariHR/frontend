@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./components/MainPage";
 import AdminAnalysisPage from "./components/AdminAnalysisPage.jsx";
 import OrgChartPage from "./components/org-chart/OrgChartPage.jsx";
+import { LoadingPage } from "./components/LoadingPage.jsx";
 const DashboardPage = React.lazy(
   () => import("./components/DashboardPage.jsx"),
 );
@@ -57,7 +58,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <DashboardPage />
               </Suspense>
             }
@@ -65,7 +66,7 @@ function App() {
           <Route
             path="org-chart"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <OrgChartPage />
               </Suspense>
             }
@@ -73,7 +74,7 @@ function App() {
           <Route
             path="approval/details/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <ApprovalDetails />
               </Suspense>
             }
@@ -81,7 +82,7 @@ function App() {
           <Route
             path="/attendance"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <MyAttendancePage />
               </Suspense>
             }
@@ -89,7 +90,7 @@ function App() {
           <Route
             path="/login"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <LoginPage />
               </Suspense>
             }
@@ -98,7 +99,7 @@ function App() {
             exact
             path="/approval"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <ApprovalPage />
               </Suspense>
             }
@@ -106,7 +107,7 @@ function App() {
           <Route
             path="/platform"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <PlatformPage />
               </Suspense>
             }
@@ -114,7 +115,7 @@ function App() {
           <Route
             path="/chatting"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <ChattingPage />
               </Suspense>
             }
@@ -122,7 +123,7 @@ function App() {
           <Route
             path="/calendar"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <CalendarPage />
               </Suspense>
             }
@@ -130,7 +131,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <SignUp />
               </Suspense>
             }
@@ -138,7 +139,7 @@ function App() {
           <Route
             path="/admin/departments"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminDepartmentsPage />
               </Suspense>
             }
@@ -146,7 +147,7 @@ function App() {
           <Route
             path="/mentoring"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <MentoringPage />
               </Suspense>
             }
@@ -154,7 +155,7 @@ function App() {
           <Route
             path="/myProfile"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <MyProfile />
               </Suspense>
             }
@@ -162,7 +163,7 @@ function App() {
           <Route
             path="/admin/recruitment"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminRecruitmentPage />
               </Suspense>
             }
@@ -170,7 +171,7 @@ function App() {
           <Route
             path="/admin/recruitment/analysis/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminAnalysisPage />
               </Suspense>
             }
@@ -178,7 +179,7 @@ function App() {
           <Route
             path="/admin/attendance"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminAttendancePage />
               </Suspense>
             }
@@ -186,7 +187,7 @@ function App() {
           <Route
             path="/admin/attendance/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminAttendanceDetailPage />
               </Suspense>
             }
@@ -194,7 +195,7 @@ function App() {
           <Route
             path="/admin/users"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminUsersPage />
               </Suspense>
             }
@@ -202,7 +203,7 @@ function App() {
           <Route
             path="/vacation"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <VacationPage />
               </Suspense>
             }
@@ -210,7 +211,7 @@ function App() {
           <Route
             path="/vacation/overview"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <VacationOverviewPage />
               </Suspense>
             }
@@ -218,7 +219,7 @@ function App() {
           <Route
             path="/vacation"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <VacationPage />
               </Suspense>
             }
@@ -226,7 +227,7 @@ function App() {
           <Route
             path="/vacation/request"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <VacationRequestPage />
               </Suspense>
             }
