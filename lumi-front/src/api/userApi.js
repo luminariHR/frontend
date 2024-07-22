@@ -29,3 +29,13 @@ export const fetchMyProfile = async () => {
     return null;
   }
 };
+
+export const inviteUser = async (inviteData) => {
+  try {
+    const response = await axiosInstance.post(`/api/v1/invite`, inviteData);
+    return response.data;
+  } catch (error) {
+    console.error("에러 발생", error);
+    return null;
+  }
+};
