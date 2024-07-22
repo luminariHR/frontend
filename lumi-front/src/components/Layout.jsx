@@ -70,7 +70,11 @@ const Layout = ({ children }) => {
             text="멘토링"
             to={"/mentoring"}
           />
-          <SidebarItem icon={<Book size={20} />} text="자료실" />
+          <SidebarItem 
+            icon={<Book size={20} />} 
+            text="자료실" 
+            to={"/document"}
+          />
           <SidebarItem
             icon={<MessageCircle size={20} />}
             text="메신저"
@@ -116,7 +120,6 @@ const Layout = ({ children }) => {
             <SidebarItem
               icon={<MessageCircle size={20} />}
               text="챗봇 데이터 관리"
-              to={"/admin/chatbot"}
             />
           </>
         )}

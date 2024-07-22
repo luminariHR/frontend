@@ -40,6 +40,14 @@ const AdminUsersPage = React.lazy(
   () => import("./components/AdminUsersPage.jsx"),
 );
 
+const DocumentPage = React.lazy(
+  () => import("./components/document/DocumentPage.jsx"),
+);
+
+const DocumentDetails = React.lazy(
+  () => import("./components/document/DocumentDetails.jsx"),
+);
+
 function App() {
   return (
     <RecoilRoot>
@@ -180,6 +188,22 @@ function App() {
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <AdminUsersPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/document"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <DocumentPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="document/details/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <DocumentDetails />
               </Suspense>
             }
           />
