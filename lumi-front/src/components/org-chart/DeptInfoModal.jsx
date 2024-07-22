@@ -23,6 +23,12 @@ export default function DeptInfoModal({ isOpen, onClose, dept }) {
     fetchData();
   }, [dept]);
 
+  const isDuplicate = (department, member) => {
+    return (
+      !department.head || (department.head && member.id !== department.head.id)
+    );
+  };
+
   if (!isOpen || !dept) return null;
 
   return (
@@ -83,9 +89,9 @@ export default function DeptInfoModal({ isOpen, onClose, dept }) {
               <div className={"text-md mr-2"}>없음</div>
             ) : null}
             {department.members.map((member, index) => {
-              if (department.head && member.id !== department.head.id) {
+              if (isDuplicate(department, member)) {
                 return (
-                  <div className={"flex items-center mb-4"}>
+                  <div key={member.id} className={"flex items-center mb-4"}>
                     <div className="bg-gray-200 flex-shrink-0 overflow-hidden rounded-full mr-3 w-7 h-7">
                       <UserAvatar
                         userProfileImg={member.profile_image}
@@ -108,7 +114,7 @@ export default function DeptInfoModal({ isOpen, onClose, dept }) {
                   </div>
                 );
               }
-              return <></>;
+              return null;
             })}
           </div>
           <div className={"font-semibold text-md mt-14 mb-2 text-gray-700"}>
