@@ -4,16 +4,54 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
-import { clockIn, clockOut } from "../api/attendanceApi.js";
+import { clockIn, clockOut, fetchMyAttendance } from "../api/attendanceApi.js";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
+import { fetchSentRequest } from "../api/approvalApi.js";
 
 const DashboardPage = () => {
   const [startDate, setStartDate] = useState(new Date());
   const [currentDate, setCurrentDate] = useState(new Date());
   const [clockInNote, setClockInNote] = useState("");
   const [clockOutNote, setClockOutNote] = useState("");
+  const [approvalCount, setApprovalCount] = useState([0, 0, 0]);
+  const [clockedInTime, setClockedInTime] = useState(null);
+  const [clockedOutTime, setClockedOutTime] = useState(null);
+  const [clickedClockOut, setClickedClockOut] = useState(false);
+  const [difference, setDifference] = useState(null);
   const user = useRecoilValue(loggedInUserState);
+
+  const calculateDifference = (t1, t2) => {
+    if (t1 === null && t2 === null) {
+      return `${0}시간 ${0}분`;
+    }
+    const time1Date = new Date(t1);
+    let time2Date;
+    if (t2 === null) {
+      time2Date = new Date();
+    } else {
+      time2Date = new Date(t2);
+    }
+    let diff = Math.abs(time2Date - time1Date) / 1000 / 60; // difference in minutes
+    const hours = Math.floor(diff / 60);
+    const minutes = diff % 60;
+
+    return `${hours}시간 ${Math.round(minutes)}분`;
+  };
+
+  useEffect(() => {
+    setDifference(calculateDifference(clockedInTime, clockedOutTime));
+  }, [clockedInTime, clockedOutTime]);
+
+  useEffect(() => {
+    let interval;
+    if (!clockedOutTime) {
+      interval = setInterval(() => {
+        setDifference(calculateDifference(clockedInTime, clockedOutTime));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [clockedInTime, clockedOutTime]);
 
   useEffect(() => {
     let animationFrameId;
@@ -27,6 +65,39 @@ const DashboardPage = () => {
 
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const counter = [0, 0, 0];
+      const response = await fetchSentRequest();
+      response.map((approval) => {
+        if (approval.status === "approved") {
+          counter[1] += 1;
+        } else if (approval.status === "rejected") {
+          counter[2] += 1;
+        } else if (approval.status === "pending") {
+          counter[0] += 1;
+        }
+      });
+      setApprovalCount(counter);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetchMyAttendance();
+      if (response.data.length === 1) {
+        if (response.data[0].clock_in) {
+          setClockedInTime(response.data[0].clock_in);
+        }
+        if (response.data[0].clock_out) {
+          setClockedOutTime(response.data[0].clock_out);
+        }
+      }
+    };
+    fetchData();
+  }, [clickedClockOut]);
 
   const getCurrentDateString = () => {
     return currentDate.toLocaleDateString("ko-KR", {
@@ -57,6 +128,7 @@ const DashboardPage = () => {
   const handleClockOut = async () => {
     try {
       const response = await clockOut(clockOutNote);
+      setClickedClockOut(true);
       alert(response.message);
     } catch (error) {
       alert(error.message || "출근 처리 중 오류가 발생했습니다.");
@@ -81,23 +153,28 @@ const DashboardPage = () => {
             <section className="flex">
               <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
                 <div className="flex h-8 items-center text-xs justify-between">
-                  <span className="">업무 현황</span>
+                  <span className="">출퇴근 현황</span>
                   <div className="text-xs font-semibold text-white">
                     <button
-                      className="bg-secondary rounded-lg px-3 py-1 mr-1"
+                      className={`rounded-lg px-3 py-1 mr-1 ${clockedInTime === null ? "bg-secondary cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
                       onClick={handleClockIn}
+                      disabled={clockedInTime !== null}
                     >
                       출근
                     </button>
                     <button
-                      className="bg-[#392323] rounded-lg px-3 py-1"
+                      className={`rounded-lg px-3 py-1 ${clockedOutTime === null ? "bg-[#392323] cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
                       onClick={handleClockOut}
+                      disabled={clockedOutTime !== null}
                     >
                       퇴근
                     </button>
                   </div>
                 </div>
-                <div>1시간 20분 36초</div>
+                <div className={"font-semibold"}>{difference}</div>
+                {clockedOutTime ? (
+                  <div className={"text-sm"}>오늘도 수고하셨습니다!</div>
+                ) : null}
               </div>
               <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
                 <div className="flex h-8 items-center text-xs justify-between">
@@ -112,15 +189,15 @@ const DashboardPage = () => {
                 <div className="flex items-center gap-4">
                   <div>
                     <p>대기</p>
-                    <p>2</p>
+                    <p>{approvalCount[0]}</p>
                   </div>
                   <div>
                     <p>승인</p>
-                    <p>2</p>
+                    <p>{approvalCount[1]}</p>
                   </div>
                   <div>
                     <p>반려</p>
-                    <p>2</p>
+                    <p>{approvalCount[2]}</p>
                   </div>
                 </div>
               </div>
