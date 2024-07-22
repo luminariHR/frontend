@@ -10,32 +10,44 @@ import {
 } from "./ui/table";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
-import { User } from "lucide-react";
-import { fetchAllUsers } from "../api/userApi.js";
+import { fetchAllUsers, inviteUser } from "../api/userApi.js";
 import { fetchDepartments } from "../api/departmentApi.js";
 import { postAppointment } from "../api/appointmentApi.js";
 import Button from "./ui/button.jsx";
 import { CustomModal2 } from "./ui/modal.jsx";
 import CustomSelectButton from "./ui/select.jsx";
+import { UserAvatar } from "./ui/avatar.jsx";
 
 export default function AdminUsersPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [employees, setEmployees] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [inviteForm, setInviteForm] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    employee_id: "",
+    gender: 0,
+    employment_status: 0,
+    job_title: "",
+    phone_number: "",
+    start_date: "",
+  });
 
   const handleEditClick = (employee) => {
     setSelectedEmployee({
       ...employee,
       is_department_head: employee.is_department_head,
     });
-    setIsModalOpen(true);
+    setIsAppointmentModalOpen(true);
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
+  const handleAppointmentModalClose = () => {
+    setIsAppointmentModalOpen(false);
     setSelectedEmployee(null);
   };
 
@@ -44,8 +56,17 @@ export default function AdminUsersPage() {
     setSelectedEmployee((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleInviteInputChange = (e) => {
+    const { name, value } = e.target;
+    setInviteForm((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleDepartmentSelect = (department) => {
     setSelectedEmployee((prev) => ({ ...prev, department }));
+  };
+
+  const handleGenderSelect = (gender) => {
+    setInviteForm((prev) => ({ ...prev, gender: gender.id }));
   };
 
   const handleCheckboxChange = (e) => {
@@ -68,10 +89,36 @@ export default function AdminUsersPage() {
       alert(response.message);
       const usersData = await fetchAllUsers();
       setEmployees(usersData);
-      handleModalClose();
+      handleAppointmentModalClose();
     } catch (error) {
       console.error("Error saving appointment:", error);
       alert("인사 발령 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleCreateClick = () => {
+    setIsInviteModalOpen(true);
+  };
+
+  const handleInviteModalClose = () => {
+    setIsInviteModalOpen(false);
+  };
+
+  const handleInviteSubmit = async () => {
+    try {
+      const inviteData = {
+        ...inviteForm,
+        employee_id: `EMP${Date.now()}`,
+        start_date: new Date().toISOString().split("T")[0],
+      };
+      const response = await inviteUser(inviteData);
+      alert(response.message);
+      const usersData = await fetchAllUsers();
+      setEmployees(usersData);
+      handleInviteModalClose();
+    } catch (error) {
+      console.error("Error inviting user:", error);
+      alert("회원 초대 중 오류가 발생했습니다.");
     }
   };
 
@@ -139,12 +186,20 @@ export default function AdminUsersPage() {
         </div>
 
         <div className="">
-          <div className="mb-6">
+          <div className="mb-6 flex justify-between">
             <Input
               placeholder="이름을 입력하세요."
               value={searchTerm}
               onChange={handleSearchChange}
             />
+            <div>
+              <Button
+                text={"신규 회원 초대"}
+                variant="teams"
+                onClick={handleCreateClick}
+                addClass="font-semibold"
+              />
+            </div>
           </div>
 
           <div className="overflow-auto rounded-lg border">
@@ -164,24 +219,15 @@ export default function AdminUsersPage() {
                 {filteredEmployees.map((item) => (
                   <TableRow key={item.id} addClass="cursor-default">
                     <TableCell>
-                      {item.profile_image ? (
-                        <div className="flex">
-                          <img
-                            src={item.profile_image}
-                            className="h-6 w-6 mr-4"
-                            alt="profile-img"
+                      <div className="flex items-center">
+                        <div className="h-6 w-6 flex-shrink-0">
+                          <UserAvatar
+                            userProfileImg={item.profile_image}
+                            userName={item.name}
                           />
-                          <div>{item.name ? item.name : "-"}</div>
                         </div>
-                      ) : (
-                        <div className="flex">
-                          <User
-                            strokeWidth={1}
-                            className="border border-gray-400 text-gray-400 rounded-full h-6 w-6 mr-4"
-                          />
-                          <div>{item.name ? item.name : "-"}</div>
-                        </div>
-                      )}
+                        <div className="ml-2">{item.name}</div>
+                      </div>
                     </TableCell>
                     <TableCell></TableCell>
                     <TableCell>{item.email}</TableCell>
@@ -205,8 +251,8 @@ export default function AdminUsersPage() {
 
         {/* 인사 발령 모달 */}
         <CustomModal2
-          isOpen={isModalOpen}
-          closeModal={handleModalClose}
+          isOpen={isAppointmentModalOpen}
+          closeModal={handleAppointmentModalClose}
           title="인사 발령"
         >
           {selectedEmployee && (
@@ -274,7 +320,7 @@ export default function AdminUsersPage() {
               </div>
 
               <div className="flex justify-center gap-4 mt-4">
-                <Button text="취소" onClick={handleModalClose} />
+                <Button text="취소" onClick={handleAppointmentModalClose} />
                 <Button
                   text="저장"
                   variant="primary"
@@ -283,6 +329,91 @@ export default function AdminUsersPage() {
               </div>
             </div>
           )}
+        </CustomModal2>
+
+        {/* 계정 생성 모달 */}
+        <CustomModal2
+          isOpen={isInviteModalOpen}
+          closeModal={handleInviteModalClose}
+          title="신규 계정 생성"
+        >
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block font-medium mb-2">성</label>
+                <Input
+                  name="last_name"
+                  value={inviteForm.last_name}
+                  onChange={handleInviteInputChange}
+                  addClass="w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-2">이름</label>
+                <Input
+                  name="first_name"
+                  value={inviteForm.first_name}
+                  onChange={handleInviteInputChange}
+                  addClass="w-full text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block font-medium mb-2">이메일</label>
+              <Input
+                name="email"
+                value={inviteForm.email}
+                onChange={handleInviteInputChange}
+                addClass="w-full text-sm"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block font-medium mb-2">성별</label>
+                <CustomSelectButton
+                  options={[
+                    { id: 0, name: "남자" },
+                    { id: 1, name: "여자" },
+                  ]}
+                  selectedOption={
+                    inviteForm.gender === 0
+                      ? { id: 0, name: "남자" }
+                      : inviteForm.gender === 1
+                        ? { id: 1, name: "여자" }
+                        : null
+                  }
+                  onSelect={handleGenderSelect}
+                  defaultText="성별을 선택하세요"
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-2">휴대전화</label>
+                <Input
+                  name="phone_number"
+                  value={inviteForm.phone_number}
+                  onChange={handleInviteInputChange}
+                  addClass="w-full text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block font-medium mb-2">직책</label>
+              <Input
+                name="job_title"
+                value={inviteForm.job_title}
+                onChange={handleInviteInputChange}
+                addClass="w-full text-sm"
+              />
+            </div>
+            <div className="flex justify-center gap-4 mt-4">
+              <Button text="취소" onClick={handleInviteModalClose} />
+              <Button
+                text="이메일 전송하기"
+                variant="primary"
+                onClick={handleInviteSubmit}
+              />
+            </div>
+          </div>
         </CustomModal2>
       </Layout>
     </SidebarProvider>
