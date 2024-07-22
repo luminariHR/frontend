@@ -216,7 +216,7 @@ const ChattingPage = () => {
               <input className='bg-gray-100 text-xs h-6 mt-2 placeholder:pl-1' placeholder='Search' />
             </div>
             <div className="flex h-[500px] flex-col">
-              <h2 className='text-lg font-semibold mt-3 border-b border-gray-300'>🏢My Company</h2>
+              <h2 className='text-lg font-semibold mt-3 border-b border-gray-300'>🏢 루미나리</h2>
               {users.map((user) => (
                 <p key={user.id} className='px-8 pt-2 text-xs font-semibold cursor-pointer' onClick={() => handleUserClick(user)}>
                   {user.name}
