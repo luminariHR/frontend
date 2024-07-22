@@ -50,7 +50,10 @@ export default function OrgChartPage() {
           <DeptInfoModal
             dept={selectedNode}
             isOpen={showDeptInfoModal}
-            onClose={() => setShowDeptInfoModal(false)}
+            onClose={() => {
+              setSelectedNode(null);
+              setShowDeptInfoModal(false);
+            }}
           />
         </div>
       </Layout>

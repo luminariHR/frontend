@@ -4,6 +4,7 @@ import { fetchOneDepartment } from "../../api/departmentApi.js";
 import ClipLoader from "react-spinners/ClipLoader.js";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../../state/userAtom.js";
+import Button from "../ui/button.jsx";
 
 export default function DeptInfoModal({ isOpen, onClose, dept }) {
   const [department, setDepartment] = useState(null);
@@ -32,7 +33,12 @@ export default function DeptInfoModal({ isOpen, onClose, dept }) {
     >
       {department && !loading ? (
         <>
-          <div className={"font-bold text-2xl mb-1"}>{department.name}</div>
+          <div className={"flex items-center justify-between"}>
+            <div className={"font-bold text-2xl mb-1"}>{department.name}</div>
+            <div className={"mx-1"}>
+              <Button variant="default" text={"닫기"} onClick={onClose} />
+            </div>
+          </div>
           <div className={"text-gray-500 text-lg mb-8"}>
             {department.address}
           </div>
