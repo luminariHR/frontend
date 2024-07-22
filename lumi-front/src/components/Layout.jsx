@@ -42,7 +42,7 @@ const Layout = ({ children }) => {
           <SidebarItem
             icon={<Network size={20} />}
             text="조직도"
-            to={"/organization"}
+            to={"/org-chart"}
           />
           {user?.is_hr_admin && (
             <SidebarItem

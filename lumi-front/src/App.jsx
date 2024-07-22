@@ -3,6 +3,7 @@ import { RecoilRoot } from "recoil";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./components/MainPage";
 import AdminAnalysisPage from "./components/AdminAnalysisPage.jsx";
+import OrgChartPage from "./components/org-chart/OrgChartPage.jsx";
 const DashboardPage = React.lazy(
   () => import("./components/DashboardPage.jsx"),
 );
@@ -58,6 +59,14 @@ function App() {
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <DashboardPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="org-chart"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <OrgChartPage />
               </Suspense>
             }
           />
