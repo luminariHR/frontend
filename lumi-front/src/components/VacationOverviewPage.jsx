@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
 import Layout from "./Layout.jsx";
 import { SidebarProvider } from "./Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,95 +7,14 @@ import { CustomModal2 } from "./ui/modal.jsx";
 import VacationCalendar from "./VacationCalendar.jsx";
 import { Calendar, User } from "lucide-react";
 import Button from "./ui/button.jsx";
-
-const dummyEvents = [
-  {
-    id: 1,
-    title: "휴가자 3명",
-    start: "2024-07-11",
-    color: "#8583FD",
-    details: [
-      {
-        employee_id: "1",
-        name: "김승우",
-        profile_url: null,
-        department: "재무팀",
-        job_title: "매니저",
-        start: "2024-07-18T14:48:00.000Z",
-        end: "2024-07-18T18:48:00.000Z",
-      },
-      {
-        employee_id: "2",
-        name: "박영희",
-        profile_url: null,
-        department: "프론트엔드팀",
-        job_title: "프론트엔드 개발자",
-        start: "2024-07-18T14:48:00.000Z",
-        end: "2024-07-18T18:48:00.000Z",
-      },
-      {
-        employee_id: "3",
-        name: "이민호",
-        profile_url: null,
-        department: "재무팀",
-        job_title: "매니저",
-        start: "2024-07-18T14:48:00.000Z",
-        end: "2024-07-18T18:48:00.000Z",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "휴가자 2명",
-    start: "2024-07-12",
-    color: "#8583FD",
-    details: [
-      {
-        employee_id: 1,
-        name: "김승우",
-        profile_url: null,
-        department: "재무팀",
-        job_title: "매니저",
-        start: "2024-07-18T14:48:00.000Z",
-        end: "2024-07-18T18:48:00.000Z",
-      },
-      {
-        employee_id: 2,
-        name: "박영희",
-        profile_url: null,
-        department: "재무팀",
-        job_title: "매니저",
-        start: "2024-07-18T14:48:00.000Z",
-        end: "2024-07-18T18:48:00.000Z",
-      },
-    ],
-  },
-];
-
-const getFormattedDate = (dateString) => {
-  const date = new Date(dateString);
-  const options = {
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-  };
-  return date.toLocaleString("ko-KR", options);
-};
+import { fetchMonthlyView, fetchDailyView } from "../api/ptoApi.js";
 
 export default function VacationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedEventDetails, setSelectedEventDetails] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState(dummyEvents);
-
-  const handleRowClick = (id) => {
-    navigate(`/approval/details/${id}`);
-  };
+  const [events, setEvents] = useState([]);
 
   const openModal = (date, details) => {
     setSelectedDate(date);
@@ -118,15 +36,54 @@ export default function VacationPage() {
     });
   };
 
-  const handleEventClick = (info) => {
-    const event = events.find((event) => event.start === info.event.startStr);
-    if (event) {
-      openModal(info.event.startStr, event.details);
+  const handleEventClick = async (info) => {
+    const date = info.event.startStr;
+    const [year, month, day] = date.split("-");
+    const data = await fetchDailyView(year, month, day);
+    if (data) {
+      const details = data.employees.map((employee) => ({
+        employee_id: employee.id,
+        name: employee.name,
+        profile_url: employee.profile_image,
+        department: employee.department.name,
+        job_title: employee.job_title,
+        start_date: employee.start_date,
+        end_date: employee.end_date,
+      }));
+      openModal(date, details);
     }
   };
 
+  const getThisMonthPtoList = useCallback(async (month, year) => {
+    setLoading(true);
+    const data = await fetchMonthlyView(year, month);
+    if (data) {
+      const formattedEvents = data
+        .filter((item) => item.total_count > 0)
+        .map((item) => ({
+          id: item.date,
+          title: `휴가자 ${item.total_count}명`,
+          start: item.date,
+          color: "#8583FD",
+          details: item.employees
+            ? item.employees.map((employee) => ({
+                employee_id: employee.id,
+                name: employee.name,
+                profile_url: employee.profile_image,
+                department: employee.department.name,
+                job_title: employee.job_title,
+                start: employee.start_date,
+                end: employee.end_date,
+              }))
+            : [],
+        }));
+      setEvents(formattedEvents);
+    }
+    setLoading(false);
+  }, []);
+
   const getCurrentDateString = () => {
-    return currentDate.toLocaleDateString("ko-KR", {
+    return new Date().toLocaleDateString("ko-KR", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -135,30 +92,17 @@ export default function VacationPage() {
 
   const getCurrentDayString = () => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
-    const currentDay = days[currentDate.getDay()];
+    const currentDay = days[new Date().getDay()];
     const weekOfMonthStr = ["첫", "둘", "셋", "넷"];
-    const weekOfMonth =
-      weekOfMonthStr[Math.ceil(currentDate.getDate() / 7) - 1];
+    const weekOfMonth = weekOfMonthStr[Math.ceil(new Date().getDate() / 7) - 1];
     return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 
   useEffect(() => {
-    let animationFrameId;
-
-    const updateCurrentDate = () => {
-      setCurrentDate(new Date());
-      animationFrameId = requestAnimationFrame(updateCurrentDate);
-    };
-
-    animationFrameId = requestAnimationFrame(updateCurrentDate);
-
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
-
-  // 휴가자 현황 fetch
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    getThisMonthPtoList(currentMonth, currentYear);
+  }, [getThisMonthPtoList]);
 
   return (
     <SidebarProvider>
@@ -173,32 +117,27 @@ export default function VacationPage() {
 
         <div className="">
           <div className="transition duration-300 ease-in-out">
-            <div className="overflow-auto rounded-lg">
-              {loading ? (
-                <div className="flex w-full justify-center items-center m-auto w-1/2 p-8">
-                  <ClipLoader
-                    color={"#5d5bd4"}
-                    loading={loading}
-                    size={50}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
+            <div className="relative overflow-auto rounded-lg">
+              <div className="flex item-center justify-center w-[900px] h-[600px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">
+                <div className="w-full relative">
+                  <VacationCalendar
+                    events={events}
+                    handleEventClick={handleEventClick}
+                    getThisMonthPtoList={getThisMonthPtoList}
                   />
-                </div>
-              ) : (
-                <>
-                  <div
-                    className="flex flx item-center justify-center w-[900px] h-[600px] bg-white border-l-2
-                      border-gray-300 rounded-r-xl shadow-lg "
-                  >
-                    <div className="w-full">
-                      <VacationCalendar
-                        events={events}
-                        handleEventClick={handleEventClick}
+                  {loading && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <ClipLoader
+                        color={"#5d5bd4"}
+                        loading={loading}
+                        size={50}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
                       />
                     </div>
-                  </div>
-                </>
-              )}
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -214,7 +153,7 @@ export default function VacationPage() {
               <ul>
                 {selectedEventDetails.map((item) => (
                   <li key={item.employee_id}>
-                    <div className=" flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                       <div className="flex items-center mb-4">
                         <div className="mr-2">
                           {item.profile_url ? (
@@ -244,11 +183,11 @@ export default function VacationPage() {
                           <div className="text-xs text-gray-500">
                             <div className="flex items-center">
                               <Calendar className="h-3 w-3 mr-2" />
-                              {`휴가 시작일 : ${getFormattedDate(item.start)}`}
+                              {`휴가 시작일 : ${getDateString(item.start_date)}`}
                             </div>
                             <div className="flex items-center">
                               <Calendar className="h-3 w-3 mr-2" />
-                              {`휴가 종료일 : ${getFormattedDate(item.end)}`}
+                              {`휴가 종료일 : ${getDateString(item.end_date)}`}
                             </div>
                           </div>
                         </div>
@@ -257,7 +196,7 @@ export default function VacationPage() {
                   </li>
                 ))}
               </ul>
-              <div className="flex justify-center p-6">
+              <div className="flex justify-end pt-3">
                 <Button text={"닫기"} onClick={closeModal} size="sm" />
               </div>
             </CustomModal2>
