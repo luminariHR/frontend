@@ -109,7 +109,7 @@ export default function VacationPage() {
   const closeModal = () => setIsModalOpen(false);
 
   const handleRowClick = (id) => {
-    navigate(`/vacation/details/${id}`);
+    navigate(`/vacation/${id}`);
   };
 
   const getStatusPill = (status) => {
@@ -149,7 +149,7 @@ export default function VacationPage() {
   const calculateDeltaInDays = (startDateString, endDateString) => {
     const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);
-    const differenceInMilliseconds = startDate - endDate;
+    const differenceInMilliseconds = endDate - startDate;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
     return Math.round(differenceInDays);
   };
