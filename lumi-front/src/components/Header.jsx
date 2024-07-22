@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { SidebarContext } from "./Sidebar";
 import logoImg from "../assets/logo.png";
-import { Bell, LogOut, Settings } from "lucide-react";
+import { Bell, Settings } from "lucide-react";
 import NotificationModal from "./notification/notificationModal.jsx";
 import { fetchAllNotifications } from "../api/notificationApi.js";
 import useWebSocket from "../hooks/useWebsocket.js";
 
 const Header = () => {
-  const navigate = useNavigate();
   const { expanded } = useContext(SidebarContext);
   const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
   const { messages, sendMessage } = useWebSocket(
@@ -39,12 +38,6 @@ const Header = () => {
     fetchData();
   }, [messages, showNotificationModal]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-
-    navigate("/login");
-  };
   return (
     <header
       className="bg-[#F8F8FF] text-primary-foreground px-4 lg:px-6 py-6 fixed top-0 right-0 z-10 shadow"
@@ -82,11 +75,6 @@ const Header = () => {
                 <Settings className="h-8 mx-2" />
               </Link>
             </li>
-            {/*<li>*/}
-            {/*  <button onClick={handleLogout} className="text-sm">*/}
-            {/*    <LogOut className="pt-1 mx-2 h-8" />*/}
-            {/*  </button>*/}
-            {/*</li>*/}
           </ul>
         </div>
       </div>
