@@ -239,7 +239,7 @@ function App() {
             }
           />
           <Route
-            path="/vacation/request/:id"
+            path="/vacation/details/:id"
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <VacationRequestDetailPage />
@@ -247,7 +247,7 @@ function App() {
             }
           />
           <Route
-            path="/vacation/details/:id"
+            path="/vacation/:id"
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <VacationDetailPage />
