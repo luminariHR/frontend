@@ -63,6 +63,7 @@ export const CustomModal2 = ({
           zIndex: 51,
           width: width,
           height: height,
+          maxHeight: "80vh",
           margin: "auto",
           borderRadius: "8px",
           padding: "20px",
@@ -72,6 +73,7 @@ export const CustomModal2 = ({
           overflowY: "auto",
         },
       }}
+      className="hide-scrollbar h-auto"
     >
       <h2 className="text-lg font-semibold mb-5">{title}</h2>
       <div>{children}</div>
