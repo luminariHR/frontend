@@ -89,3 +89,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* src/index.css */
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}

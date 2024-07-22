@@ -123,16 +123,6 @@ export default function MyAttendancePage() {
                 />
               </div>
             </div>
-
-            {/* todo 휴가 신청하기 기능 */}
-            <div>
-              <Button
-                text={"휴가 신청하기"}
-                size={"md"}
-                variant={"solid"}
-                addClass={"font-semibold"}
-              />
-            </div>
           </div>
 
           <div className="overflow-auto rounded-lg border">
