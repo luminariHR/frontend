@@ -28,7 +28,7 @@ const Sidebar = ({ children }) => {
         } transition-width duration-300`}
       >
         <div
-          className={`pt-5 flex items-center text-[#979797] text-sm ${
+          className={`py-6 flex items-center text-[#979797] text-sm ${
             expanded ? "justify-between pl-6 pr-3" : "justify-center px-3"
           }`}
         >
@@ -133,10 +133,6 @@ export function SidebarItem({
       navigate(to);
     }
   };
-
-  useEffect(() => {
-    console.log("expanded", expanded);
-  }, [expanded]);
 
   return (
     <li className="relative">

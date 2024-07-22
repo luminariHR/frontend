@@ -156,7 +156,7 @@ export default function Card({ item }) {
           {/*  <span> {item.start_date.slice(0, 10)}</span>*/}
           {/*</div>*/}
           <div className="flex">
-            <p className="">기한&nbsp;:&nbsp;</p>
+            <p className="whitespace-nowrap">기한&nbsp;:&nbsp;</p>
             {endDate ? (
               <DatePicker
                 selected={endDate}
