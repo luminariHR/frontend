@@ -11,11 +11,16 @@ const ChattingPage = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
   const [chatRoomId, setChatRoomId] = useState(null);
   const [chatRooms, setChatRooms] = useState([]);
   const [inviteUserId, setInviteUserId] = useState(null);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isEditingChatRoomName, setIsEditingChatRoomName] = useState(false);
+  const [newChatRoomName, setNewChatRoomName] = useState('');
   const ws = useRef(null);
+  const messagesEndRef = useRef(null);
 
   const loggedInUser = useRecoilValue(loggedInUserState);
 
@@ -25,7 +30,9 @@ const ChattingPage = () => {
       const response = await axios.get('https://dev.luminari.kro.kr/api/v1/accounts/', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setUsers(response.data.filter(user => user.id !== loggedInUser.id));
+      const fetchedUsers = response.data.filter(user => user.id !== loggedInUser.id);
+      setUsers(fetchedUsers);
+      setFilteredUsers(fetchedUsers); // 초기 필터링 설정
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -47,6 +54,11 @@ const ChattingPage = () => {
     fetchUsers();
     fetchChatRooms();
   }, [fetchUsers, fetchChatRooms]);
+
+  useEffect(() => {
+    const filtered = users.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    setFilteredUsers(filtered);
+  }, [searchTerm, users]);
 
   const fetchChatRoom = useCallback(async (userId) => {
     try {
@@ -98,14 +110,13 @@ const ChattingPage = () => {
       ws.current.onmessage = (event) => {
         const data = JSON.parse(event.data);
         console.log('WebSocket message received:', data);
-        
-        // 타임스탬프가 없거나 유효하지 않은 경우 처리
+
         const timestamp = data.timestamp ? new Date(data.timestamp) : new Date();
         if (isNaN(timestamp.getTime())) {
           console.error(`Invalid timestamp received: ${data.timestamp}`);
           return;
         }
-      
+
         setMessages(prevMessages => {
           const messageExists = prevMessages.some(
             message => message.time.toISOString() === timestamp.toISOString() && message.user === data.sender && message.text === data.message
@@ -120,8 +131,6 @@ const ChattingPage = () => {
           return prevMessages;
         });
       };
-      
-      
 
       ws.current.onerror = (error) => console.error('WebSocket 에러:', error);
       ws.current.onclose = () => console.log('WebSocket 연결 종료');
@@ -147,9 +156,16 @@ const ChattingPage = () => {
         sender: loggedInUser.id,
         timestamp: new Date().toISOString()
       };
-      console.log('Sending message:', messageData); // 로그 추가
+      console.log('Sending message:', messageData);
       ws.current.send(JSON.stringify(messageData));
       setInput('');
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -186,82 +202,147 @@ const ChattingPage = () => {
     }
   };
 
+  const handleChatRoomNameClick = () => {
+    setIsEditingChatRoomName(true);
+    setNewChatRoomName(chatRooms.find(room => room.id === chatRoomId)?.name || '');
+  };
+
+  const handleChatRoomNameChange = (e) => setNewChatRoomName(e.target.value);
+
+  const handleSaveChatRoomName = async () => {
+    if (newChatRoomName.trim()) {
+      try {
+        await axios.patch(`https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/${chatRoomId}/update/`, {
+          name: newChatRoomName
+        }, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        setIsEditingChatRoomName(false);
+        await fetchChatRooms(); // Refresh chat rooms after name change
+      } catch (error) {
+        console.error('Error updating chat room name:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   const formatTime = (timeString) => {
-  if (!timeString) {
-    console.error('Received an undefined or empty timestamp:', timeString);
-    return ''; // 타임스탬프가 없으면 빈 문자열 반환
-  }
+    if (!timeString) {
+      console.error('Received an undefined or empty timestamp:', timeString);
+      return '';
+    }
 
-  const time = new Date(timeString);
-  if (isNaN(time.getTime())) {
-    console.error(`Invalid time value received: ${timeString}`);
-    return ''; // 유효하지 않은 날짜라면 빈 문자열 반환
-  }
+    const time = new Date(timeString);
+    if (isNaN(time.getTime())) {
+      console.error(`Invalid time value received: ${timeString}`);
+      return '';
+    }
 
-  const hours = time.getHours().toString().padStart(2, '0');
-  const minutes = time.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
-};
-  
+    const hours = time.getHours().toString().padStart(2, '0');
+    const minutes = time.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
+  const getUserName = (userId) => {
+    const user = users.find(user => user.id === userId);
+    return user ? user.name : '나';
+  };
 
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex pb-3">
-          <div className='ml-10 w-[250px] p-5 bg-[#DCDBFB] shadow-2xl'>
-            <div className="flex flex-col border-b border-gray-300 pb-3">
-              <div className="flex items-center">
-                <Mails className='text-xs font-bold text-[#6863f0] mr-2' />
-                <span className='text-xs font-bold text-gray-500'>메신저</span>
+        <div className='flex'>
+          <div className='w-[250px] p-5 bg-[#5d5bd4] shadow-lg rounded-l-2xl'>
+            <div className="border-b border-white pb-3 flex flex-col">
+              <div className='flex items-center'>
+                <Mails size={20} className='text-white' />
+                <span className='ml-2 text-sm font-semibold text-white'>메신저</span>
               </div>
-              <input className='bg-gray-100 text-xs h-6 mt-2 placeholder:pl-1' placeholder='Search' />
+              <input
+                className='bg-[#f8f8ff] text-xs h-8 mt-2 px-2 placeholder-black border placeholder:font-bold border-white rounded-md'
+                placeholder='Search'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)} // 검색어 상태 업데이트
+              />
             </div>
-            <div className="flex h-[500px] flex-col">
-              <h2 className='text-lg font-semibold mt-3 border-b border-gray-300'>🏢 루미나리</h2>
-              {users.map((user) => (
-                <p key={user.id} className='px-8 pt-2 text-xs font-semibold cursor-pointer' onClick={() => handleUserClick(user)}>
+            <div className="flex h-[500px] flex-col mt-3">
+              <h2 className='text-lg font-semibold mb-2 border-b border-white text-white'>🏢 루미나리</h2>
+              {filteredUsers.map((user) => (
+                <p key={user.id} className='px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-gray-200 rounded-md text-white' onClick={() => handleUserClick(user)}>
                   {user.name}
                 </p>
               ))}
             </div>
           </div>
-          <div className='w-[700px] p-5 bg-[#f8f8ff] shadow-lg border-r-2 border-gray-200 flex flex-col justify-between'>
-            <div className="border-b border-gray-300 pb-3">
-              <h2 className='text-lg font-semibold flex flex-row'>
-                {selectedUser || chatRooms.find(room => room.id === chatRoomId)?.title || '채팅방 선택'}
-                <LogOut className='ml-[500px] cursor-pointer' onClick={handleLeave} />
-                <Plus className='ml-[10px] cursor-pointer' onClick={() => setIsInviteModalOpen(true)} />
-              </h2>
+          <div className='w-[700px] p-5 bg-[#f8f8ff] shadow-lg border-r border-gray-200 flex flex-col'>
+            <div className="border-b border-gray-300 pb-3 flex items-center justify-between">
+              {isEditingChatRoomName ? (
+                <div className='flex items-center '>
+                  <input
+                    type="text"
+                    value={newChatRoomName}
+                    onChange={handleChatRoomNameChange}
+                    className='text-lg font-semibold border-b border-gray-300 outline-none'
+                  />
+                  <button onClick={handleSaveChatRoomName} className='ml-2 p-1 bg-green-500 text-white rounded-md'>저장</button>
+                </div>
+              ) : (
+                <div className='flex items-center'>
+                  <h2 className='text-lg font-semibold cursor-pointer' onClick={handleChatRoomNameClick}>
+                    {selectedUser || chatRooms.find(room => room.id === chatRoomId)?.name || '채팅방 선택'}
+                  </h2>
+                </div>
+              )}
+              <div className='flex items-center'>
+                <LogOut className='ml-4 cursor-pointer text-gray-600 hover:text-gray-800' onClick={handleLeave} />
+                <Plus className='ml-2 cursor-pointer text-gray-600 hover:text-gray-800' onClick={() => setIsInviteModalOpen(true)} />
+              </div>
             </div>
-            <div className='flex flex-col overflow-y-auto h-[400px]'>
+            <div className='flex flex-col overflow-y-auto h-[500px] bg-[#f8f8ff] p-3 rounded-md shadow-md mt-2'>
               {messages.map((message, index) => (
                 <div key={index} className={`mb-2 ${message.user === loggedInUser.id ? 'text-right' : 'text-left'}`}>
-                  <span className='text-[10px] text-gray-400'>{formatTime(message.time)}</span>
-                  <span className={`ml-1 text-xs font-medium inline-block p-2 ${message.user === loggedInUser.id ? 'bg-[#DCDBFB] rounded-l-full rounded-b-full' : 'bg-gray-200 rounded-r-full rounded-b-full'}`}>
+                  <div className='text-xs text-gray-500'>
+                    {getUserName(message.user)}
+                  </div>
+                  <span className='text-xs text-gray-400'>{formatTime(message.time)}</span>
+                  <span className={`ml-2 text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? 'bg-blue-100 rounded-l-full rounded-b-full' : 'bg-gray-200 rounded-r-full rounded-b-full'}`}>
                     {message.text}
                   </span>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
-            <div className='mt-4 h-10 flex border-t border-gray-300 pt-2'>
+            <div className='mt-4 flex border-t border-gray-300 pt-2'>
               <div className='flex-grow relative'>
-                <input type="text" value={input} onChange={handleInputChange} className='w-full p-1.5 border border-gray-300 rounded-md pl-10' placeholder='Message...' />
-                <button onClick={handleSendMessage} className='ml-2 p-2 flex items-center'>
-                  <Send className='absolute top-1/3 right-4 text-gray-400' size={20} />
+                <input
+                  type="text"
+                  value={input}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  className='w-full p-2 border border-gray-300 rounded-md pl-10'
+                  placeholder='Message...'
+                />
+                <button onClick={handleSendMessage} className='absolute top-1/2 right-2 transform -translate-y-1/2 p-2 text-gray-600 hover:text-gray-800'>
+                  <Send size={20} />
                 </button>
               </div>
             </div>
           </div>
-          <div className='w-[250px] p-5 bg-[#f8f8ff] shadow-lg'>
+          <div className='w-[250px] p-5 bg-[#f8f8ff] shadow-lg rounded-r-2xl'>
             <div className="border-b border-gray-300 pb-3">
               <h2 className='text-lg font-semibold'>채팅방</h2>
             </div>
-            <div className="flex flex-col h-[500px] overflow-y-auto">
+            <div className="flex flex-col h-[500px] overflow-y-auto mt-3">
               {chatRooms.map((chatRoom) => (
-                <p key={chatRoom.id} className='pt-2 text-md font-semibold cursor-pointer' onClick={() => handleChatRoomClick(chatRoom)}>
-                  <button className={`w-full text-left p-2 rounded-lg ${chatRoom.id === chatRoomId ? 'bg-[#8583FD] text-white' : 'bg-[#f0f0ff] hover:bg-[#e0e0ff]'}`}>
+                <p key={chatRoom.id} className='pt-2 text-sm font-semibold'>
+                  <button className={`w-full text-left p-2 rounded-lg ${chatRoom.id === chatRoomId ? 'bg-[#5d5bd4] text-white' : ' hover:bg-[#cecece]'}`} onClick={() => handleChatRoomClick(chatRoom)}>
                     <span>{chatRoom.name}</span>
-                    <span className='px-4 flex justify-end text-[11px] font-light'>{chatRoom.created_at.substring(0, 10)}</span>
+                    <span className='px-4 text-xs font-light'>{chatRoom.created_at.substring(0, 10)}</span>
                   </button>
                 </p>
               ))}
@@ -279,8 +360,8 @@ const ChattingPage = () => {
                   <option key={user.id} value={user.id}>{user.name}</option>
                 ))}
               </select>
-              <button onClick={handleInvite} className='w-full mt-2 p-2 bg-[#8583fd] text-white rounded-md'>초대</button>
-              <button onClick={() => setIsInviteModalOpen(false)} className='w-full mt-2 p-2 bg-[#717070] text-white rounded-md'>취소</button>
+              <button onClick={handleInvite} className='w-full mt-2 p-2 bg-indigo-500 text-white rounded-md'>초대</button>
+              <button onClick={() => setIsInviteModalOpen(false)} className='w-full mt-2 p-2 bg-gray-500 text-white rounded-md'>취소</button>
             </div>
           </div>
         )}
