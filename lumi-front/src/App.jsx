@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import { RecoilRoot } from "recoil";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./components/MainPage";
-import AdminAnalysisPage from "./components/AdminAnalysisPage.jsx";
 import OrgChartPage from "./components/org-chart/OrgChartPage.jsx";
 import { LoadingPage } from "./components/LoadingPage.jsx";
 const DashboardPage = React.lazy(
@@ -26,8 +25,12 @@ const AdminDepartmentsPage = React.lazy(
 );
 const SignUp = React.lazy(() => import("./components/SignUp.jsx"));
 const AdminRecruitmentPage = React.lazy(
-  () => import("./components/AdminRecruitmentPage.jsx"),
+  () => import("./components/recruitment/AdminRecruitmentPage.jsx"),
 );
+const AdminAnalysisPage = React.lazy(
+  () => import("./components/recruitment/AdminAnalysisPage.jsx"),
+);
+
 const MentoringPage = React.lazy(
   () => import("./components/MentoringPage.jsx"),
 );
@@ -185,7 +188,7 @@ function App() {
             }
           />
           <Route
-            path="/admin/recruitment/analysis/:id"
+            path="/admin/recruitment/analysis/:posting_id/:applicant_email"
             element={
               <Suspense fallback={<LoadingPage />}>
                 <AdminAnalysisPage />
@@ -251,7 +254,7 @@ function App() {
           <Route
             path="/vacation/details/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <VacationRequestDetailPage />
               </Suspense>
             }
@@ -259,27 +262,27 @@ function App() {
           <Route
             path="/vacation/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <VacationDetailPage />
               </Suspense>
             }
           />
-            <Route
+          <Route
             path="/document"
             element={
-                <Suspense fallback={<div>Loading...</div>}>
-                    <DocumentPage />
-                </Suspense>
+              <Suspense fallback={<LoadingPage />}>
+                <DocumentPage />
+              </Suspense>
             }
-        />
-            <Route
-                path="document/details/:id"
-                element={
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <DocumentDetails />
-                    </Suspense>
-                }
-            />
+          />
+          <Route
+            path="document/details/:id"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <DocumentDetails />
+              </Suspense>
+            }
+          />
         </Routes>
       </Router>
     </RecoilRoot>
