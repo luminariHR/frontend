@@ -48,6 +48,12 @@ export const addDocument = async (formData) => {
 };
 
 
-export function deleteDocument() {
-  // 함수 구현
-}
+export const deleteDocument = async (document_id) => {
+  try {
+    const response = await axiosInstance.delete(`admin/chatbot/documents/${document_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("문서 추가 중 에러 발생:", error);
+    return null;
+  }
+};

@@ -22,8 +22,9 @@ export default function DocumentDetails() {
   const [name, setName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isLoding, setIsLoding] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [Description, setDescription] = useState("");
+  const [showDeleteMessage, setShowDeleteMessage] = useState(false);
   const user = useRecoilValue(loggedInUserState);
   
   const categories = [
@@ -61,26 +62,26 @@ export default function DocumentDetails() {
   }, [id]);
 
   const handleBackClick = () => navigate(-1);
+  const confirmDelete = () => setShowDeleteConfirm(true);
+  const cancelDelete = () => setShowDeleteConfirm(false);
 
   const handleDeleteDocument = async () => {
-    setIsLoding(true);
+    setIsLoading(true);
     try {
       const response = await deleteDocument(id);
-      if (response.success) {
-        console.log(response.message);
-        navigate(-1);
-      } else {
-        console.error(response.message);
-      }
+      setShowDeleteMessage(true);
     } catch (error) {
       console.error('문서 삭제 중 에러 발생:', error);
     } finally {
-      setIsLoding(false);
+      setIsLoading(false);
+      cancelDelete();
     }
   };
 
-  const confirmDelete = () => setShowDeleteConfirm(true);
-  const cancelDelete = () => setShowDeleteConfirm(false);
+  const handleDeleteMessageClose = () => {
+    setShowDeleteMessage(false);
+    navigate(-1);
+  };
 
   if (!detail) {
     return (
@@ -278,7 +279,22 @@ export default function DocumentDetails() {
             </div>
           </div>
         )}
-        {isLoding && (
+        {showDeleteMessage && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h4 className="text-lg font-semibold">삭제 완료</h4>
+              <p className="mt-2">문서가 성공적으로 삭제되었습니다.</p>
+              <div className="mt-4 flex justify-end">
+                <Button 
+                  text="확인" 
+                  onClick={handleDeleteMessageClose} 
+                  type="button"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {isLoading && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <ClipLoader color={"#5d5bd4"} size={70} aria-label="Saving Spinner" data-testid="loader" />
           </div>
