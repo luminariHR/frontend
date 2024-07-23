@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Layout from "./Layout.jsx";
-import { SidebarProvider } from "./Sidebar.jsx";
+import Layout from "../Layout.jsx";
+import { SidebarProvider } from "../Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
 import ClipLoader from "react-spinners/ClipLoader";
-import { CustomModal2 } from "./ui/modal.jsx";
+import { CustomModal2 } from "../ui/modal.jsx";
 import VacationCalendar from "./VacationCalendar.jsx";
-import { Calendar, User } from "lucide-react";
-import Button from "./ui/button.jsx";
-import { fetchMonthlyView, fetchDailyView } from "../api/ptoApi.js";
+import { Calendar } from "lucide-react";
+import Button from "../ui/button.jsx";
+import { fetchMonthlyView, fetchDailyView } from "../../api/ptoApi.js";
+import { UserAvatar } from "../ui/avatar.jsx";
 
 export default function VacationPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -155,23 +156,15 @@ export default function VacationPage() {
                   <li key={item.employee_id}>
                     <div className="flex justify-between items-center">
                       <div className="flex items-center mb-4">
-                        <div className="mr-2">
-                          {item.profile_url ? (
-                            <img
-                              src={item.profile_url}
-                              alt={"프로필 이미지"}
-                              className="border border-gray-400 text-gray-400 rounded-full h-8 w-8 mr-2"
-                            />
-                          ) : (
-                            <User
-                              strokeWidth={1}
-                              className="border border-gray-400 text-gray-400 rounded-full h-8 w-8 mr-2"
-                            />
-                          )}
+                        <div className="h-8 w-8 mr-4">
+                          <UserAvatar
+                            userProfileImg={item.profile_image}
+                            userName={item.name}
+                          />
                         </div>
 
                         <div className="">
-                          <div className="mb-1">
+                          <div className="mb-0">
                             <span className="text-sm mr-2">{item.name}</span>
                             <span className="text-xs text-gray-400">
                               <span className="mr-1">{item.job_title}</span>
