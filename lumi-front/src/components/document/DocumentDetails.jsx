@@ -10,7 +10,7 @@ import ClipLoader from "react-spinners/ClipLoader.js";
 import { FileMinusIcon, CircleX } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import CustomSelectButton from "../ui/select.jsx";
-import { fetchChatBot, deleteDocument } from "../../api/chatbotApi.js";
+import { fetchDocument, deleteDocument } from "../../api/chatbotApi.js";
 
 export default function DocumentDetails() {
   const { id } = useParams();
@@ -45,7 +45,7 @@ export default function DocumentDetails() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const documentDetail = await fetchChatBot(id);
+      const documentDetail = await fetchDocument(id);
       setDetail(documentDetail);
       if (documentDetail) {
         const filename = documentDetail.file.split("/").pop();

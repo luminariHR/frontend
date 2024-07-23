@@ -41,7 +41,6 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
   };
 
   const add_Document = async () => {
-    setLoading(true);
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", Description);
@@ -51,6 +50,7 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
     if (selectedCategory) {
       formData.append("category", selectedCategory.name);
     }
+    setLoading(true);
     try {
       const response = await addDocument(formData);
       console.log('API 응답:', response);
@@ -100,8 +100,8 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
                     id="title"
                     type="text"
                     value={name}
-                    placeholder={"챗봇 데이터 제목을 적어주세요."}
-                    onChange={(e) => setName(e.target.value)}
+                    placeholder={"자료 제목을 적어주세요."}
+                    onChange={(newname) => setName(newname.target.value)}
                     className="shadow appearance-none border rounded w-full py-2 px-3 mt-4 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />

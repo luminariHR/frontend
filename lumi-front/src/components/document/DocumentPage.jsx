@@ -17,7 +17,7 @@ import Button from "../ui/button.jsx";
 import { FilePlusIcon, MinusIcon, DownloadIcon } from "lucide-react";
 import { DocumentRequestModal } from "./DocumentRequest.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
-import { fetchAllChatBot } from "../../api/chatbotApi.js";
+import { fetchAllDocument } from "../../api/chatbotApi.js";
 
 export default function DocumentPage() {
   const [documents, setDocuments] = useState([]);
@@ -31,33 +31,40 @@ export default function DocumentPage() {
   };
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const getDateString = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  const closeModal = () => {
+    setIsModalOpen(false);
+    fetchData();
   };
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchAllChatBot();
-        if (data) {
-          setDocuments(data);
-        }
-      } catch (error) {
-        console.error("데이터 로드 중 에러 발생", error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchAllDocument();
+      console.log('Fetched data:', data);
+      if (Array.isArray(data)) {
+        setDocuments(data);
+      } else {
+        console.error("API 응답이 배열이 아닙니다.");
+      }
+    } catch (error) {
+      console.error("데이터 로드 중 에러 발생", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
+
+
+
+  const handleDownloadClick = (fileUrl) => {
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = fileUrl.split('/').pop();
+    link.click();
+  };
 
   return (
     <SidebarProvider>
@@ -124,7 +131,6 @@ export default function DocumentPage() {
                     <TableRow>
                       <TableHead>이름</TableHead>
                       <TableHead>카테고리</TableHead>
-                      <TableHead>생성일</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -135,13 +141,8 @@ export default function DocumentPage() {
                         addClass={"hover:bg-gray-100 cursor-pointer"}
                         onClick={() => handleRowClick(item.id)}
                       >
-                        <TableCell>{item.title}</TableCell>
+                        <TableCell>{item.name}</TableCell>
                         <TableCell>{item.category}</TableCell>
-                        <TableCell>
-                          {item.created_at
-                            ? getDateString(item.created_at)
-                            : "-"}
-                        </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end">
                             <>
@@ -151,7 +152,7 @@ export default function DocumentPage() {
                                 text={"데이터 원본 다운로드"}
                                 leftIcon={<DownloadIcon className="h-4 w-4" />}
                                 addClass={"mr-2"}
-                                onClick={() => {}}
+                                onClick={() => handleDownloadClick(item.file)}
                               />
                             </>
                           </div>
