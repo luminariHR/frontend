@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SidebarContext } from "./Sidebar";
 import Header from "./Header";
-import Sidebar, { SidebarItem } from "./Sidebar";
+import Sidebar, { SidebarItem, SidebarSubmenu } from "./Sidebar";
 import mainback from "../assets/mainback.jpg";
 import {
   Book,
@@ -39,26 +39,38 @@ const Layout = ({ children }) => {
     >
       <Sidebar>
         <>
-          <SidebarItem icon={<Home size={20} />} text="홈" to={"/dashboard"} />
           <SidebarItem
             icon={<Network size={20} />}
             text="조직도"
-            to={"/organization"}
+            to={"/org-chart"}
           />
+          {user?.is_hr_admin && (
+            <SidebarItem
+              icon={<Users size={20} />}
+              text="인사 관리"
+              hasSubmenu={true}
+            >
+              <SidebarSubmenu text="부서 관리" to={"/admin/departments"} />
+              <SidebarSubmenu text="인사 발령" to={"/admin/users"} />
+            </SidebarItem>
+          )}
           <SidebarItem
             icon={<Laptop size={20} />}
-            text="내 근태 현황"
-            to={"/attendance"}
-          />
+            text="근태 관리"
+            hasSubmenu={true}
+          >
+            <SidebarSubmenu text="내 근태 관리" to={"/attendance"} />
+            {user?.is_hr_admin && (
+              <SidebarSubmenu text="전체 근태 관리" to={"/admin/attendance"} />
+            )}
+            <SidebarSubmenu text="내 휴가 관리" to={"/vacation"} />
+            <SidebarSubmenu text="사내 휴가자 현황" to={"/vacation/overview"} />
+            <SidebarSubmenu text="휴가 신청 관리" to={"/vacation/request"} />
+          </SidebarItem>
           <SidebarItem
             icon={<Clock size={20} />}
             text="일정 관리"
             to={"/calendar"}
-          />
-          <SidebarItem
-            icon={<Calendar size={20} />}
-            text="휴가 관리"
-            to={"vacation"}
           />
           <SidebarItem
             icon={<Newspaper size={20} />}
@@ -66,66 +78,34 @@ const Layout = ({ children }) => {
             to={"/approval"}
           />
           <SidebarItem
-            icon={<HeartHandshake size={20} />}
-            text="멘토링"
-            to={"/mentoring"}
-          />
-          <SidebarItem 
-            icon={<Book size={20} />} 
-            text="자료실" 
-            to={"/document"}
-          />
+            icon={<HeartHandshake />}
+            size={20}
+            text={"멘토링"}
+            hasSubmenu={true}
+          >
+            <SidebarSubmenu text="내 멘토링" to={"/mentoring"} />
+            {user?.is_hr_admin && (
+              <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
+            )}
+          </SidebarItem>
           <SidebarItem
             icon={<MessageCircle size={20} />}
             text="메신저"
             to={"/chatting"}
           />
+          {user?.is_hr_admin && (
+              <SidebarItem
+                  icon={<Book size={20} />}
+                  text="자료실"
+                  to={"/document"}
+              />
+          )}
         </>
-        {user?.is_hr_admin && (
-          <>
-            <div className={"h-9 pt-3 pl-3 pb-1 flex items-center "}>
-              <span
-                className={`text-[#979797] text-sm overflow-hidden transition-all ${
-                  expanded ? "w-auto" : "hidden"
-                }`}
-              >
-                플랫폼 관리
-              </span>
-            </div>
-            <SidebarItem
-              icon={<Building2 size={20} />}
-              text="부서 관리"
-              to={"/admin/departments"}
-            />
-            <SidebarItem
-              icon={<Users size={20} />}
-              text="인사 관리"
-              to={"/admin/users"}
-            />
-            <SidebarItem
-              icon={<Laptop size={20} />}
-              text="근태 관리"
-              to={"/admin/attendance"}
-            />
-            <SidebarItem
-              icon={<HeartHandshake size={20} />}
-              text="멘토링 관리"
-              to={"/admin/mentoring"}
-            />
-            <SidebarItem
-              icon={<FileText size={20} />}
-              text="채용 관리"
-              to={"/admin/recruitment"}
-            />
-            <SidebarItem
-              icon={<MessageCircle size={20} />}
-              text="챗봇 데이터 관리"
-            />
-          </>
-        )}
       </Sidebar>
       <div
-        className={`flex-1 transition-all duration-300 ${expanded ? "ml-64" : "ml-16"}`}
+        className={`flex-1 transition-all duration-300 ${
+          expanded ? "ml-64" : "ml-16"
+        }`}
       >
         <Header />
         <main className="pt-20 px-4 w-full">{children}</main>

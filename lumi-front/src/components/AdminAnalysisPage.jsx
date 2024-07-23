@@ -5,6 +5,7 @@ import Layout from "../components/Layout.jsx";
 import { SidebarProvider } from "./Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "./ui/button.jsx";
+import { LoadingPage } from "./LoadingPage.jsx";
 
 function AdminAnalysisPage() {
   const { id } = useParams();
@@ -51,7 +52,7 @@ function AdminAnalysisPage() {
   }, []);
 
   if (!applicantData) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (

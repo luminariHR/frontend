@@ -3,6 +3,8 @@ import { RecoilRoot } from "recoil";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./components/MainPage";
 import AdminAnalysisPage from "./components/AdminAnalysisPage.jsx";
+import OrgChartPage from "./components/org-chart/OrgChartPage.jsx";
+import { LoadingPage } from "./components/LoadingPage.jsx";
 const DashboardPage = React.lazy(
   () => import("./components/DashboardPage.jsx"),
 );
@@ -39,6 +41,21 @@ const AdminAttendanceDetailPage = React.lazy(
 const AdminUsersPage = React.lazy(
   () => import("./components/AdminUsersPage.jsx"),
 );
+const VacationPage = React.lazy(
+  () => import("./components/vacation/VacationPage.jsx"),
+);
+const VacationOverviewPage = React.lazy(
+  () => import("./components/vacation/VacationOverviewPage.jsx"),
+);
+const VacationRequestPage = React.lazy(
+  () => import("./components/vacation/VacationRequestPage.jsx"),
+);
+const VacationRequestDetailPage = React.lazy(
+  () => import("./components/vacation/VacationRequestDetailPage.jsx"),
+);
+const VacationDetailPage = React.lazy(
+  () => import("./components/vacation/VacationDetailPage.jsx"),
+);
 
 const DocumentPage = React.lazy(
   () => import("./components/document/DocumentPage.jsx"),
@@ -57,15 +74,23 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <DashboardPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="org-chart"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <OrgChartPage />
               </Suspense>
             }
           />
           <Route
             path="approval/details/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <ApprovalDetails />
               </Suspense>
             }
@@ -73,7 +98,7 @@ function App() {
           <Route
             path="/attendance"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <MyAttendancePage />
               </Suspense>
             }
@@ -81,7 +106,7 @@ function App() {
           <Route
             path="/login"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <LoginPage />
               </Suspense>
             }
@@ -90,7 +115,7 @@ function App() {
             exact
             path="/approval"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <ApprovalPage />
               </Suspense>
             }
@@ -98,7 +123,7 @@ function App() {
           <Route
             path="/platform"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <PlatformPage />
               </Suspense>
             }
@@ -106,7 +131,7 @@ function App() {
           <Route
             path="/chatting"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <ChattingPage />
               </Suspense>
             }
@@ -114,7 +139,7 @@ function App() {
           <Route
             path="/calendar"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <CalendarPage />
               </Suspense>
             }
@@ -122,7 +147,7 @@ function App() {
           <Route
             path="/signup"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <SignUp />
               </Suspense>
             }
@@ -130,7 +155,7 @@ function App() {
           <Route
             path="/admin/departments"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminDepartmentsPage />
               </Suspense>
             }
@@ -138,7 +163,7 @@ function App() {
           <Route
             path="/mentoring"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <MentoringPage />
               </Suspense>
             }
@@ -146,7 +171,7 @@ function App() {
           <Route
             path="/myProfile"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <MyProfile />
               </Suspense>
             }
@@ -154,7 +179,7 @@ function App() {
           <Route
             path="/admin/recruitment"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminRecruitmentPage />
               </Suspense>
             }
@@ -162,7 +187,7 @@ function App() {
           <Route
             path="/admin/recruitment/analysis/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminAnalysisPage />
               </Suspense>
             }
@@ -170,7 +195,7 @@ function App() {
           <Route
             path="/admin/attendance"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminAttendancePage />
               </Suspense>
             }
@@ -178,7 +203,7 @@ function App() {
           <Route
             path="/admin/attendance/:id"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminAttendanceDetailPage />
               </Suspense>
             }
@@ -186,27 +211,75 @@ function App() {
           <Route
             path="/admin/users"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<LoadingPage />}>
                 <AdminUsersPage />
               </Suspense>
             }
           />
           <Route
-            path="/document"
+            path="/vacation"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <DocumentPage />
+              <Suspense fallback={<LoadingPage />}>
+                <VacationPage />
               </Suspense>
             }
           />
           <Route
-            path="document/details/:id"
+            path="/vacation/overview"
             element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <DocumentDetails />
+              <Suspense fallback={<LoadingPage />}>
+                <VacationOverviewPage />
               </Suspense>
             }
           />
+          <Route
+            path="/vacation"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <VacationPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/vacation/request"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <VacationRequestPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/vacation/details/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <VacationRequestDetailPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/vacation/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <VacationDetailPage />
+              </Suspense>
+            }
+          />
+            <Route
+            path="/document"
+            element={
+                <Suspense fallback={<div>Loading...</div>}>
+                    <DocumentPage />
+                </Suspense>
+            }
+        />
+            <Route
+                path="document/details/:id"
+                element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <DocumentDetails />
+                    </Suspense>
+                }
+            />
         </Routes>
       </Router>
     </RecoilRoot>

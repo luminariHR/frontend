@@ -7,10 +7,21 @@ export const fetchDepartments = async () => {
     const response = await axiosInstance.get(
       "/api/v1/departments/?include_deleted=false",
     );
-    console.log("조직 response.data", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching departments:", error);
+    throw error;
+  }
+};
+
+export const fetchOneDepartment = async (departmentId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/v1/departments/${departmentId}`,
+    );
+    return response.data[0];
+  } catch (error) {
+    console.error("Error fetching department members:", error);
     throw error;
   }
 };
@@ -20,7 +31,6 @@ export const fetchDepartmentMembers = async (departmentId) => {
     const response = await axiosInstance.get(
       `/api/v1/departments/${departmentId}`,
     );
-    console.log("조직 멤버", response.data);
     return response.data.members;
   } catch (error) {
     console.error("Error fetching department members:", error);
