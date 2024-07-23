@@ -5,33 +5,24 @@ import { useDropzone } from "react-dropzone";
 import { TextEditor } from "../ui/editor";
 import CustomSelectButton from "../ui/select.jsx";
 import { FilePlusIcon } from "lucide-react";
-import { fetchCategories } from "../../api/chatbotApi.js";
+import { addDocument } from "../../api/chatbotApi.js";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export function DocumentRequestModal({ onClose, onRequestSubmit }) {
   const [isSidenavOpen, setIsSidenavOpen] = useState(true);
-  const [title, setTitle] = useState("");
-  const [editorValue, setEditorValue] = useState("");
+  const [name, setName] = useState("");
+  const [Description, setDescription] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await fetchCategories();
-        setCategories(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadCategories();
-  }, []);
+  const categories = [
+    { id: 1, name: "onboarding_offboarding" },
+    { id: 2, name: "company_policies" },
+    { id: 3, name: "others" },
+  ];
 
   const onDrop = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -46,24 +37,47 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
   });
 
   const handleEditorChange = (value) => {
-    setEditorValue(value);
+    setDescription(value);
   };
 
-  const handleSubmit = async () => {
+  const add_Document = async () => {
+    setLoading(true);
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", editorValue);
+    formData.append("name", name);
+    formData.append("description", Description);
     if (selectedFile) {
       formData.append("file", selectedFile);
     }
     if (selectedCategory) {
-      formData.append("category", selectedCategory.id); // Add category ID to form data
+      formData.append("category", selectedCategory.name);
     }
-    onClose();
+    try {
+      const response = await addDocument(formData);
+      console.log('API 응답:', response);
+      onRequestSubmit();
+      onClose();
+    } catch (error) {
+      console.error('문서 추가 중 에러 발생:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = () => {
+    setShowConfirmation(true);
+  };
+
+  const handleConfirm = async () => {
+    setShowConfirmation(false);
+    await add_Document();
+  };
+
+  const handleCancel = () => {
+    setShowConfirmation(false);
   };
 
   const isSubmittable = () => {
-    return title && editorValue && selectedCategory;
+    return name && Description && selectedCategory;
   };
 
   return (
@@ -74,7 +88,7 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
         } h-[90%]`}
       >
         <div className="flex flex-row w-full h-full">
-          <div className="flex-grow p-8 overflow-auto ">
+          <div className="flex-grow p-8 overflow-auto">
             <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between hide-scrollbar">
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold">자료실 추가하기</h2>
@@ -85,20 +99,18 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
                   <input
                     id="title"
                     type="text"
-                    value={title}
+                    value={name}
                     placeholder={"챗봇 데이터 제목을 적어주세요."}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                     className="shadow appearance-none border rounded w-full py-2 px-3 mt-4 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
                 </div>
                 <h3 className="text-l font-semibold">카테고리</h3>
                 <div>
-                  {loading && <p>Loading categories...</p>}
-                  {error && <p>Error loading categories: {error}</p>}
                   <CustomSelectButton
                     onSelect={(selectedOption) => setSelectedCategory(selectedOption)}
-                    options={categories} // Use the fetched categories
+                    options={categories}
                     selectedOption={selectedCategory}
                     defaultText={"카테고리를 선택해주세요"}
                   />
@@ -161,7 +173,7 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
               </div>
               <div>
                 <h3 className="text-l font-semibold mb-3">문서 양식</h3>
-                <TextEditor value={editorValue} onChange={handleEditorChange} />
+                <TextEditor value={Description} onChange={handleEditorChange} />
               </div>
               <div className="flex items-center justify-center">
                 <div className={"mx-1"}>
@@ -176,7 +188,7 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
                     <Button
                       text={"데이터 추가"}
                       variant={"teams"}
-                      type="submit"
+                      type="button"
                       onClick={handleSubmit}
                       leftIcon={<FilePlusIcon />}
                     />
@@ -184,14 +196,14 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
                     <Button
                       text={"데이터 추가"}
                       variant={"teams"}
-                      type="submit"
+                      type="button"
                       disabled={true}
                       leftIcon={<FilePlusIcon />}
                     />
                   )}
                   {!isSubmittable() && showTooltip && (
                     <div className="absolute left-[50%] bottom-20 transform -translate-x-1/2 mt-2 px-3 py-1 text-sm text-white bg-gray-700 rounded shadow-lg">
-                      제목, 카테고리 등을 추가해주세요.
+                      제목, 카테고리, 내용 등을 추가해주세요.
                     </div>
                   )}
                 </div>
@@ -199,6 +211,33 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
             </div>
           </div>
         </div>
+
+        {showConfirmation && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold mb-4">추가 확인</h3>
+              <p>정말로 데이터를 추가하시겠습니까?</p>
+              <div className="flex justify-end mt-4">
+                <Button
+                  text={"취소"}
+                  variant={"default"}
+                  onClick={handleCancel}
+                  className="mr-2"
+                />
+                <Button
+                  text={"확인"}
+                  variant={"teams"}
+                  onClick={handleConfirm}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <ClipLoader color={"#5d5bd4"} size={70} aria-label="Saving Spinner" data-testid="loader" />
+          </div>
+        )}
       </div>
     </div>
   );
