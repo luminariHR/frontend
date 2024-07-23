@@ -29,7 +29,7 @@ const CustomSelectButton = ({
       </div>
 
       {isOpen && (
-        <div className="origin-top-right absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+        <div className="max-h-[150px] overflow-y-auto origin-top-right absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="py-1">
             {options.map((option) => (
               <div

@@ -41,14 +41,21 @@ const AdminAttendanceDetailPage = React.lazy(
 const AdminUsersPage = React.lazy(
   () => import("./components/AdminUsersPage.jsx"),
 );
-const VacationPage = React.lazy(() => import("./components/VacationPage.jsx"));
+const VacationPage = React.lazy(
+  () => import("./components/vacation/VacationPage.jsx"),
+);
 const VacationOverviewPage = React.lazy(
-  () => import("./components/VacationOverviewPage.jsx"),
+  () => import("./components/vacation/VacationOverviewPage.jsx"),
 );
 const VacationRequestPage = React.lazy(
-  () => import("./components/VacationRequestPage.jsx"),
+  () => import("./components/vacation/VacationRequestPage.jsx"),
 );
-
+const VacationRequestDetailPage = React.lazy(
+  () => import("./components/vacation/VacationRequestDetailPage.jsx"),
+);
+const VacationDetailPage = React.lazy(
+  () => import("./components/vacation/VacationDetailPage.jsx"),
+);
 function App() {
   return (
     <RecoilRoot>
@@ -229,6 +236,22 @@ function App() {
             element={
               <Suspense fallback={<LoadingPage />}>
                 <VacationRequestPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/vacation/details/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <VacationRequestDetailPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/vacation/:id"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <VacationDetailPage />
               </Suspense>
             }
           />
