@@ -32,7 +32,7 @@ export const fetchMyProfile = async () => {
 
 export const inviteUser = async (inviteData) => {
   try {
-    const response = await axiosInstance.post(`/api/v1/invite`, inviteData);
+    const response = await axiosInstance.post(`/invite/`, inviteData);
     return response.data;
   } catch (error) {
     console.error("에러 발생", error);
