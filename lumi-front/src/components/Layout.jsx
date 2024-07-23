@@ -17,6 +17,7 @@ import {
   Network,
   FileText,
   Building2,
+  BookMarked,
 } from "lucide-react";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
@@ -93,13 +94,21 @@ const Layout = ({ children }) => {
             text="메신저"
             to={"/chatting"}
           />
+
           {user?.is_hr_admin && (
+            <>
               <SidebarItem
-                  icon={<Book size={20} />}
-                  text="자료실"
-                  to={"/document"}
+                icon={<FileText size={20} />}
+                text="채용 관리"
+                to={"/admin/recruitment"}
               />
+            </>
           )}
+          <SidebarItem
+            icon={<Book size={20} />}
+            text="자료실"
+            to={"/document"}
+          />
         </>
       </Sidebar>
       <div
