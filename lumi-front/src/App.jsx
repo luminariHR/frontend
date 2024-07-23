@@ -56,6 +56,15 @@ const VacationRequestDetailPage = React.lazy(
 const VacationDetailPage = React.lazy(
   () => import("./components/vacation/VacationDetailPage.jsx"),
 );
+
+const DocumentPage = React.lazy(
+  () => import("./components/document/DocumentPage.jsx"),
+);
+
+const DocumentDetails = React.lazy(
+  () => import("./components/document/DocumentDetails.jsx"),
+);
+
 function App() {
   return (
     <RecoilRoot>
@@ -255,6 +264,22 @@ function App() {
               </Suspense>
             }
           />
+            <Route
+            path="/document"
+            element={
+                <Suspense fallback={<div>Loading...</div>}>
+                    <DocumentPage />
+                </Suspense>
+            }
+        />
+            <Route
+                path="document/details/:id"
+                element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <DocumentDetails />
+                    </Suspense>
+                }
+            />
         </Routes>
       </Router>
     </RecoilRoot>
