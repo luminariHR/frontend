@@ -86,10 +86,12 @@ export default function AdminUsersPage() {
 
     try {
       const response = await postAppointment(appointmentData);
-      alert(response.message);
-      const usersData = await fetchAllUsers();
-      setEmployees(usersData);
-      handleAppointmentModalClose();
+      if (response) {
+        alert(response.message);
+        const usersData = await fetchAllUsers();
+        setEmployees(usersData);
+        handleAppointmentModalClose();
+      }
     } catch (error) {
       console.error("Error saving appointment:", error);
       alert("인사 발령 중 오류가 발생했습니다.");
@@ -112,10 +114,12 @@ export default function AdminUsersPage() {
         start_date: new Date().toISOString().split("T")[0],
       };
       const response = await inviteUser(inviteData);
-      alert(response.message);
-      const usersData = await fetchAllUsers();
-      setEmployees(usersData);
-      handleInviteModalClose();
+      if (response) {
+        alert(response.message);
+        const usersData = await fetchAllUsers();
+        setEmployees(usersData);
+        handleInviteModalClose();
+      }
     } catch (error) {
       console.error("Error inviting user:", error);
       alert("회원 초대 중 오류가 발생했습니다.");
@@ -335,7 +339,7 @@ export default function AdminUsersPage() {
         <CustomModal2
           isOpen={isInviteModalOpen}
           closeModal={handleInviteModalClose}
-          title="신규 계정 생성"
+          title="신규 회원 초대"
         >
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-2">
@@ -408,8 +412,8 @@ export default function AdminUsersPage() {
             <div className="flex justify-center gap-4 mt-4">
               <Button text="취소" onClick={handleInviteModalClose} />
               <Button
-                text="이메일 전송하기"
-                variant="primary"
+                text="초대 이메일 전송"
+                variant="teams"
                 onClick={handleInviteSubmit}
               />
             </div>
