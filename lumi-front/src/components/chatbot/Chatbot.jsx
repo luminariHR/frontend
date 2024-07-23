@@ -153,7 +153,11 @@ export default function Chatbot({ isOpen, onClose }) {
       <div className="p-4 border-t">
         <input
           type="text"
-          placeholder="Ask a question"
+          placeholder={
+            isLoading || !hideIntroductoryText
+              ? "카테고리를 선택해주세요."
+              : "질문을 적어주세요."
+          }
           className="w-full border rounded-full py-2 px-4"
           value={input}
           disabled={isLoading || !hideIntroductoryText}

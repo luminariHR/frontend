@@ -79,7 +79,7 @@ export function ApproveRequestModal({ onClose, onRequestSubmit }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
       <div
         className={`relative flex bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ${
           isSidenavOpen ? "w-11/12 max-w-6xl" : "w-11/12 max-w-4xl"
