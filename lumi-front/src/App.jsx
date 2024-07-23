@@ -26,9 +26,15 @@ const SignUp = React.lazy(() => import("./components/SignUp.jsx"));
 const AdminRecruitmentPage = React.lazy(
   () => import("./components/AdminRecruitmentPage.jsx"),
 );
-const MentoringPage = React.lazy(
-  () => import("./components/MentoringPage.jsx"),
+
+//멘토링
+const BeforeMatchingPage = React.lazy(
+  () => import("./components/BeforeMatchingPage.jsx"),
 );
+const AfterMatchingPage = React.lazy(
+  () => import("./components/AfterMatchingPage.jsx"),
+);
+
 const MyProfile = React.lazy(() => import("./components/MyProfile.jsx"));
 const AdminAttendancePage = React.lazy(
   () => import("./components/AdminAttendancePage.jsx"),
@@ -135,10 +141,18 @@ function App() {
             }
           />
           <Route
-            path="/mentoring"
+            path="/beforementoring/"
             element={
               <Suspense fallback={<div>Loading...</div>}>
-                <MentoringPage />
+                <BeforeMatchingPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/aftermentoring/"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AfterMatchingPage />
               </Suspense>
             }
           />

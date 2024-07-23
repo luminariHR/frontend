@@ -83,7 +83,12 @@ const Layout = ({ children }) => {
             text={"멘토링"}
             hasSubmenu={true}
           >
-            <SidebarSubmenu text="내 멘토링" to={"/mentoring"} />
+            <SidebarSubmenu text="매칭 전 멘토링" to={"/beforementoring"} />
+            {user?.is_hr_admin && (
+              <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
+            )}
+
+            <SidebarSubmenu text="매칭 후 멘토링" to={"/aftermentoring"} />
             {user?.is_hr_admin && (
               <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
             )}

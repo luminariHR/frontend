@@ -274,19 +274,7 @@ const MyProfile = () => {
                                     프로필 수정하기
                                 </button>
                             </div>
-                            <div className="flex justify-center">
-                            <input
-                                type="file"
-                                onChange={handleProfileImageChange}
-                                className="border p-2 mb-4 w-full"
-                            />
-                            <button
-                                onClick={handleProfileImageUpload}
-                                className="flex justify-center items-center bg-blue-500 shadow-lg w-4/5 h-[30px] mt-4 cursor-pointer font-semibold text-white"
-                            >
-                                프로필 사진 업로드
-                            </button>
-                            </div>
+                        
                             <div className="flex justify-start items-center ml-4 mt-4 text-gray-500 text-sm">
                                 <Mail className="mr-2" />
                                 <p>{profileData?.email || 'N/A'}</p>
@@ -379,6 +367,19 @@ const MyProfile = () => {
                                 className="border p-2 mb-4 w-full"
                                 placeholder="입사연월"
                             />
+                            <div className="flex justify-center">
+                            <input
+                                type="file"
+                                onChange={handleProfileImageChange}
+                                className="border p-2 mb-4 w-full"
+                            />
+                            <button
+                                onClick={handleProfileImageUpload}
+                                className="flex justify-center items-center bg-blue-500 shadow-lg w-4/5 mb-4 cursor-pointer font-semibold text-white"
+                            >
+                                프로필 사진 업로드
+                            </button>
+                            </div>
 
                             <div className="flex justify-end space-x-2">
                                 <button
