@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { loggedInUserState } from "../state/userAtom.js";
-import Layout from "./Layout";
-import { SidebarProvider } from "./Sidebar";
+import Layout from "../Layout";
+import { SidebarProvider } from "../Sidebar";
 import { LogOut, Mails, Plus, Send } from "lucide-react";
+import { loggedInUserState } from "../../state/userAtom.js";
 
-const ChattingPage = () => {
+const MessengerModal = ({ isOpen, onClose }) => {
   const [selectedUser, setSelectedUser] = useState("");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -255,11 +255,13 @@ const ChattingPage = () => {
     return `${hours}:${minutes}`;
   };
 
+  if (!isOpen) return null;
+
   return (
-    <SidebarProvider>
-      <Layout>
-        <div className="flex pb-3">
-          <div className="ml-10 w-[250px] p-5 bg-[#DCDBFB] shadow-2xl">
+    <>
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+        <div className="flex m-auto h-[80%]">
+          <div className="ml-10 w-[250px] p-5 bg-[#DCDBFB] shadow-2xl rounded-l-lg">
             <div className="flex flex-col border-b border-gray-300 pb-3">
               <div className="flex items-center">
                 <Mails className="text-xs font-bold text-[#6863f0] mr-2" />
@@ -326,6 +328,7 @@ const ChattingPage = () => {
                   onChange={handleInputChange}
                   className="w-full p-1.5 border border-gray-300 rounded-md pl-10"
                   placeholder="Message..."
+                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                 />
                 <button
                   onClick={handleSendMessage}
@@ -339,7 +342,7 @@ const ChattingPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-[250px] p-5 bg-[#f8f8ff] shadow-lg">
+          <div className="w-[250px] p-5 bg-[#f8f8ff] shadow-lg rounded-r-lg">
             <div className="border-b border-gray-300 pb-3">
               <h2 className="text-lg font-semibold">채팅방</h2>
             </div>
@@ -395,9 +398,9 @@ const ChattingPage = () => {
             </div>
           </div>
         )}
-      </Layout>
-    </SidebarProvider>
+      </div>
+    </>
   );
 };
 
-export default ChattingPage;
+export default MessengerModal;
