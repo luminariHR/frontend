@@ -167,9 +167,9 @@ const CalendarPage = () => {
             </h2>
           </div>
           <div className={"flex justify-center mx-auto mt-3"}>
-            <div className="flex items-center justify-center w-[60vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl m-3">
+            <div className="flex items-center justify-center w-[55vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl m-3">
               <div
-                className="flex flx item-center justify-center w-[50vw] max-w-[900px] h-[75vh] bg-[#F8F8FF]
+                className="flex item-center justify-center w-[50vw] max-w-[900px] h-[75vh] bg-[#F8F8FF]
             border-gray-300 rounded-r-xl"
               >
                 <div className="w-full">
