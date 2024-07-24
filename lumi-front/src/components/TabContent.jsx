@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import defaultprofile from '../assets/defaultprofile.png';
-import modal from './ui/mentorModal';
+import MentorModal from './ui/mentorModal'; // 경로 확인 필요
 
 const TabContent = ({ currentTab }) => {
     const [mentors, setMentors] = useState([]);
     const [mentees, setMentees] = useState([]);
-    const [matches,setMatches] = useState([]);
+    const [matches, setMatches] = useState([]);
     const [availableUsers, setAvailableUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
@@ -15,14 +15,15 @@ const TabContent = ({ currentTab }) => {
     const [recommendations, setRecommendations] = useState([]);
     const [isMentorModalOpen, setIsMentorModalOpen] = useState(false);
 
-
     useEffect(() => {
-        setError(null); // 탭이 변경될 때 error 상태를 초기화합니다.
+        setError(null);
         if (currentTab === 0) {
-            fetchMentors();
+            fetchMatches();
         } else if (currentTab === 1) {
-            fetchMentees();
+            fetchMentors();
         } else if (currentTab === 2) {
+            fetchMentees();
+        } else if (currentTab === 3) {
             fetchAvailableUsers();
         }
     }, [currentTab]);
@@ -31,10 +32,8 @@ const TabContent = ({ currentTab }) => {
         try {
             setLoading(true);
             const response = await axiosInstance.get('/admin/mentorship/matches/');
-            console.log('매치 불러오기', response.data);
             setMatches(response.data);
         } catch (error) {
-            console.error('Error fetching matches:', error);
             setError('매치 목록을 불러오는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
@@ -45,10 +44,8 @@ const TabContent = ({ currentTab }) => {
         try {
             setLoading(true);
             const response = await axiosInstance.get('/admin/mentorship/mentors/');
-            console.log('멘토 불러오기', response.data);
             setMentors(response.data);
         } catch (error) {
-            console.error('Error fetching mentors:', error);
             setError('멘토 목록을 불러오는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
@@ -59,10 +56,8 @@ const TabContent = ({ currentTab }) => {
         try {
             setLoading(true);
             const response = await axiosInstance.get('/admin/mentorship/mentees/');
-            console.log('멘티 불러오기', response.data);
             setMentees(response.data);
         } catch (error) {
-            console.error('Error fetching mentees:', error);
             setError('멘티 목록을 불러오는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
@@ -72,12 +67,9 @@ const TabContent = ({ currentTab }) => {
     const fetchAvailableUsers = async () => {
         try {
             setLoading(true);
-            setAvailableUsers([]);
             const response = await axiosInstance.get('/admin/mentorship/available/');
-            console.log('대기목록 불러오기', response.data);
             setAvailableUsers(response.data);
         } catch (error) {
-            console.error('Error fetching available users:', error);
             setError('추가되지 않은 사용자 목록을 불러오는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
@@ -88,17 +80,11 @@ const TabContent = ({ currentTab }) => {
         try {
             setLoading(true);
             const response = await axiosInstance.get(`/admin/mentorship/recommendations/?mentee_id=${userId}`);
-            console.log('추천 멘토 불러오기', response.data);
             setRecommendations(response.data.recommendations);
             setIsMentorModalOpen(true);
         } catch (error) {
-            console.error('Error fetching recommendations:', error);
             if (error.response) {
-                if (error.response.status === 404) {
-                    setError(`유저 코드가 틀린거같아서 :${userId}`);
-                } else {
-                    setError(`추천 멘토를 불러오는 중 오류가 발생했습니다 상태 코드: ${error.response.status}, 유저코드가 틀린거같을때 :${userId}`);
-                }
+                setError(`추천 멘토를 불러오는 중 오류가 발생했습니다 상태 코드: ${error.response.status}, 유저코드가 틀린거같을때 :${userId}`);
             } else {
                 setError('네트워크 오류가 발생했습니다');
             }
@@ -112,7 +98,6 @@ const TabContent = ({ currentTab }) => {
             setLoading(true);
             await axiosInstance.post(`/admin/mentorship/mentors/`, { new_candidate_id: userId });
         } catch (error) {
-            console.error('Error adding mentor:', error);
             setError('멘토로 추가하는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
@@ -124,7 +109,6 @@ const TabContent = ({ currentTab }) => {
             setLoading(true);
             await axiosInstance.post(`/admin/mentorship/mentees/`, { new_candidate_id: userId });
         } catch (error) {
-            console.error('Error adding mentee:', error);
             setError('멘티로 추가하는 중 오류가 발생했습니다.');
         } finally {
             setLoading(false);
@@ -154,7 +138,7 @@ const TabContent = ({ currentTab }) => {
 
     return (
         <div>
-             {currentTab === 0 && (
+            {currentTab === 0 && (
                 <div>
                     <h2>매칭 목록</h2>
                     {matches.length === 0 ? (
@@ -276,6 +260,13 @@ const TabContent = ({ currentTab }) => {
                 </div>
             )}
             {currentTab === 4 && <div>파트너 활동 내용</div>}
+
+            {/* 모달 추가 */}
+            <MentorModal
+                isOpen={isMentorModalOpen}
+                recommendations={recommendations}
+                onClose={() => setIsMentorModalOpen(false)}
+            />
         </div>
     );
 };
