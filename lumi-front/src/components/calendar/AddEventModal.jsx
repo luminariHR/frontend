@@ -10,8 +10,9 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { ko } from "date-fns/locale/ko";
 import Button from "../ui/button";
 import "tailwindcss/tailwind.css";
+import { adminCreateEvent } from "../../api/calendarApi.js";
 
-const eventCategories = [
+export const eventCategories = [
   {
     label: "회사 이벤트",
     value: "company_event",
@@ -37,7 +38,26 @@ const AddEventModal = ({ isOpen, onClose, onSave }) => {
   const [allDay, setAllDay] = useState(false);
   const [category, setCategory] = useState(eventCategories[0].label);
 
-  const handleSave = () => {
+  const extractTime = (date) => {
+    // Extract hours, minutes, and seconds
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    // Return the time in HH:MM:SS format
+    return `${hours}:${minutes}`;
+  };
+
+  const extractDate = (date) => {
+    // Extract year, month, and day
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    const day = date.getDate().toString().padStart(2, "0");
+
+    // Return the date in YYYY-MM-DD format
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleSave = async () => {
     const event = {
       title,
       start: startDate,
@@ -46,6 +66,18 @@ const AddEventModal = ({ isOpen, onClose, onSave }) => {
       color: eventCategories.find((cat) => cat.label === category).color,
       emoji: eventCategories.find((cat) => cat.label === category).emoji,
     };
+    const data = {
+      title,
+      content: title,
+      start_date: extractDate(startDate),
+      end_date: extractDate(endDate),
+      tag: eventCategories.find((cat) => cat.label === category).value,
+    };
+    if (!allDay) {
+      data.start_time = extractTime(startDate);
+      data.end_time = extractTime(endDate);
+    }
+    await adminCreateEvent(data);
     onSave(event);
     setTitle("");
     setStartDate(new Date());

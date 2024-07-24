@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import koLocale from "@fullcalendar/core/locales/ko";
 
-const Calendar = ({ events, handleDateClick }) => {
+const Calendar = ({ events, handleDateClick, datesSet }) => {
   return (
     <FullCalendar
       plugins={[dayGridPlugin, interactionPlugin]}
@@ -24,6 +24,7 @@ const Calendar = ({ events, handleDateClick }) => {
         center: "title",
         right: "next",
       }}
+      datesSet={datesSet}
       buttonIcons={{
         prev: "chevrons-left",
         next: "chevrons-right",

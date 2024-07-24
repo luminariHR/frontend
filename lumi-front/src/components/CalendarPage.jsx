@@ -4,29 +4,19 @@ import { SidebarProvider } from "../components/Sidebar";
 import Calendar from "../components/FullCalendar";
 import scalendar from "../assets/scalendar.png";
 import { CircleCheck, CircleAlert } from "lucide-react";
-import AddEventModal from "./calendar/AddEventModal.jsx";
+import AddEventModal, { eventCategories } from "./calendar/AddEventModal.jsx";
 import "tailwindcss/tailwind.css";
 import "../index.css";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
+import { fetchEvents } from "../api/calendarApi.js";
 
 // 이벤트 관리
 const CalendarPage = () => {
-  const [events, setEvents] = useState([
-    {
-      title: "체크인미팅",
-      description: "체크인체크인",
-      start: "2024-07-11",
-      color: "#378ef8",
-    },
-    {
-      title: "체크아웃미팅",
-      description: "체크아웃체크아웃",
-      start: "2024-07-12",
-      color: "#e66a35",
-    },
-  ]);
+  const [events, setEvents] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const calendarRef = useRef(null);
   const addEvent = (event) => {
     setEvents([...events, event]);
@@ -60,22 +50,50 @@ const CalendarPage = () => {
     }
   };
 
-  const extractTime = (dateString) => {
-    // Parse the date string into a Date object
-    const date = new Date(dateString);
+  function getFirstAndLastDayOfMonth(year, month) {
+    // Month is 0-indexed in JavaScript Date, so January is 0, December is 11
+    const firstDay = new Date(year, month - 1, 1);
+    const lastDay = new Date(year, month, 0);
 
-    // Check if the Date object is valid
-    if (isNaN(date)) {
-      throw new Error("Invalid date string provided");
-    }
+    // Format the dates as YYYY-MM-DD
+    const formatDate = (date) => {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    };
 
-    // Extract hours, minutes, and seconds
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return {
+      firstDay: formatDate(firstDay),
+      lastDay: formatDate(lastDay),
+    };
+  }
 
-    // Return the time in HH:MM:SS format
-    return `${hours}:${minutes}`;
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const range = getFirstAndLastDayOfMonth(currentYear, currentMonth + 1);
+      const data = await fetchEvents(range.firstDay, range.lastDay);
+      if (data) {
+        setEvents(
+          data.map((d) => {
+            return {
+              title: d.title,
+              start: d.start_time
+                ? new Date(`${d.start_date}T${d.start_time}`)
+                : new Date(`${d.start_date}`),
+              end: d.end_time
+                ? new Date(`${d.end_date}T${d.end_time}`)
+                : new Date(`${d.end_date}`),
+              allDay: d.start_time === null,
+              color: eventCategories.find((cat) => cat.value === d.tag).color,
+              emoji: eventCategories.find((cat) => cat.value === d.tag).emoji,
+            };
+          }),
+        );
+      }
+    };
+    fetchData();
+  }, [currentMonth, currentYear]);
 
   useEffect(() => {
     setTodayEvents(
@@ -116,6 +134,12 @@ const CalendarPage = () => {
     setNewEventDescription("");
   };
 
+  const handleDatesSet = (arg) => {
+    const currentMonthDate = new Date(arg.start);
+    setCurrentMonth(currentMonthDate.getMonth());
+    setCurrentYear(currentMonthDate.getFullYear());
+  };
+
   // 엔터치고 넘어가게 한것
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -149,12 +173,17 @@ const CalendarPage = () => {
             border-gray-300 rounded-r-xl"
               >
                 <div className="w-full">
-                  <Calendar events={events} handleDateClick={handleDateClick} />
+                  <Calendar
+                    events={events}
+                    handleDateClick={handleDateClick}
+                    ref={calendarRef}
+                    datesSet={handleDatesSet}
+                  />
                 </div>
               </div>
             </div>
             <div className="w-[300px] h-[80vh] bg-[#F8F8FF] rounded-xl m-5 p-7 py-10 shadow-xl">
-              <div className="border-b-2 border-gray-300 pb-3">
+              <div className="pb-3">
                 {user.is_hr_admin ? (
                   <div className={"flex items-center justify-left"}>
                     <button
@@ -197,28 +226,12 @@ const CalendarPage = () => {
                       <span className="pl-2 text-md">
                         {shortenString(event.title)}
                       </span>
+                      {event.allDay ? (
+                        <span className="pl-2 text-sm">{"(하루 종일)"}</span>
+                      ) : null}
                     </div>
                   ))}
                 </div>
-              </div>
-              <div className="flex  justify-start items-center">
-                <CircleCheck className="text-[#717171] ml-4 mt-4 h-5" />
-                <span className="pl-2 font-bold text-[14px] mt-4 text-[#979797]">
-                  상세일정
-                </span>
-              </div>
-              <div className="ml-4 mt-2">
-                {todayEvents.map((event, index) => {
-                  return (
-                    <div key={index} className="flex items-center">
-                      <span
-                        className={`pl-2 text-[${event.color}] text-sm text-[12px]`}
-                      >
-                        {event.description}
-                      </span>
-                    </div>
-                  );
-                })}
               </div>
             </div>
           </div>
@@ -228,78 +241,6 @@ const CalendarPage = () => {
           onClose={handleModalClose}
           onSave={handleEventSave}
         />
-
-        {/*<Modal*/}
-        {/*  isOpen={modalIsOpen}*/}
-        {/*  onRequestClose={() => setModalIsOpen(false)}*/}
-        {/*  style={{*/}
-        {/*    overlay: {*/}
-        {/*      zIndex: 50,*/}
-        {/*      display: "flex",*/}
-        {/*      alignItems: "center",*/}
-        {/*      justifyContent: "center",*/}
-        {/*      backgroundColor: "rgba(76, 76, 76, 0.7)", //카카오 어쩌구 저쩌구 따옴*/}
-        {/*    },*/}
-        {/*    content: {*/}
-        {/*      zIndex: 51,*/}
-        {/*      width: "400px",*/}
-        {/*      margin: "auto",*/}
-        {/*      borderRadius: "8px",*/}
-        {/*      padding: "20px",*/}
-        {/*      background: "white",*/}
-        {/*    },*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <h2>일정 추가</h2>*/}
-        {/*  <form onKeyDown={handleKeyDown}>*/}
-        {/*    <div>*/}
-        {/*      <label>제목:</label>*/}
-        {/*      <input*/}
-        {/*        type="text"*/}
-        {/*        value={newEventTitle}*/}
-        {/*        onChange={(e) => setNewEventTitle(e.target.value)}*/}
-        {/*        className="w-full p-2 mb-4 border border-gray-300 rounded"*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <label>세부 일정:</label>*/}
-        {/*      <textarea*/}
-        {/*        value={newEventDescription}*/}
-        {/*        onChange={(e) => setNewEventDescription(e.target.value)}*/}
-        {/*        className="w-full p-2 mb-4 border border-gray-300 rounded"*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*    <div>*/}
-        {/*      <label>색상 선택:</label>*/}
-        {/*      <div className="flex">*/}
-        {/*        {colorOptions.map((color, index) => (*/}
-        {/*          <div*/}
-        {/*            key={index}*/}
-        {/*            className="w-6 h-6 rounded-full cursor-pointer mx-1"*/}
-        {/*            style={{ backgroundColor: color }}*/}
-        {/*            onClick={() => setSelectedColor(color)}*/}
-        {/*          />*/}
-        {/*        ))}*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*    <div className="flex justify-end mt-4">*/}
-        {/*      <button*/}
-        {/*        type="button"*/}
-        {/*        onClick={handleAddEvent}*/}
-        {/*        className="bg-blue-500 text-white px-4 py-2 rounded mr-2"*/}
-        {/*      >*/}
-        {/*        추가*/}
-        {/*      </button>*/}
-        {/*      <button*/}
-        {/*        type="button"*/}
-        {/*        onClick={() => setModalIsOpen(false)}*/}
-        {/*        className="bg-gray-300 text-black px-4 py-2 rounded"*/}
-        {/*      >*/}
-        {/*        취소*/}
-        {/*      </button>*/}
-        {/*    </div>*/}
-        {/*  </form>*/}
-        {/*</Modal>*/}
       </Layout>
     </SidebarProvider>
   );
