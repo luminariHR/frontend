@@ -135,7 +135,7 @@ export default function ApprovalPage() {
           </div>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="mb-6 flex items-center justify-between">
             {isModalOpen && (
               <ApproveRequestModal

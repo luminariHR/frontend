@@ -10,13 +10,12 @@ import {
 } from "./ui/table";
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CalendarDays } from "lucide-react";
 import { fetchMyAttendance } from "../api/attendanceApi.js";
 import Button from "./ui/button.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { StatusPill } from "./ui/pill.jsx";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function MyAttendancePage() {
   const { id } = useParams();
@@ -27,15 +26,7 @@ export default function MyAttendancePage() {
   const [attendance, setAttendance] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
-
-  // const handleSearchButtonClick = async () => {
-  //   const start = startDate.toISOString().split("T")[0];
-  //   const end = endDate.toISOString().split("T")[0];
-  //   const data = await fetchMyAttendance(start, end);
-  //   if (data) {
-  //     setAttendance(data.data);
-  //   }
-  // };
+  const [loading, setLoading] = useState(true);
 
   const handleEditClick = (id) => {
     setEditingRow(id);
@@ -102,6 +93,7 @@ export default function MyAttendancePage() {
       if (data) {
         setAttendance(data.data);
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -138,118 +130,136 @@ export default function MyAttendancePage() {
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>날짜</TableHead>
-                  <TableHead>상태</TableHead>
-                  <TableHead>출근 시각</TableHead>
-                  <TableHead>퇴근 시각</TableHead>
-                  <TableHead>근무 시간</TableHead>
-                  <TableHead>특이사항</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {attendance ? (
-                  attendance.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>{item.date ? item.date : "-"}</TableCell>
-                      <TableCell>
-                        {item.is_late
-                          ? getStatusPill("late")
-                          : item.is_early_leave
-                            ? getStatusPill("early_leave")
-                            : item.clock_out
-                              ? getStatusPill("out")
-                              : getStatusPill("normal")}
-                      </TableCell>
-                      <TableCell>
-                        {editingRow === item.id ? (
-                          <Input
-                            value={editedData.clock_in}
-                            onChange={(e) => handleInputChange(e, "clock_in")}
-                          />
-                        ) : (
-                          <Input
-                            value={
-                              item.clock_in
-                                ? item.clock_in.split("T")[1].slice(0, 8)
-                                : ""
-                            }
-                            disabled
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {editingRow === item.id ? (
-                          <Input
-                            value={editedData.clock_out}
-                            onChange={(e) => handleInputChange(e, "clock_out")}
-                          />
-                        ) : (
-                          <Input
-                            value={
-                              item.clock_out
-                                ? item.clock_out.split("T")[1].slice(0, 8)
-                                : ""
-                            }
-                            disabled
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {item.hours_worked
-                          ? `${Math.floor(item.hours_worked)}시간 ${Math.round(
-                              (item.hours_worked -
-                                Math.floor(item.hours_worked)) *
-                                60,
-                            )}분`
-                          : "-"}
-                      </TableCell>
-                      <TableCell addClass="truncate">
-                        {item.clock_out_note
-                          ? item.clock_out_note.length > 30
-                            ? item.clock_out_note.slice(0, 30) + "..."
-                            : item.clock_out_note
-                          : "-"}
-                      </TableCell>
-                      <TableCell>
-                        {editingRow === item.id ? (
-                          <div className="flex justify-end">
-                            <Button
-                              text={"저장하기"}
-                              size="sm"
-                              onClick={handleSaveClick}
-                              addClass="mr-2"
+        <div className=" mt-[60px] mb-6 mx-16">
+          <div className="overflow-auto h-[63vh] rounded-lg">
+            {loading ? (
+              <div
+                className={
+                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                }
+              >
+                <ClipLoader
+                  color={"#5d5bd4"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>날짜</TableHead>
+                    <TableHead>상태</TableHead>
+                    <TableHead>출근 시각</TableHead>
+                    <TableHead>퇴근 시각</TableHead>
+                    <TableHead>근무 시간</TableHead>
+                    <TableHead>특이사항</TableHead>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {attendance ? (
+                    attendance.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.date ? item.date : "-"}</TableCell>
+                        <TableCell>
+                          {item.is_late
+                            ? getStatusPill("late")
+                            : item.is_early_leave
+                              ? getStatusPill("early_leave")
+                              : item.clock_out
+                                ? getStatusPill("out")
+                                : getStatusPill("normal")}
+                        </TableCell>
+                        <TableCell>
+                          {editingRow === item.id ? (
+                            <Input
+                              value={editedData.clock_in}
+                              onChange={(e) => handleInputChange(e, "clock_in")}
                             />
-                            <Button
-                              text={"취소"}
-                              size="sm"
-                              onClick={handleCancelClick}
+                          ) : (
+                            <Input
+                              value={
+                                item.clock_in
+                                  ? item.clock_in.split("T")[1].slice(0, 8)
+                                  : ""
+                              }
+                              disabled
                             />
-                          </div>
-                        ) : (
-                          <div className="flex justify-end">
-                            <Button
-                              text={"수정"}
-                              size="sm"
-                              onClick={() => handleEditClick(item.id)}
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {editingRow === item.id ? (
+                            <Input
+                              value={editedData.clock_out}
+                              onChange={(e) =>
+                                handleInputChange(e, "clock_out")
+                              }
                             />
-                          </div>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <div className="h-[100px] w-full p-auto flex items-center justify-center">
-                    <p className="">등록된 근태 기록이 없습니다.</p>
-                  </div>
-                )}
-              </TableBody>
-            </Table>
+                          ) : (
+                            <Input
+                              value={
+                                item.clock_out
+                                  ? item.clock_out.split("T")[1].slice(0, 8)
+                                  : ""
+                              }
+                              disabled
+                            />
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {item.hours_worked
+                            ? `${Math.floor(item.hours_worked)}시간 ${Math.round(
+                                (item.hours_worked -
+                                  Math.floor(item.hours_worked)) *
+                                  60,
+                              )}분`
+                            : "-"}
+                        </TableCell>
+                        <TableCell addClass="truncate">
+                          {item.clock_out_note
+                            ? item.clock_out_note.length > 30
+                              ? item.clock_out_note.slice(0, 30) + "..."
+                              : item.clock_out_note
+                            : "-"}
+                        </TableCell>
+                        <TableCell>
+                          {editingRow === item.id ? (
+                            <div className="flex justify-end">
+                              <Button
+                                text={"저장하기"}
+                                size="sm"
+                                onClick={handleSaveClick}
+                                addClass="mr-2"
+                              />
+                              <Button
+                                text={"취소"}
+                                size="sm"
+                                onClick={handleCancelClick}
+                              />
+                            </div>
+                          ) : (
+                            <div className="flex justify-end">
+                              <Button
+                                text={"수정"}
+                                size="sm"
+                                onClick={() => handleEditClick(item.id)}
+                              />
+                            </div>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <div className="bg-white p-8 text-gray-500">
+                      <p className="">등록된 근태 기록이 없습니다.</p>
+                    </div>
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </div>
 
           <div className="my-6 w-full flex justify-center">

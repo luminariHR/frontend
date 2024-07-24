@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../Layout.jsx";
 import { SidebarProvider } from "../Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
-import Button from "../ui/button.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
-import { CustomModal2 } from "../ui/modal.jsx";
 import { StatusPill } from "../ui/pill.jsx";
 import {
   Table,
@@ -21,7 +19,7 @@ import {
 } from "../../api/ptoApi.js";
 import { vacationCategoryEnums } from "../../enums/vacation.js";
 
-export default function VacationPage() {
+export default function VacationRequestPage() {
   const [vacationRequest, setVacationRequest] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -60,11 +58,6 @@ export default function VacationPage() {
     }
   };
 
-  const handleReviewSubmit = async (status) => {
-    await reviewPTORequest(selectedVacationId, status);
-    closeModal();
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetchReceivedPTORequests();
@@ -83,7 +76,7 @@ export default function VacationPage() {
           </div>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="transition duration-300 ease-in-out">
             <div className="overflow-auto rounded-lg">
               {loading ? (
