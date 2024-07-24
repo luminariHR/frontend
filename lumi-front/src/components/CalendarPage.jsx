@@ -167,9 +167,9 @@ const CalendarPage = () => {
             </h2>
           </div>
           <div className={"flex justify-center mx-auto mt-3"}>
-            <div className="flex items-center justify-center w-[1100px] h-[80vh] bg-[#F8F8FF] shadow-xl rounded-xl m-5">
+            <div className="flex items-center justify-center w-[55vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl m-3">
               <div
-                className="flex flx item-center justify-center w-[900px] h-[75vh] bg-[#F8F8FF]
+                className="flex item-center justify-center w-[50vw] max-w-[900px] h-[75vh] bg-[#F8F8FF]
             border-gray-300 rounded-r-xl"
               >
                 <div className="w-full">
@@ -182,7 +182,7 @@ const CalendarPage = () => {
                 </div>
               </div>
             </div>
-            <div className="w-[300px] h-[80vh] bg-[#F8F8FF] rounded-xl m-5 p-7 py-10 shadow-xl">
+            <div className="w-[15vw] min-w-[300px] h-[78vh] bg-[#F8F8FF] rounded-xl m-3 p-7 py-10 shadow-xl">
               <div className="pb-3">
                 {user.is_hr_admin ? (
                   <div className={"flex items-center justify-left"}>

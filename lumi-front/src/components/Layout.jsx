@@ -143,7 +143,7 @@ const Layout = ({ children }) => {
         />
         <button
           onClick={() => setChatbotOpen(true)}
-          className="fixed bottom-4 right-4 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
+          className="z-20 fixed bottom-4 right-4 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
         >
           루미와 대화하기
         </button>
