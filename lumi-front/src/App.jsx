@@ -72,7 +72,10 @@ const DocumentPage = React.lazy(
 const DocumentDetails = React.lazy(
   () => import("./components/document/DocumentDetails.jsx"),
 );
-
+const CareerMainPage = React.lazy(
+  () => import("./components/CareerMainPage.jsx"),
+);
+const ApplyPage = React.lazy(() => import("./components/ApplyPage.jsx"));
 function App() {
   return (
     <RecoilRoot>
@@ -293,6 +296,22 @@ function App() {
             element={
               <Suspense fallback={<LoadingPage />}>
                 <DocumentDetails />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/career"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <CareerMainPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/apply/:id"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <ApplyPage />
               </Suspense>
             }
           />

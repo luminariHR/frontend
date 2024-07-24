@@ -21,6 +21,7 @@ function AdminAnalysisPage() {
   const [jobTitle, setJobTitle] = useState("");
   const [applicantName, setApplicantName] = useState("");
   const [applicantPhone, setApplicantPhone] = useState("");
+  const [isDataFetched, setIsDataFetched] = useState(false);
 
   useEffect(() => {
     const getApplicantData = async () => {
@@ -52,12 +53,17 @@ function AdminAnalysisPage() {
           );
         }
         setApplicantAnswers(answers);
+        setIsDataFetched(true);
       } catch (error) {
+        alert("아직 자소서를 분석 중입니다.");
+        navigate("/admin/recruitment");
         console.error("Error fetching applicant data:", error);
       }
     };
-    getApplicantData();
-  }, [posting_id, applicant_email]);
+    if (!isDataFetched) {
+      getApplicantData();
+    }
+  }, [posting_id, applicant_email, isDataFetched]);
 
   const getCurrentDateString = () => {
     return currentDate.toLocaleDateString("ko-KR", {
