@@ -34,9 +34,15 @@ const Layout = ({ children }) => {
 
   return (
     <div
-      className="flex h-screen w-full"
-      style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
-    >
+  className="flex w-full"
+  style={{
+    backgroundImage: `url(${mainback})`,
+    backgroundSize: "cover",
+    backgroundRepeat: "repeat",
+    backgroundAttachment: "scroll",
+    minHeight: "100vh" // 화면 높이보다 크거나 같은 최소 높이 설정
+  }}
+>
       <Sidebar>
         <>
           <SidebarItem

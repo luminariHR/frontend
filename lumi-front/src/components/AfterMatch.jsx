@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import { useRecoilValue } from "recoil";
-import { loggedInUserState } from "../state/userAtom.js";
+import { loggedInUserState } from "../state/userAtom.js"
 
 const AfterMatch = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
