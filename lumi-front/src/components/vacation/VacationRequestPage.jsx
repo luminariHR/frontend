@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Layout from "./Layout.jsx";
-import { SidebarProvider } from "./Sidebar.jsx";
+import { useNavigate } from "react-router-dom";
+import Layout from "../Layout.jsx";
+import { SidebarProvider } from "../Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
-import Button from "./ui/button.jsx";
+import Button from "../ui/button.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
-import { CustomModal2 } from "./ui/modal.jsx";
-import { StatusPill } from "./ui/pill.jsx";
+import { CustomModal2 } from "../ui/modal.jsx";
+import { StatusPill } from "../ui/pill.jsx";
 import {
   Table,
   TableBody,
@@ -13,75 +14,33 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table.jsx";
-import { Input } from "./ui/input.jsx";
-import CustomSelectButton from "./ui/select.jsx";
-import { fetchReceivedPTORequests, reviewPTORequest } from "../api/ptoApi.js";
-import { vacationCategoryEnums } from "../enums/vacation.js";
-
-const dummyVacationData = [
-  {
-    id: 1,
-    status: "approved",
-    title: "김철수",
-    references: [],
-    start_date: "2024-07-18T14:48:00.000Z",
-    end_date: "2024-07-20T18:48:00.000Z",
-    hours: 24,
-  },
-  {
-    id: 2,
-    status: "pending",
-    title: "박영희",
-    references: [],
-    start_date: "2024-08-01T09:00:00.000Z",
-    end_date: "2024-08-03T18:00:00.000Z",
-    hours: 24,
-  },
-  {
-    id: 3,
-    status: "rejected",
-    title: "이민호",
-    references: [],
-    start_date: "2024-09-15T09:00:00.000Z",
-    end_date: "2024-09-17T18:00:00.000Z",
-    hours: 24,
-  },
-];
+} from "../ui/table.jsx";
+import {
+  fetchReceivedPTORequests,
+  reviewPTORequest,
+} from "../../api/ptoApi.js";
+import { vacationCategoryEnums } from "../../enums/vacation.js";
 
 export default function VacationPage() {
   const [vacationRequest, setVacationRequest] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("status");
   const [loading, setLoading] = useState(true);
   const [selectedVacationId, setSelectedVacationId] = useState(null);
+  const navigate = useNavigate();
 
-  const openModal = (id) => {
-    setSelectedVacationId(id);
-    setIsModalOpen(true);
-  };
   const closeModal = () => {
     setSelectedVacationId(null);
     setIsModalOpen(false);
   };
 
-  const getDateString = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const handleRowClick = (id) => {
-    openModal(id);
+    navigate(`/vacation/details/${id}`);
   };
 
   const calculateDeltaInDays = (startDateString, endDateString) => {
     const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);
-    const differenceInMilliseconds = startDate - endDate;
+    const differenceInMilliseconds = endDate - startDate;
     const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
     return Math.round(differenceInDays);
   };
@@ -115,18 +74,6 @@ export default function VacationPage() {
     fetchData();
   }, [selectedVacationId]);
 
-  const getFormattedDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      month: "numeric",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return date.toLocaleString("ko-KR", options);
-  };
-
   return (
     <SidebarProvider>
       <Layout>
@@ -137,28 +84,6 @@ export default function VacationPage() {
         </div>
 
         <div className="">
-          <div className="mb-6 flex items-center justify-between">
-            {isModalOpen && (
-              <CustomModal2
-                title="휴가 신청"
-                isOpen={isModalOpen}
-                onClose={closeModal}
-              >
-                <div>휴가 신청 내역</div>
-                <div>
-                  <Button
-                    text={"반려"}
-                    onClick={() => handleReviewSubmit("rejected")}
-                  />
-                  <Button
-                    text={"승인"}
-                    onClick={() => handleReviewSubmit("approved")}
-                  />
-                </div>
-              </CustomModal2>
-            )}
-          </div>
-
           <div className="transition duration-300 ease-in-out">
             <div className="overflow-auto rounded-lg">
               {loading ? (

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { AlignJustify, ArrowRightFromLine } from "lucide-react";
+import { AlignJustify, ArrowRightFromLine, LogOut } from "lucide-react";
 import Avatar from "boring-avatars";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -18,8 +18,15 @@ export const SidebarProvider = ({ children }) => {
 };
 
 const Sidebar = ({ children }) => {
+  const navigate = useNavigate();
   const { expanded, setExpanded } = useContext(SidebarContext);
   const user = useRecoilValue(loggedInUserState);
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+
+    navigate("/login");
+  };
   return (
     <aside className="h-screen fixed top-0 left-0">
       <div
@@ -86,6 +93,14 @@ const Sidebar = ({ children }) => {
               </span>
             </div>
           </div>
+          <button
+            onClick={handleLogout}
+            className={`text-sm ${expanded ? "" : "w-0"}`}
+          >
+            <LogOut
+              className={`ml-2 h-8 text-black ${expanded ? "" : "w-0"}`}
+            />
+          </button>
         </div>
       </div>
     </aside>

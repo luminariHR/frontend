@@ -17,15 +17,18 @@ import {
   Network,
   FileText,
   Building2,
+  BookMarked,
 } from "lucide-react";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
 import Chatbot from "./chatbot/Chatbot.jsx";
+import MessengerModal from "./messenger/MessengerModal.jsx";
 
 const Layout = ({ children }) => {
   const { expanded } = useContext(SidebarContext);
   const [headerWidth, setHeaderWidth] = useState("calc(100% - 64px)");
   const [chatbotOpen, setChatbotOpen] = useState(false);
+  const [messengerOpen, setMessengerOpen] = useState(false);
   const user = useRecoilValue(loggedInUserState);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const Layout = ({ children }) => {
           <SidebarItem
             icon={<Network size={20} />}
             text="조직도"
-            to={"/organization"}
+            to={"/org-chart"}
           />
           {user?.is_hr_admin && (
             <SidebarItem
@@ -104,13 +107,21 @@ const Layout = ({ children }) => {
             text="메신저"
             to={"/chatting"}
           />
+
           {user?.is_hr_admin && (
-            <SidebarItem
-              icon={<MessageCircle size={20} />}
-              text="챗봇 데이터 관리"
-              to={"/admin/chatdata"}
-            />
+            <>
+              <SidebarItem
+                icon={<FileText size={20} />}
+                text="채용 관리"
+                to={"/admin/recruitment"}
+              />
+            </>
           )}
+          <SidebarItem
+            icon={<Book size={20} />}
+            text="자료실"
+            to={"/document"}
+          />
         </>
       </Sidebar>
       <div
@@ -120,6 +131,16 @@ const Layout = ({ children }) => {
       >
         <Header />
         <main className="pt-20 px-4 w-full">{children}</main>
+        <button
+          onClick={() => setMessengerOpen(!messengerOpen)}
+          className="z-20 absolute bottom-4 right-44 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
+        >
+          <MessageCircle size={24} />
+        </button>
+        <MessengerModal
+          isOpen={messengerOpen}
+          onClose={() => setMessengerOpen(false)}
+        />
         <button
           onClick={() => setChatbotOpen(true)}
           className="fixed bottom-4 right-4 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"

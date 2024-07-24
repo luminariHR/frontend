@@ -38,7 +38,6 @@ export const fetchMyAttendance = async (
     const response = await axiosInstance.get(
       `/attendance/?start_date=${startDate}&end_date=${endDate}`,
     );
-    console.log("내 근퇴 response", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching attendance data:", error);

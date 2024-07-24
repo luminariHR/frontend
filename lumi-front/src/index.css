@@ -90,6 +90,11 @@
     text-overflow: ellipsis;
 }
 
+.svg-chart-container {
+    width: 100%;
+    height: 750px;
+}
+
 /* src/index.css */
 .hide-scrollbar::-webkit-scrollbar {
     width: 0;
