@@ -37,15 +37,15 @@ const Layout = ({ children }) => {
 
   return (
     <div
-  className="flex w-full"
-  style={{
-    backgroundImage: `url(${mainback})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "repeat",
-    backgroundAttachment: "scroll",
-    minHeight: "100vh" // 화면 높이보다 크거나 같은 최소 높이 설정
-  }}
->
+      className="flex w-full"
+      style={{
+        backgroundImage: `url(${mainback})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "repeat",
+        backgroundAttachment: "scroll",
+        minHeight: "100vh", // 화면 높이보다 크거나 같은 최소 높이 설정
+      }}
+    >
       <Sidebar>
         <>
           <SidebarItem
@@ -133,7 +133,7 @@ const Layout = ({ children }) => {
         <main className="pt-20 px-4 w-full">{children}</main>
         <button
           onClick={() => setMessengerOpen(!messengerOpen)}
-          className="z-20 absolute bottom-4 right-44 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
+          className="z-20 fixed bottom-4 right-44 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
         >
           <MessageCircle size={24} />
         </button>
@@ -143,7 +143,7 @@ const Layout = ({ children }) => {
         />
         <button
           onClick={() => setChatbotOpen(true)}
-          className="fixed bottom-4 right-4 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
+          className="z-20 fixed bottom-4 right-4 bg-[#5d5bd4] text-white p-4 rounded-full shadow-lg hover:[#5553c1] focus:outline-none font-bold"
         >
           루미와 대화하기
         </button>

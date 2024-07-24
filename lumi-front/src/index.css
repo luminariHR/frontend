@@ -105,3 +105,25 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
+
+.fc .fc-button-primary .fc-button {
+    @apply bg-[#5d5bd4];
+}
+
+.fullcalendar-container {
+    height: 80vh; /* Adjust the height as needed */
+    overflow-y: hidden;
+}
+
+.fc-scrollgrid {
+    height: 100%;
+}
+
+/*.fc-daygrid-day {*/
+/*    max-height: 100px;*/
+/*}*/
+
+/*.fc-daygrid-day-events {*/
+/*    max-height: 40px; !* Adjust the max-height as needed *!*/
+/*    overflow-y: auto;*/
+/*}*/

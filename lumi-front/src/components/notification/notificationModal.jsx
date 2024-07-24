@@ -16,7 +16,7 @@ export default function NotificationModal({
   };
 
   return (
-    <div className="fixed top-14 right-20 bg-white w-[23rem] shadow-lg rounded-lg overflow-hidden">
+    <div className="absolute top-14 right-20 bg-white w-[23rem] shadow-lg rounded-lg overflow-hidden">
       <div className="flex justify-between items-center p-4 border-b">
         <h2 className="text-lg font-semibold">알림</h2>
         <button onClick={handleReadAll} className="text-red-500">
@@ -32,7 +32,7 @@ export default function NotificationModal({
           notifications.map((notification, index) => (
             <a
               key={index}
-              className="flex items-start p-2 border-b cursor-pointer hover:bg-gray-300"
+              className="relative flex items-start p-2 border-b cursor-pointer hover:bg-gray-300"
               href={notification.context.path ? notification.context.path : ""}
               onClick={() => {
                 sendMessage({
@@ -43,7 +43,9 @@ export default function NotificationModal({
             >
               {notification.is_read ? null : (
                 <span
-                  className={"fixed ml-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"}
+                  className={
+                    "absolute ml-0.5 w-2.5 h-2.5 bg-red-500 rounded-full"
+                  }
                 ></span>
               )}
               <div className="bg-gray-200 flex-shrink-0 overflow-hidden rounded-full mr-4 w-10 h-10">
