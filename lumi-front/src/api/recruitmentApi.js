@@ -28,10 +28,9 @@ export const createRecruitmentPosting = async (postingData) => {
 // 상태 변경
 export const updateRecruitmentStatus = async (id, status) => {
   try {
-    const response = await axiosInstance.patch(
-      `/api/v1/recruitment/postings/${id}/`,
-      { status },
-    );
+    const response = await axiosInstance.patch(`/recruitment/postings/${id}/`, {
+      status,
+    });
     return response.data;
   } catch (error) {
     console.error("Error updating recruitment status:", error);
@@ -43,7 +42,7 @@ export const updateRecruitmentStatus = async (id, status) => {
 export const fetchApplicantsByPostingId = async (postingId) => {
   try {
     const response = await axiosInstance.get(
-      `/api/v1/recruitment/postings/${postingId}/applicants/`,
+      `/recruitment/postings/${postingId}/applicants/`,
     );
     return response.data;
   } catch (error) {
@@ -56,7 +55,7 @@ export const fetchApplicantsByPostingId = async (postingId) => {
 export const fetchApplicantData = async (postingId, applicantEmail) => {
   try {
     const response = await axiosInstance.get(
-      `/api/v1/recruitment/summaries/?posting_id=${postingId}&applicant_email=${applicantEmail}`,
+      `/recruitment/summaries/?posting_id=${postingId}&applicant_email=${applicantEmail}`,
     );
     return response.data;
   } catch (error) {
@@ -69,11 +68,25 @@ export const fetchApplicantData = async (postingId, applicantEmail) => {
 export const fetchApplicantAnswers = async (postingId, applicantEmail) => {
   try {
     const response = await axiosInstance.get(
-      `/api/v1/recruitment/postings/${postingId}/applicants/${applicantEmail}/`,
+      `/recruitment/postings/${postingId}/applicants/${applicantEmail}/`,
     );
     return response.data;
   } catch (error) {
     console.error("Error fetching applicant answers:", error);
+    throw error;
+  }
+};
+
+// 지원서 제출
+export const submitApplication = async (applicationData) => {
+  try {
+    const response = await axiosInstance.post(
+      `/recruitment/answers/${applicationData.posting_id}/`,
+      applicationData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting application:", error);
     throw error;
   }
 };
