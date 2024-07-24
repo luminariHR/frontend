@@ -11,19 +11,21 @@ import {
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import "react-datepicker/dist/react-datepicker.css";
-import { fetchMyAttendance } from "../api/attendanceApi.js";
+import { fetchOneAttendance, updateAttendance } from "../api/attendanceApi.js";
 import Button from "./ui/button.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { StatusPill } from "./ui/pill.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
+import DatePicker from "react-datepicker";
+import { CalendarDays, CircleAlert } from "lucide-react";
 
 export default function MyAttendancePage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [startDate, setStartDate] = useState("2024-07-01");
-  const [endDate, setEndDate] = useState("2024-07-20");
-  const [attendance, setAttendance] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [attendance, setAttendance] = useState(null);
   const [editingRow, setEditingRow] = useState(null);
   const [editedData, setEditedData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -41,9 +43,25 @@ export default function MyAttendancePage() {
     });
   };
 
-  // todo 관리자 근태 기록 수정
-  const handleSaveClick = () => {
-    setEditingRow(null);
+  const handleSaveClick = async () => {
+    try {
+      const updatedData = {
+        ...editedData,
+        clock_in: editedData.clock_in
+          ? `${attendance.find((item) => item.id === editingRow).date}T${editedData.clock_in}:00Z`
+          : null,
+        clock_out: editedData.clock_out
+          ? `${attendance.find((item) => item.id === editingRow).date}T${editedData.clock_out}:00Z`
+          : null,
+      };
+      await updateAttendance(editingRow, updatedData);
+      alert("근태 기록이 수정되었습니다.");
+      setEditingRow(null);
+      handleSearchButtonClick();
+    } catch (error) {
+      console.error("Error updating attendance:", error);
+      alert("근태 기록 수정 중 오류가 발생했습니다.");
+    }
   };
 
   const handleCancelClick = () => {
@@ -87,16 +105,28 @@ export default function MyAttendancePage() {
         );
     }
   };
+
+  const handleSearchButtonClick = async () => {
+    const start = startDate.toISOString().split("T")[0];
+    const end = endDate.toISOString().split("T")[0];
+    setLoading(true);
+    const data = await fetchOneAttendance(id, start, end);
+    if (data) {
+      setAttendance(data.data);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchMyAttendance(startDate, endDate);
+      const data = await fetchOneAttendance(id);
       if (data) {
         setAttendance(data.data);
       }
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     let animationFrameId;
@@ -122,144 +152,190 @@ export default function MyAttendancePage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between mb-6">
-          <div className="text-xl font-medium">근태 현황</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-6">
+          <h2>
+            <span className="text-[#8a8686]">
+              메인 &gt; 근태 관리 &gt; 전체 근태 관리 &gt;
+            </span>{" "}
+            <span className="font-semibold text-[#20243f]">근태 기록</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
-        <div className=" mt-[60px] mb-6 mx-16">
-          <div className="overflow-auto h-[63vh] rounded-lg">
-            {loading ? (
-              <div
-                className={
-                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
-                }
-              >
-                <ClipLoader
-                  color={"#5d5bd4"}
-                  loading={loading}
-                  size={50}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
+        <div className="mx-16">
+          <div className="">
+            <div className="flex items-center gap-4 mb-6">
+              <label className="flex p-2 border rounded bg-white">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="yyyy-MM-dd"
+                  className={"outline-none cursor-pointer caret-transparent"}
+                  dayClassName={dayClassName}
+                />
+                <CalendarDays />
+              </label>
+              <label className="flex p-2 border rounded bg-white">
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  dateFormat="yyyy-MM-dd"
+                  className={"outline-none cursor-pointer caret-transparent"}
+                  dayClassName={dayClassName}
+                />
+                <CalendarDays />
+              </label>
+              <div>
+                <Button
+                  text={"검색"}
+                  size={"md"}
+                  variant={"primary"}
+                  onClick={handleSearchButtonClick}
                 />
               </div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>날짜</TableHead>
-                    <TableHead>상태</TableHead>
-                    <TableHead>출근 시각</TableHead>
-                    <TableHead>퇴근 시각</TableHead>
-                    <TableHead>근무 시간</TableHead>
-                    <TableHead>특이사항</TableHead>
-                    <TableHead></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {attendance ? (
-                    attendance.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>{item.date ? item.date : "-"}</TableCell>
-                        <TableCell>
-                          {item.is_late
-                            ? getStatusPill("late")
-                            : item.is_early_leave
-                              ? getStatusPill("early_leave")
-                              : item.clock_out
-                                ? getStatusPill("out")
-                                : getStatusPill("normal")}
-                        </TableCell>
-                        <TableCell>
-                          {editingRow === item.id ? (
-                            <Input
-                              value={editedData.clock_in}
-                              onChange={(e) => handleInputChange(e, "clock_in")}
-                            />
-                          ) : (
-                            <Input
-                              value={
-                                item.clock_in
-                                  ? item.clock_in.split("T")[1].slice(0, 8)
-                                  : ""
-                              }
-                              disabled
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editingRow === item.id ? (
-                            <Input
-                              value={editedData.clock_out}
-                              onChange={(e) =>
-                                handleInputChange(e, "clock_out")
-                              }
-                            />
-                          ) : (
-                            <Input
-                              value={
-                                item.clock_out
-                                  ? item.clock_out.split("T")[1].slice(0, 8)
-                                  : ""
-                              }
-                              disabled
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {item.hours_worked
-                            ? `${Math.floor(item.hours_worked)}시간 ${Math.round(
-                                (item.hours_worked -
-                                  Math.floor(item.hours_worked)) *
-                                  60,
-                              )}분`
-                            : "-"}
-                        </TableCell>
-                        <TableCell addClass="truncate">
-                          {item.clock_out_note
-                            ? item.clock_out_note.length > 30
-                              ? item.clock_out_note.slice(0, 30) + "..."
-                              : item.clock_out_note
-                            : "-"}
-                        </TableCell>
-                        <TableCell>
-                          {editingRow === item.id ? (
-                            <div className="flex justify-end">
-                              <Button
-                                text={"저장하기"}
-                                size="sm"
-                                onClick={handleSaveClick}
-                                addClass="mr-2"
+            </div>
+
+            <div className="overflow-auto rounded-lg ">
+              {loading ? (
+                <div
+                  className={
+                    "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                  }
+                >
+                  <ClipLoader
+                    color={"#5d5bd4"}
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                </div>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>날짜</TableHead>
+                      <TableHead>상태</TableHead>
+                      <TableHead>출근 시각</TableHead>
+                      <TableHead>퇴근 시각</TableHead>
+                      <TableHead>근무 시간</TableHead>
+                      <TableHead>특이사항</TableHead>
+                      <TableHead></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {attendance && attendance.length > 0 ? (
+                      attendance.map((item) => (
+                        <TableRow key={item.id}>
+                          <TableCell>{item.date ? item.date : "-"}</TableCell>
+                          <TableCell>
+                            {item.is_late
+                              ? getStatusPill("late")
+                              : item.is_early_leave
+                                ? getStatusPill("early_leave")
+                                : item.clock_out
+                                  ? getStatusPill("out")
+                                  : getStatusPill("normal")}
+                          </TableCell>
+                          <TableCell>
+                            {editingRow === item.id ? (
+                              <Input
+                                value={editedData.clock_in}
+                                onChange={(e) =>
+                                  handleInputChange(e, "clock_in")
+                                }
                               />
-                              <Button
-                                text={"취소"}
-                                size="sm"
-                                onClick={handleCancelClick}
+                            ) : (
+                              <Input
+                                value={
+                                  item.clock_in
+                                    ? item.clock_in.split("T")[1].slice(0, 8)
+                                    : ""
+                                }
+                                disabled
                               />
-                            </div>
-                          ) : (
-                            <div className="flex justify-end">
-                              <Button
-                                text={"수정"}
-                                size="sm"
-                                onClick={() => handleEditClick(item.id)}
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {editingRow === item.id ? (
+                              <Input
+                                value={editedData.clock_out}
+                                onChange={(e) =>
+                                  handleInputChange(e, "clock_out")
+                                }
                               />
-                            </div>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <div className="bg-white p-8 text-gray-500">
-                      <p className="">등록된 근태 기록이 없습니다.</p>
-                    </div>
-                  )}
-                </TableBody>
-              </Table>
-            )}
+                            ) : (
+                              <Input
+                                value={
+                                  item.clock_out
+                                    ? item.clock_out.split("T")[1].slice(0, 8)
+                                    : ""
+                                }
+                                disabled
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {item.hours_worked
+                              ? `${Math.floor(item.hours_worked)}시간 ${Math.round(
+                                  (item.hours_worked -
+                                    Math.floor(item.hours_worked)) *
+                                    60,
+                                )}분`
+                              : "-"}
+                          </TableCell>
+                          <TableCell addClass="truncate">
+                            {item.clock_out_note
+                              ? item.clock_out_note.length > 30
+                                ? item.clock_out_note.slice(0, 30) + "..."
+                                : item.clock_out_note
+                              : "-"}
+                          </TableCell>
+                          <TableCell>
+                            {editingRow === item.id ? (
+                              <div className="flex justify-end">
+                                <Button
+                                  text={"저장하기"}
+                                  size="sm"
+                                  onClick={handleSaveClick}
+                                  addClass="mr-2"
+                                />
+                                <Button
+                                  text={"취소"}
+                                  size="sm"
+                                  onClick={handleCancelClick}
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex justify-end">
+                                <Button
+                                  text={"수정"}
+                                  size="sm"
+                                  onClick={() => handleEditClick(item.id)}
+                                />
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <div className="bg-white p-8 text-gray-500">
+                        <p className="">
+                          해당 기간 동안의 근태 기록이 없습니다.
+                        </p>
+                      </div>
+                    )}
+                  </TableBody>
+                </Table>
+              )}
+            </div>
           </div>
 
           <div className="my-6 w-full flex justify-center">

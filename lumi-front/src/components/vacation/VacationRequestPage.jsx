@@ -18,6 +18,7 @@ import {
   reviewPTORequest,
 } from "../../api/ptoApi.js";
 import { vacationCategoryEnums } from "../../enums/vacation.js";
+import { CircleAlert } from "lucide-react";
 
 export default function VacationRequestPage() {
   const [vacationRequest, setVacationRequest] = useState([]);
@@ -70,10 +71,19 @@ export default function VacationRequestPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between justify-items-center mt-2 mb-12">
-          <div className="flex items-center justify-center">
-            <div className={"text-2xl font-bold"}>휴가 신청 관리</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">휴가 신청 관리</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
         <div className="mx-16">

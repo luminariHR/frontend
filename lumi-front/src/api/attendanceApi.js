@@ -46,13 +46,33 @@ export const fetchMyAttendance = async (
 };
 
 // 관리자용
-export const fetchOneAttendance = async (user_id) => {
+export const fetchOneAttendance = async (user_id, start_date, end_date) => {
   try {
-    const response = await axios.get(`/admin/attendance/users/${user_id}`);
-    console.log(response.data);
+    let response;
+    if (start_date && end_date) {
+      response = await axiosInstance.get(
+        `/admin/attendance/users/${user_id}?start_date=${start_date}&end_date=${end_date}`,
+      );
+    } else {
+      response = await axiosInstance.get(`/admin/attendance/users/${user_id}`);
+    }
+
     return response.data;
   } catch (error) {
     console.log("Error fetching one attendance data:", error);
     return null;
+  }
+};
+
+export const updateAttendance = async (attendance_id, updatedData) => {
+  try {
+    const response = await axiosInstance.patch(
+      `/admin/attendance/${attendance_id}`,
+      updatedData,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating attendance data:", error);
+    throw error;
   }
 };

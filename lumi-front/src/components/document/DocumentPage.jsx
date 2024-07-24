@@ -14,7 +14,12 @@ import Layout from "../Layout.jsx";
 import { SidebarProvider } from "../Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "../ui/button.jsx";
-import { FilePlusIcon, MinusIcon, DownloadIcon } from "lucide-react";
+import {
+  FilePlusIcon,
+  MinusIcon,
+  DownloadIcon,
+  CircleAlert,
+} from "lucide-react";
 import { DocumentRequestModal } from "./DocumentRequest.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
 import { fetchAllDocument } from "../../api/chatbotApi.js";
@@ -67,26 +72,30 @@ export default function DocumentPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between justify-items-center mt-2 mb-12">
-          <div className="flex items-center justify-center">
-            {user ? (
-              <>
-                <div className={"text-2xl font-bold"}>자료실</div>
-              </>
-            ) : (
-              user?.is_hr_admin && (
-                <>
-                  <div className={"text-2xl font-bold"}>자료실 관리</div>
-                </>
-              )
-            )}
+        <div className="">
+          <div className="flex flex-row justify-between mb-4">
+            <h2>
+              <span className="text-[#8a8686]">메인 &gt; &gt;</span>{" "}
+              <span className="font-semibold text-[#20243f]">
+                {" "}
+                {user ? "자료실" : user?.is_hr_admin && "자료실 관리"}
+              </span>
+            </h2>
+            <h2 className="flex">
+              <span>
+                <CircleAlert className="text-gray-500 h-[20px]" />
+              </span>
+              <span className="text-gray-500 ml-2 text-[14px]">
+                업무 외 개인정보 이용 금지
+              </span>
+            </h2>
           </div>
-          <div className={"flex items-center justify-center"}>
+
+          <div className={"flex items-center justify-end mx-16"}>
             {user?.is_hr_admin && (
               <>
                 <Button
                   text={"자료실 데이터 추가하기"}
-                  size={"lg"}
                   variant={"teams"}
                   leftIcon={<FilePlusIcon />}
                   addClass={"font-semibold"}

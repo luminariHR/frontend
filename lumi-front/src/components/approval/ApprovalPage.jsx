@@ -20,6 +20,7 @@ import {
 import { StatusPill } from "../ui/pill.jsx";
 import { ApproveRequestModal } from "./ApprovalRequest";
 import ClipLoader from "react-spinners/ClipLoader";
+import { CircleAlert } from "lucide-react";
 
 export default function ApprovalPage() {
   const [approval, setApproval] = useState([]);
@@ -87,10 +88,24 @@ export default function ApprovalPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between justify-items-center mt-2 mb-12">
-          <div className="flex items-center justify-center">
-            <div className={"text-2xl font-bold"}>전자 결재 관리</div>
-          </div>
+        <div className="flex flex-row justify-between mb-6">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">전자 결재</span>
+          </h2>
+
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
+        </div>
+
+        <div className={"flex items-center justify-between mx-16"}>
+          <div></div>
           <div className="flex flex-col items-center">
             <div className="flex justify-evenly space-x-4 bg-white py-2.5 px-5 rounded-full">
               {tabs.map((tab) => (
@@ -124,15 +139,12 @@ export default function ApprovalPage() {
               ))}
             </div>
           </div>
-          <div className={"flex items-center justify-center"}>
-            <Button
-              text={"결재 기안하기"}
-              size={"lg"}
-              variant={"teams"}
-              addClass={"font-semibold"}
-              onClick={openModal}
-            />
-          </div>
+          <Button
+            text={"결재 기안하기"}
+            variant={"teams"}
+            addClass={"font-semibold"}
+            onClick={openModal}
+          />
         </div>
 
         <div className="mx-16">
