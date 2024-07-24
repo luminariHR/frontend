@@ -62,7 +62,7 @@ function LoginPage() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleLogin();
     }
@@ -71,61 +71,61 @@ function LoginPage() {
   return (
     <>
       <form onKeyDown={handleKeyDown}>
-      <div
-        className="h-screen w-full bg-cover bg-center flex items-center justify-center "
-        style={{ backgroundImage: `url(${loginbackground})` }}
-      >
         <div
-          className="bg-transparent absolute mt-10 px-10 py-20 rounded-xl border-[1px] border-[#cdcdcd] w-full 
-      max-w-md mx-auto flex flex-col items-center backdrop-blur-lg shadow-xl"
+          className="h-screen w-full bg-cover bg-center flex items-center justify-center "
+          style={{ backgroundImage: `url(${loginbackground})` }}
         >
-          <h1 className="text-3xl font-bold mb-4 text-white">로그인</h1>
-          <p className="font-medium text-md text-white mt-2">
-            시작하려면 이메일을 입력하세요
-          </p>
-          {errorMessage && (
-            <div className="mb-4 text-red-500">{errorMessage}</div>
-          )}
-          <div className="flex flex-col items-center mt-4">
-            <input
-              type="email"
-              placeholder="이메일"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-transparent mb-4 p-2 border rounded-[100px] w-[350px] text-white placeholder:text-white px-4"
-            />
-            <input
-              type="password"
-              placeholder="비밀번호"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-transparent mb-4 p-2 border rounded-[100px]
+          <div
+            className="bg-transparent absolute mt-10 px-10 py-20 rounded-xl border-[1px] border-[#cdcdcd] w-full 
+      max-w-md mx-auto flex flex-col items-center backdrop-blur-lg shadow-xl"
+          >
+            <h1 className="text-3xl font-bold mb-4 text-white">로그인</h1>
+            <p className="font-medium text-md text-white mt-2">
+              시작하려면 이메일을 입력하세요
+            </p>
+            {errorMessage && (
+              <div className="mb-4 text-red-500">{errorMessage}</div>
+            )}
+            <div className="flex flex-col items-center mt-4">
+              <input
+                type="email"
+                placeholder="이메일"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-transparent mb-4 p-2 border rounded-[100px] w-[350px] text-white placeholder:text-white px-4"
+              />
+              <input
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-transparent mb-4 p-2 border rounded-[100px]
              w-[350px] text-white placeholder:text-white px-4"
-            />
-          </div>
-          <div className="mt-8 flex flex-col gap-y-4">
-            <button
-              type="button"
-              className="active:duration-75 hover:scale-[1.01] ease-in-out transition-all sacle-[.98]
-            py-3 rounded-[100px] bg-[#ffffff] text-black text-lg font-bold px-[100px] w-[350px] h-12"
-              onClick={handleLogin}
-            >
-              로그인
-            </button>
-          </div>
-          <div className="mt-8 flex justify-between items-center">
-            <div>
-              <input type="checkbox" id="remember" />
-              <label className="ml-2 font-semibold text-base text-white">
-                로그인 상태 유지
-              </label>
+              />
             </div>
-            <button className="ml-20 font-semibold text-base text-[#F0C84B]-500 text-white">
-              비밀번호 찾기
-            </button>
+            <div className="mt-8 flex flex-col gap-y-4">
+              <button
+                type="button"
+                className="active:duration-75 hover:scale-[1.01] ease-in-out transition-all sacle-[.98]
+            py-3 rounded-[100px] bg-[#ffffff] text-black text-lg font-bold px-[100px] w-[350px] h-12"
+                onClick={handleLogin}
+              >
+                로그인
+              </button>
+            </div>
+            <div className="mt-8 flex justify-between items-center">
+              {/*<div>*/}
+              {/*  <input type="checkbox" id="remember" />*/}
+              {/*  <label className="ml-2 font-semibold text-base text-white">*/}
+              {/*    로그인 상태 유지*/}
+              {/*  </label>*/}
+              {/*</div>*/}
+              {/*<button className="ml-20 font-semibold text-base text-[#F0C84B]-500 text-white">*/}
+              {/*  비밀번호 찾기*/}
+              {/*</button>*/}
+            </div>
           </div>
         </div>
-      </div>
       </form>
     </>
   );
