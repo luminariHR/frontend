@@ -2,7 +2,7 @@ import React from "react";
 import { useTable } from "react-table";
 
 export const Table = ({ children, addClass, ...props }) => (
-  <div className="overflow-x-auto">
+  <div className="overflow-x-hidden max-h-[63vh] overflow-y-auto hide-scrollbar">
     <table
       {...props}
       className={`min-w-full bg-white border-gray-100 ${addClass}`}
@@ -13,7 +13,7 @@ export const Table = ({ children, addClass, ...props }) => (
 );
 
 export const TableHeader = ({ children, addClass, ...props }) => (
-  <thead {...props} className={`bg-gray-100 ${addClass}`}>
+  <thead {...props} className={`bg-gray-100 sticky top-0 ${addClass}`}>
     {children}
   </thead>
 );
