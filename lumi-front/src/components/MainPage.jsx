@@ -72,7 +72,7 @@ function MainPage() {
           </div>
           <div className=" w-[560px] h-[100px] ">
             <button
-              className="flex flex-row whitespace-nowrap 
+              className="flex flex-row whitespace-nowrap
              bg-[#363644] hover:bg-[#5d5bd4] py-2 px-6 text-[14px]
               text-[#ffffff] font-bold rounded-lg
               shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out animate-fade-in delay-600"
@@ -93,14 +93,20 @@ function MainPage() {
             </div>
           </div>
         </div>
+        <div className="flex p-4  mt-[80px] w-[60%]">
+          <Spline
+            scene="https://prod.spline.design/XSoiYuwZF-ir-nA2/scene.splinecode"
+            className="rounded-lg inset-0 z-0"
+          />
+        </div>
 
         {/*============absolute 라인=============== */}
         <div className="absolute top-0 left-10 flex items-center justify-start whitespace-nowrap z-10 p-4">
           <img src={mainlogo} className="h-[80px]" alt="Main Logo" />
         </div>
         <button
-          className="absolute flex items-center text-[14px] top-0 mt-10 whitespace-nowrap right-4 z-10 px-6 py-1 
-        bg-[#3e3e54] font-semibold text-[#eeeeef] rounded-full cursor-pointer hover:bg-[#5b5dbb] 
+          className="absolute flex items-center text-[14px] top-0 mt-10 whitespace-nowrap right-4 z-10 px-6 py-1
+        bg-[#3e3e54] font-semibold text-[#eeeeef] rounded-full cursor-pointer hover:bg-[#5b5dbb]
         hover:scale-105 transition-transform duration-300 ease-in-out animate-fade-in delay-600"
           onClick={() => navigate("/login")}
         >
@@ -108,7 +114,7 @@ function MainPage() {
           <CircleChevronRight className="px-1" />
         </button>
         <span
-          className="absolute flex flex-col items-center justify-center mb-[-2px] bottom-0 left-1/2 w-20 h-[85px] 
+          className="absolute flex flex-col items-center justify-center mb-[-2px] bottom-0 left-1/2 w-20 h-[85px]
         text-xs text-[#3e3e54] font-bold whitespace-nowrap"
         >
           Press Button
@@ -181,7 +187,7 @@ function MainPage() {
                 첫달은 무료로 이용 가능합니다.
               </p>
               <button
-                className="flex justify-center mt-4 text-xs p-1 w-1/2 rounded-full 
+                className="flex justify-center mt-4 text-xs p-1 w-1/2 rounded-full
               from-[#23242c] to-gray-500  text-[#23242c] font-bold underline"
               >
                 무료체험 신청하기
@@ -270,8 +276,8 @@ function MainPage() {
               메신저로 받은 일정을 자동으로 우리 플랫폼에 등록하세요.
             </p>
             <button
-              className="flex flex-row whitespace-nowrap mt-10 
-            bg-gradient-to-r to-[#e1f2f7] via-[#b8d5f3] from-[#ebd6fa] py-2 px-6 
+              className="flex flex-row whitespace-nowrap mt-10
+            bg-gradient-to-r to-[#e1f2f7] via-[#b8d5f3] from-[#ebd6fa] py-2 px-6
             text-[14px] text-[#3c2626] font-bold rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out animate-fade-in delay-600"
               onClick={() => navigate("/signup")}
             >
