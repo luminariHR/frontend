@@ -289,150 +289,181 @@ const MyProfile = () => {
         return null;
     }
   };
+    const renderContent = () => {
+        switch(currentContent) {
+            case 'Skills':
+                return (
+                    <div>
+                        <div className="flex flex-wrap mt-4">
+                            {profileData.skills && profileData.skills.map((skill, index) => (
+                                <img
+                                    key={index}
+                                    src={`https://img.shields.io/badge/${skill}-${skillColors[skill]}.svg?&style=for-the-badge&logo=${skill}&logoColor=white`}
+                                    alt={skill}
+                                    className="mr-2 mb-2"
+                                />
+                            ))}
+                        </div>
+                        
+                        <div className="mt-4">
+                            <ul className="list-disc list-inside">
+                                {profileData.certifications && profileData.certifications.map((cert, index) => (
+                                    <li key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">{cert}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                );
+            case '프로젝트':
+                return (
+                    <div className="mt-4 flex flex-wrap">
+                        {profileData.projects && profileData.projects.map((project, index) => (
+                            <div key={index} className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]">
+                                <h3 className="text-lg font-semibold">{project.title}</h3>
+                                <p className="text-sm text-gray-500">역할: {project.role}</p>
+                                <p className="text-sm text-gray-500">기간: {project.duration}</p>
+                                <p className="text-sm text-gray-500">설명: {project.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
 
-  return (
-    <SidebarProvider>
-      <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-semibold">내 프로필</div>
-        </div>
-        <div className="flex flex-row">
-          <div className="w-1/4 h-[550px] bg-[#f8f8ff]">
-            <div className="flex justify-center items-center mx-4">
-              <img
-                src={`${profileData?.profile_image || defaultprofile}`}
-                alt="Profile"
-                className="mt-2 w-[250px] h-[250px] rounded-full"
-              />
-              {/*1300px * 1500px 사이의 가로세로 이미지가 예쁘게 잘나옴 */}
-            </div>
-            <div>
-              <h2 className="flex justify-start text-2xl font-semibold ml-4 text-[#373844]">
-                {profileData?.name || "N/A"}
-              </h2>
-              <div className="flex justify-center">
-                <button
-                  onClick={toggleModal}
-                  className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4 cursor-pointer font-semibold text-white"
-                >
-                  프로필 수정하기
-                </button>
-              </div>
-              <div className="flex justify-center">
-                <input
-                  type="file"
-                  onChange={handleProfileImageChange}
-                  className="border p-2 mb-4 w-full"
-                />
-                <button
-                  onClick={handleProfileImageUpload}
-                  className="flex justify-center items-center bg-blue-500 shadow-lg w-4/5 h-[30px] mt-4 cursor-pointer font-semibold text-white"
-                >
-                  프로필 사진 업로드
-                </button>
-              </div>
-              <div className="flex justify-start items-center ml-4 mt-4 text-gray-500 text-sm">
-                <Mail className="mr-2" />
-                <p>{profileData?.email || "N/A"}</p>
-              </div>
-              <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
-                <HomeIcon className="mr-2" />
-                <p>{profileData?.department?.name || "N/A"}</p>{" "}
-                {/* department가 null이 아닌 경우에 접근 */}
-              </div>
-              <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
-                <MapPinned className="mr-2" />
-                <p>{profileData?.location || "N/A"}</p>
-              </div>
-              <div className="flex justify_start items-center ml-4 mt-2 text-gray-500 text-sm">
-                <BookHeart className="mr-2" />
-                <p>{profileData?.mbti || "N/A"}</p>
-              </div>
-              <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
-                <PlaneTakeoff className="mr-2" />
-                <p>
-                  {profileData?.start_date
-                    ? `${profileData.start_date.slice(0, 4)}년에 입사`
-                    : "N/A"}
-                </p>
-              </div>
-              <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
-                <Bike className="mr-2" />
-                <p>
-                  {Array.isArray(profileData?.hobbies)
-                    ? profileData.hobbies.join(", ")
-                    : "N/A"}
-                </p>{" "}
-                {/* hobbies를 배열로 처리 */}
-              </div>
-            </div>
-          </div>
-          <div className="w-3/4 h-[550px] bg-[#f8f8ff]">
-            <div className="mt-4 flex items-center justify-start space-x-4">
-              <button
-                onClick={() => handleButtonClick("Skills")}
-                className={`px-4 py-2 text-xs font-semibold ${currentContent === "Skills" ? "bg-[#5d5bd4] text-white" : "text-black"}`}
-              >
-                Skills
-              </button>
-              <button
-                onClick={() => handleButtonClick("프로젝트")}
-                className={`px-4 py-2 text-xs font-semibold ${currentContent === "프로젝트" ? "bg-[#5d5bd4] text-white" : "text-black"}`}
-              >
-                프로젝트
-              </button>
-            </div>
-            <div className="flex items-center justify-center pt-10 text-black">
-              {renderContent()}
-            </div>
-          </div>
-        </div>
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-4 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">개인정보 수정</h2>
-              <input
-                type="text"
-                value={newMbti}
-                onChange={handleMbtiChange}
-                className="border p-2 mb-4 w-full"
-                placeholder="MBTI"
-              />
-              <input
-                type="text"
-                value={newSkills}
-                onChange={handleSkillsChange}
-                className="border p-2 mb-4 w-full"
-                placeholder="Skill"
-              />
-              <input
-                type="text"
-                value={newLocation}
-                onChange={handleLocationChange}
-                className="border p-2 mb-4 w-full"
-                placeholder="사는곳"
-              />
-              <input
-                type="text"
-                value={newHobbies}
-                onChange={handleHobbiesChange}
-                className="border p-2 mb-4 w-full"
-                placeholder="취미"
-              />
-              <input
-                type="text"
-                value={newCertifications}
-                onChange={handleCertificationChange}
-                className="border p-2 mb-4 w-full"
-                placeholder="자격증"
-              />
-              <input
-                type="Date"
-                value={newStart_Date}
-                onChange={handleStart_DateChange}
-                className="border p-2 mb-4 w-full"
-                placeholder="입사연월"
-              />
+    return (
+        <SidebarProvider>
+            <Layout>
+                <div className="flex justify-between pb-3">
+                    <div className="text-xl font-semibold">내 프로필</div>
+                </div>
+                <div className="flex flex-row">
+                    <div className="w-1/4 h-[550px] bg-[#f8f8ff]">
+                        <div className="flex justify-center items-center mx-4">
+                            <img
+                                src={`${profileData?.profile_image || defaultprofile}`}
+                                alt="Profile"
+                                className='mt-2 w-[250px] h-[250px] rounded-full'
+                            /> 
+                            {/*1300px * 1500px 사이의 가로세로 이미지가 예쁘게 잘나옴 */}
+                        </div>
+                        <div>
+                            <h2 className="flex justify-start text-2xl font-semibold ml-4 text-[#373844]">{profileData?.name || 'N/A'}</h2>
+                            <div className="flex justify-center">
+                                <button
+                                    onClick={toggleModal}
+                                    className="flex justify-center items-center bg-gray-500 shadow-lg w-4/5 h-[30px] mt-4 cursor-pointer font-semibold text-white"
+                                >
+                                    프로필 수정하기
+                                </button>
+                            </div>
+                        
+                            <div className="flex justify-start items-center ml-4 mt-4 text-gray-500 text-sm">
+                                <Mail className="mr-2" />
+                                <p>{profileData?.email || 'N/A'}</p>
+                            </div>
+                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
+                                <HomeIcon className="mr-2" />
+                                <p>{profileData?.department?.name || 'N/A'}</p> {/* department가 null이 아닌 경우에 접근 */}
+                            </div>
+                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
+                                <MapPinned className="mr-2" />
+                                <p>{profileData?.location || 'N/A'}</p>
+                            </div>
+                            <div className="flex justify_start items-center ml-4 mt-2 text-gray-500 text-sm">
+                                <BookHeart className="mr-2" />
+                                <p>{profileData?.mbti || 'N/A'}</p>
+                            </div>
+                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
+                                <PlaneTakeoff className="mr-2" />
+                                <p>{profileData?.start_date ? `${profileData.start_date.slice(0,4)}년에 입사` : 'N/A'}</p>
+                            </div>
+                            <div className="flex justify-start items-center ml-4 mt-2 text-gray-500 text-sm">
+                                <Bike className="mr-2" />
+                                <p>{Array.isArray(profileData?.hobbies) ? profileData.hobbies.join(', ') : 'N/A'}</p> {/* hobbies를 배열로 처리 */}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-3/4 h-[550px] bg-[#f8f8ff]">
+                        <div className="mt-4 flex items-center justify-start space-x-4">
+                            <button
+                                onClick={() => handleButtonClick('Skills')}
+                                className={`px-4 py-2 text-xs font-semibold ${currentContent === 'Skills' ? 'bg-[#5d5bd4] text-white' : 'text-black'}`}
+                            >
+                                Skills
+                            </button>
+                            <button
+                                onClick={() => handleButtonClick('프로젝트')}
+                                className={`px-4 py-2 text-xs font-semibold ${currentContent === '프로젝트' ? 'bg-[#5d5bd4] text-white' : 'text-black'}`}
+                            >
+                                프로젝트
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-center pt-10 text-black">
+                            {renderContent()}
+                        </div>
+                    </div>
+                </div>
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white p-4 rounded shadow-lg">
+                            <h2 className="text-xl font-semibold mb-4">개인정보 수정</h2>
+                            <input
+                                type="text"
+                                value={newMbti}
+                                onChange={handleMbtiChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="MBTI"
+                            />
+                            <input
+                                type="text"
+                                value={newSkills}
+                                onChange={handleSkillsChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="Skill"
+                            />
+                            <input
+                                type="text"
+                                value={newLocation}
+                                onChange={handleLocationChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="사는곳"
+                            />
+                            <input
+                                type="text"
+                                value={newHobbies}
+                                onChange={handleHobbiesChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="취미"
+                            />
+                            <input
+                                type="text"
+                                value={newCertifications}
+                                onChange={handleCertificationChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="자격증"
+                            />
+                            <input
+                                type="Date"
+                                value={newStart_Date}
+                                onChange={handleStart_DateChange}
+                                className="border p-2 mb-4 w-full"
+                                placeholder="입사연월"
+                            />
+                            <div className="flex justify-center">
+                            <input
+                                type="file"
+                                onChange={handleProfileImageChange}
+                                className="border p-2 mb-4 w-full"
+                            />
+                            <button
+                                onClick={handleProfileImageUpload}
+                                className="flex justify-center items-center bg-blue-500 shadow-lg w-4/5 mb-4 cursor-pointer font-semibold text-white"
+                            >
+                                프로필 사진 업로드
+                            </button>
+                            </div>
 
               <div className="flex justify-end space-x-2">
                 <button

@@ -27,13 +27,18 @@ const SignUp = React.lazy(() => import("./components/SignUp.jsx"));
 const AdminRecruitmentPage = React.lazy(
   () => import("./components/recruitment/AdminRecruitmentPage.jsx"),
 );
+
+//멘토링
+const BeforeMatchingPage = React.lazy(
+  () => import("./components/BeforeMatchingPage.jsx"),
+);
+const AfterMatchingPage = React.lazy(
+  () => import("./components/AfterMatchingPage.jsx"),
+
 const AdminAnalysisPage = React.lazy(
   () => import("./components/recruitment/AdminAnalysisPage.jsx"),
 );
 
-const MentoringPage = React.lazy(
-  () => import("./components/MentoringPage.jsx"),
-);
 const MyProfile = React.lazy(() => import("./components/MyProfile.jsx"));
 const AdminAttendancePage = React.lazy(
   () => import("./components/AdminAttendancePage.jsx"),
@@ -164,10 +169,18 @@ function App() {
             }
           />
           <Route
-            path="/mentoring"
+            path="/beforementoring/"
             element={
-              <Suspense fallback={<LoadingPage />}>
-                <MentoringPage />
+              <Suspense fallback={<div>Loading...</div>}>
+                <BeforeMatchingPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/aftermentoring/"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <AfterMatchingPage />
               </Suspense>
             }
           />

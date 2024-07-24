@@ -37,9 +37,15 @@ const Layout = ({ children }) => {
 
   return (
     <div
-      className="flex h-screen w-full"
-      style={{ backgroundImage: `url(${mainback})`, backgroundSize: "cover" }}
-    >
+  className="flex w-full"
+  style={{
+    backgroundImage: `url(${mainback})`,
+    backgroundSize: "cover",
+    backgroundRepeat: "repeat",
+    backgroundAttachment: "scroll",
+    minHeight: "100vh" // 화면 높이보다 크거나 같은 최소 높이 설정
+  }}
+>
       <Sidebar>
         <>
           <SidebarItem
@@ -86,7 +92,12 @@ const Layout = ({ children }) => {
             text={"멘토링"}
             hasSubmenu={true}
           >
-            <SidebarSubmenu text="내 멘토링" to={"/mentoring"} />
+            <SidebarSubmenu text="매칭 전 멘토링" to={"/beforementoring"} />
+            {user?.is_hr_admin && (
+              <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
+            )}
+
+            <SidebarSubmenu text="매칭 후 멘토링" to={"/aftermentoring"} />
             {user?.is_hr_admin && (
               <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
             )}
