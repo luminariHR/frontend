@@ -211,7 +211,7 @@ function AdminAnalysisPage() {
                               }}
                             ></div>
                             <div className="flex justify-end mt-1">
-                              <div className="text-xs text-gray-500">{`※ 파란색 : 띄어쓰기 오류, 빨간색 : 맞춤법 오류, 초록색 : 표준어 의심, 주황색 : 통계적 오류를 뜻힙니다.`}</div>
+                              <div className="text-xs text-gray-500">{`※ 파란색 : 띄어쓰기 오류, 빨간색 : 맞춤법 오류, 초록색 : 표준어 의심, 주황색 : 통계적 오류를 뜻합니다.`}</div>
                             </div>
                           </div>
 
