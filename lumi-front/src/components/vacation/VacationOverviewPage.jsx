@@ -125,32 +125,57 @@ export default function VacationPage() {
           </h2>
         </div>
 
-        <div className="z-0">
-          <div className="transition duration-300 ease-in-out z-0">
-            <div className=" overflow-auto rounded-lg z-0">
-              <div className="flex item-center justify-center w-[900px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">
-                <div className="w-full  h-[80vh]">
-                  <VacationCalendar
-                    events={events}
-                    handleEventClick={handleEventClick}
-                    getThisMonthPtoList={getThisMonthPtoList}
+        <div className={"flex justify-center mx-16"}>
+          <div className="flex items-center justify-center p-5 w-[70vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl">
+            <div
+              className="w-[65vw] h-[75vh] bg-[#F8F8FF]
+            border-gray-300 rounded-r-xl"
+            >
+              <VacationCalendar
+                events={events}
+                handleEventClick={handleEventClick}
+                getThisMonthPtoList={getThisMonthPtoList}
+              />
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <ClipLoader
+                    color={"#5d5bd4"}
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
                   />
-                  {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <ClipLoader
-                        color={"#5d5bd4"}
-                        loading={loading}
-                        size={50}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                      />
-                    </div>
-                  )}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
+
+        {/*<div className="transition duration-300 ease-in-out z-0">*/}
+        {/*  <div className=" overflow-auto rounded-lg z-0">*/}
+        {/*    <div*/}
+        {/*        className="flex item-center justify-center w-[900px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">*/}
+        {/*      <div className="w-full  h-[80vh]">*/}
+        {/*        <VacationCalendar*/}
+        {/*            events={events}*/}
+        {/*          handleEventClick={handleEventClick}*/}
+        {/*          getThisMonthPtoList={getThisMonthPtoList}*/}
+        {/*        />*/}
+        {/*        {loading && (*/}
+        {/*          <div className="absolute inset-0 flex items-center justify-center">*/}
+        {/*            <ClipLoader*/}
+        {/*              color={"#5d5bd4"}*/}
+        {/*              loading={loading}*/}
+        {/*              size={50}*/}
+        {/*              aria-label="Loading Spinner"*/}
+        {/*              data-testid="loader"*/}
+        {/*            />*/}
+        {/*          </div>*/}
+        {/*        )}*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         {isModalOpen && (
           <div className="flex flex-col h-auto">
