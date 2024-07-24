@@ -97,7 +97,7 @@ export default function DocumentPage() {
           </div>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="mb-6 flex items-center justify-between">
             {isModalOpen && (
               <DocumentRequestModal

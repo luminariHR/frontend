@@ -20,6 +20,7 @@ import {
 import Button from "./ui/button.jsx";
 import { CustomModal2 } from "./ui/modal.jsx";
 import CustomSelectButton from "./ui/select.jsx";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function AdminDepartmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -31,6 +32,7 @@ export default function AdminDepartmentsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newDepartmentName, setNewDepartmentName] = useState("");
   const [newDepartmentAddress, setNewDepartmentAddress] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const getDepartments = async () => {
     const data = await fetchDepartments();
@@ -62,6 +64,7 @@ export default function AdminDepartmentsPage() {
       if (data) {
         setDepartments(data.sort((a, b) => a.id - b.id));
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -145,61 +148,74 @@ export default function AdminDepartmentsPage() {
           </div>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="mb-3 flex items-center justify-end">
             <Button
               text={"부서 생성하기"}
-              variant={"solid"}
+              variant={"teams"}
               onClick={() => {
                 setIsCreateModalOpen(true);
               }}
             />
           </div>
 
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>번호</TableHead>
-                  <TableHead>부서명</TableHead>
-                  <TableHead>부서장</TableHead>
-                  <TableHead>상위부서</TableHead>
-                  <TableHead>주소</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {departments.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.id}</TableCell>
-                    <TableCell>{item.name ? item.name : "-"}</TableCell>
-                    <TableCell>{item.head ? item.head.name : "-"}</TableCell>
-                    <TableCell>
-                      {item.parent_department_id
-                        ? departments.find(
-                            (d) =>
-                              d.department_id === item.parent_department_id,
-                          ).name
-                        : "-"}
-                    </TableCell>
-                    <TableCell>{item.address ? item.address : "-"}</TableCell>
-                    <TableCell>
-                      <div className="w-full flex justify-end">
-                        <Button
-                          addClass="mr-2"
-                          size="sm"
-                          text="수정"
-                          variant={"primary"}
-                          onClick={() => handleOpenEditModal(item)}
-                        />
-                        {/* todo 부서삭제? */}
-                        <Button size="sm" text="삭제" />
-                      </div>
-                    </TableCell>
+          <div className="overflow-auto rounded-lg h-[63vh] hide-scrollbar">
+            {loading ? (
+              <div
+                className={
+                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                }
+              >
+                <ClipLoader
+                  color={"#5d5bd4"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>부서명</TableHead>
+                    <TableHead>부서장</TableHead>
+                    <TableHead>상위부서</TableHead>
+                    <TableHead>주소</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {departments.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>{item.name ? item.name : "-"}</TableCell>
+                      <TableCell>{item.head ? item.head.name : "-"}</TableCell>
+                      <TableCell>
+                        {item.parent_department_id
+                          ? departments.find(
+                              (d) =>
+                                d.department_id === item.parent_department_id,
+                            ).name
+                          : "-"}
+                      </TableCell>
+                      <TableCell>{item.address ? item.address : "-"}</TableCell>
+                      <TableCell>
+                        <div className="w-full flex justify-end">
+                          <Button
+                            addClass="mr-2"
+                            size="sm"
+                            text="수정"
+                            onClick={() => handleOpenEditModal(item)}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </div>
       </Layout>

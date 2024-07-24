@@ -17,6 +17,7 @@ import Button from "./ui/button.jsx";
 import { CustomModal2 } from "./ui/modal.jsx";
 import CustomSelectButton from "./ui/select.jsx";
 import { UserAvatar } from "./ui/avatar.jsx";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function AdminUsersPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -37,6 +38,7 @@ export default function AdminUsersPage() {
     phone_number: "",
     start_date: "",
   });
+  const [loading, setLoading] = useState(true);
 
   const handleEditClick = (employee) => {
     setSelectedEmployee({
@@ -153,6 +155,7 @@ export default function AdminUsersPage() {
       if (departmentsData) {
         setDepartments(departmentsData);
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -189,8 +192,8 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
-        <div className="">
-          <div className="mb-6 flex justify-between">
+        <div className="mx-16">
+          <div className="mb-6 flex items-center justify-between hide-scrollbar">
             <Input
               placeholder="이름을 입력하세요."
               value={searchTerm}
@@ -206,50 +209,66 @@ export default function AdminUsersPage() {
             </div>
           </div>
 
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>이름</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>이메일</TableHead>
-                  <TableHead>직책</TableHead>
-                  <TableHead>부서</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {filteredEmployees.map((item) => (
-                  <TableRow key={item.id} addClass="cursor-default">
-                    <TableCell>
-                      <div className="flex items-center">
-                        <div className="h-6 w-6 flex-shrink-0">
-                          <UserAvatar
-                            userProfileImg={item.profile_image}
-                            userName={item.name}
-                          />
-                        </div>
-                        <div className="ml-2">{item.name}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.job_title}</TableCell>
-                    <TableCell>
-                      {item.department ? item.department.name : "-"}
-                    </TableCell>
-                    <TableCell addClass="flex justify-end">
-                      <Button
-                        text={"인사 발령"}
-                        size="sm"
-                        onClick={() => handleEditClick(item)}
-                      />
-                    </TableCell>
+          <div className="overflow-auto rounded-lg ">
+            {loading ? (
+              <div
+                className={
+                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                }
+              >
+                <ClipLoader
+                  color={"#5d5bd4"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>이름</TableHead>
+                    <TableHead></TableHead>
+                    <TableHead>이메일</TableHead>
+                    <TableHead>직책</TableHead>
+                    <TableHead>부서</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+
+                <TableBody>
+                  {filteredEmployees.map((item) => (
+                    <TableRow key={item.id} addClass="cursor-default">
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className="h-6 w-6 flex-shrink-0">
+                            <UserAvatar
+                              userProfileImg={item.profile_image}
+                              userName={item.name}
+                            />
+                          </div>
+                          <div className="ml-2">{item.name}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>{item.job_title}</TableCell>
+                      <TableCell>
+                        {item.department ? item.department.name : "-"}
+                      </TableCell>
+                      <TableCell addClass="flex justify-end">
+                        <Button
+                          text={"인사 발령"}
+                          size="sm"
+                          onClick={() => handleEditClick(item)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </div>
 

@@ -161,6 +161,7 @@ export default function VacationPage() {
           <div className="flex items-center justify-center">
             <div className={"text-2xl font-bold"}>내 휴가 관리</div>
           </div>
+
           <div className="flex flex-col items-center">
             <div className="flex justify-evenly space-x-4 bg-white py-2.5 px-5 rounded-full">
               {tabs.map((tab) => (
@@ -197,7 +198,7 @@ export default function VacationPage() {
           <div className={"flex items-center justify-center"}></div>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="flex items-center justify-between">
             {isModalOpen && (
               <VacationRequestModal
