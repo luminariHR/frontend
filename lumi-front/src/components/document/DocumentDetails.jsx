@@ -11,6 +11,7 @@ import { FileMinusIcon, CircleX } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import CustomSelectButton from "../ui/select.jsx";
 import { fetchDocument, deleteDocument } from "../../api/chatbotApi.js";
+import { Input } from "../ui/input.jsx";
 
 export default function DocumentDetails() {
   const { id } = useParams();
@@ -116,24 +117,17 @@ export default function DocumentDetails() {
               <div className="flex-grow p-8 px-14 overflow-auto border-r-2 border-gray-200">
                 <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between">
                   <div className="flex justify-between mt-3">
-                    {user && user.is_hr_admin ? (
-                      <h2 className="text-2xl font-semibold mb-1">
-                        문서 수정하기
-                      </h2>
-                    ) : (
-                      <h2 className="text-2xl font-semibold mb-1">
-                        문서 조회하기
-                      </h2>
-                    )}
+                    <h2 className="text-2xl font-semibold mb-1">
+                      문서 조회하기
+                    </h2>
                     <Button text={"뒤로가기"} onClick={handleBackClick} />
                   </div>
                   <div className="flex flex-col my-3">
                     <h3 className="text-l font-semibold mr-4 mb-2">제목</h3>
                     {user && user.is_hr_admin ? (
-                      <input
-                        id="title"
-                        type="text"
+                      <Input
                         value={name}
+                        disabled={true}
                         onChange={(newname) => setName(newname.target.value)}
                         className="shadow appearance-none border rounded w-full py-2 px-3 mb-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       />
@@ -144,16 +138,24 @@ export default function DocumentDetails() {
                   <div className="flex flex-col my-3 mb-6">
                     <h3 className="text-l font-semibold mr-4 mb-2">카테고리</h3>
                     {user && user.is_hr_admin ? (
-                      <CustomSelectButton
-                        onSelect={(selectedOption) =>
-                          setSelectedCategory(selectedOption)
+                      <Input
+                        value={
+                          detail.category === "onboarding_offboarding"
+                            ? "신규 입사자 가이드"
+                            : detail.category === "company_policies"
+                              ? "인사규정"
+                              : "기타"
                         }
-                        options={categories}
-                        selectedOption={selectedCategory}
-                        defaultText={detail.category}
+                        disabled={true}
                       />
                     ) : (
-                      <div className="text-xl">{detail.name}</div>
+                      <div className="text-xl">
+                        {detail.category === "onboarding_offboarding"
+                          ? "신규 입사자 가이드"
+                          : detail.category === "company_policies"
+                            ? "인사규정"
+                            : "기타"}
+                      </div>
                     )}
                   </div>
                   <div>
@@ -248,7 +250,7 @@ export default function DocumentDetails() {
                       <TextEditor
                         value={Description}
                         onChange={(Description) => setDescription(Description)}
-                        readOnly={!user.is_hr_admin}
+                        readOnly={true}
                         modules={{ toolbar: false }}
                       />
                     )}
@@ -281,7 +283,12 @@ export default function DocumentDetails() {
               <h4 className="text-lg font-semibold">문서 삭제 확인</h4>
               <p className="mt-2">이 문서를 정말로 삭제하시겠습니까?</p>
               <div className="mt-4 flex justify-end">
-                <Button text="취소" onClick={cancelDelete} type="button" />
+                <Button
+                  text="취소"
+                  onClick={cancelDelete}
+                  type="button"
+                  addClass="mr-2"
+                />
                 <Button
                   text="삭제"
                   onClick={handleDeleteDocument}

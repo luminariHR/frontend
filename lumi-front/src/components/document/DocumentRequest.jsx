@@ -224,12 +224,7 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
               <h3 className="text-lg font-semibold mb-4">추가 확인</h3>
               <p>정말로 데이터를 추가하시겠습니까?</p>
               <div className="flex justify-end mt-4">
-                <Button
-                  text={"취소"}
-                  variant={"default"}
-                  onClick={handleCancel}
-                  className="mr-2"
-                />
+                <Button text={"취소"} onClick={handleCancel} addClass="mr-2" />
                 <Button
                   text={"확인"}
                   variant={"teams"}
