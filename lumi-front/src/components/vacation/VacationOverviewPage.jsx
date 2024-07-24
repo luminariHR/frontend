@@ -119,8 +119,8 @@ export default function VacationPage() {
         <div className="z-0">
           <div className="transition duration-300 ease-in-out z-0">
             <div className=" overflow-auto rounded-lg z-0">
-              <div className="flex item-center justify-center w-[900px] h-[600px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">
-                <div className="w-full ">
+              <div className="flex item-center justify-center w-[900px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">
+                <div className="w-full  h-[80vh]">
                   <VacationCalendar
                     events={events}
                     handleEventClick={handleEventClick}
