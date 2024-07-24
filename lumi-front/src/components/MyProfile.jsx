@@ -232,63 +232,6 @@ const MyProfile = () => {
     return <div>Error: {error}</div>;
   }
 
-  const renderContent = () => {
-    switch (currentContent) {
-      case "Skills":
-        return (
-          <div>
-            <div className="flex flex-wrap mt-4">
-              {profileData.skills &&
-                profileData.skills.map((skill, index) => (
-                  <img
-                    key={index}
-                    src={`https://img.shields.io/badge/${skill}-${skillColors[skill]}.svg?&style=for-the-badge&logo=${skill}&logoColor=white`}
-                    alt={skill}
-                    className="mr-2 mb-2"
-                  />
-                ))}
-            </div>
-
-            <div className="mt-4">
-              <ul className="list-disc list-inside">
-                {profileData.certifications &&
-                  profileData.certifications.map((cert, index) => (
-                    <li
-                      key={index}
-                      className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]"
-                    >
-                      {cert}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-        );
-      case "프로젝트":
-        return (
-          <div className="mt-4 flex flex-wrap">
-            {profileData.projects &&
-              profileData.projects.map((project, index) => (
-                <div
-                  key={index}
-                  className="mx-4 mb-4 p-4 bg-white shadow rounded w-[400px]"
-                >
-                  <h3 className="text-lg font-semibold">{project.title}</h3>
-                  <p className="text-sm text-gray-500">역할: {project.role}</p>
-                  <p className="text-sm text-gray-500">
-                    기간: {project.duration}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    설명: {project.description}
-                  </p>
-                </div>
-              ))}
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
     const renderContent = () => {
         switch(currentContent) {
             case 'Skills':

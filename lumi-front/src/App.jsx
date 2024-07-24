@@ -34,7 +34,7 @@ const BeforeMatchingPage = React.lazy(
 );
 const AfterMatchingPage = React.lazy(
   () => import("./components/AfterMatchingPage.jsx"),
-
+);
 const AdminAnalysisPage = React.lazy(
   () => import("./components/recruitment/AdminAnalysisPage.jsx"),
 );
