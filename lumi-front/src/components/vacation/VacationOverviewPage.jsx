@@ -126,9 +126,9 @@ export default function VacationPage() {
         </div>
 
         <div className={"flex justify-center mx-16"}>
-          <div className="flex items-center justify-center p-5 w-[70vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl">
+          <div className="flex items-center justify-center p-5 w-[65vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl">
             <div
-              className="w-[65vw] h-[75vh] bg-[#F8F8FF]
+              className="w-[60vw] h-[75vh] bg-[#F8F8FF]
             border-gray-300 rounded-r-xl"
             >
               <VacationCalendar
