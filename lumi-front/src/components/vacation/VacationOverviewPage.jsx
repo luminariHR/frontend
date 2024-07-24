@@ -151,32 +151,6 @@ export default function VacationPage() {
           </div>
         </div>
 
-        {/*<div className="transition duration-300 ease-in-out z-0">*/}
-        {/*  <div className=" overflow-auto rounded-lg z-0">*/}
-        {/*    <div*/}
-        {/*        className="flex item-center justify-center w-[900px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">*/}
-        {/*      <div className="w-full  h-[80vh]">*/}
-        {/*        <VacationCalendar*/}
-        {/*            events={events}*/}
-        {/*          handleEventClick={handleEventClick}*/}
-        {/*          getThisMonthPtoList={getThisMonthPtoList}*/}
-        {/*        />*/}
-        {/*        {loading && (*/}
-        {/*          <div className="absolute inset-0 flex items-center justify-center">*/}
-        {/*            <ClipLoader*/}
-        {/*              color={"#5d5bd4"}*/}
-        {/*              loading={loading}*/}
-        {/*              size={50}*/}
-        {/*              aria-label="Loading Spinner"*/}
-        {/*              data-testid="loader"*/}
-        {/*            />*/}
-        {/*          </div>*/}
-        {/*        )}*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
         {isModalOpen && (
           <div className="flex flex-col h-auto">
             <CustomModal2
