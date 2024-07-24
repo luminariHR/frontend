@@ -28,7 +28,7 @@ const Sidebar = ({ children }) => {
     navigate("/login");
   };
   return (
-    <aside className="h-screen fixed top-0 left-0">
+    <aside className="h-screen fixed top-0 left-0 z-20">
       <div
         className={`h-full flex flex-col bg-[#F8F8FF] border-r shadow-lg ${
           expanded ? "w-64" : "w-16"
