@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CustomModal2 } from "../ui/modal.jsx";
 import VacationCalendar from "./VacationCalendar.jsx";
-import { Calendar } from "lucide-react";
+import { Calendar, CircleAlert } from "lucide-react";
 import Button from "../ui/button.jsx";
 import { fetchMonthlyView, fetchDailyView } from "../../api/ptoApi.js";
 import { UserAvatar } from "../ui/avatar.jsx";
@@ -108,12 +108,21 @@ export default function VacationPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">사내 휴가자 현황</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">
+              사내 휴가자 현황
+            </span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
         <div className="z-0">

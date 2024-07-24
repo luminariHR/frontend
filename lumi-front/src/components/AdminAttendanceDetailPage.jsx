@@ -17,7 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { StatusPill } from "./ui/pill.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
 import DatePicker from "react-datepicker";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, CircleAlert } from "lucide-react";
 
 export default function MyAttendancePage() {
   const { id } = useParams();
@@ -152,12 +152,21 @@ export default function MyAttendancePage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between mb-6">
-          <div className="text-xl font-medium">근태 현황</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-6">
+          <h2>
+            <span className="text-[#8a8686]">
+              메인 &gt; 근태 관리 &gt; 전체 근태 관리 &gt;
+            </span>{" "}
+            <span className="font-semibold text-[#20243f]">근태 기록</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
         <div className="mx-16">

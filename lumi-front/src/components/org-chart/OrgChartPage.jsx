@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { OrgChartModal } from "./OrgChart.jsx";
 import { fetchDepartments } from "../../api/departmentApi.js";
 import DeptInfoModal from "./DeptInfoModal.jsx";
+import { CircleAlert } from "lucide-react";
 
 export default function OrgChartPage() {
   const [data, setData] = useState(null);
@@ -41,7 +42,20 @@ export default function OrgChartPage() {
     <SidebarProvider>
       <Layout>
         <div className={"h-[80%]"} ref={orgChartContainer}>
-          <div className={"text-2xl font-bold p-6"}>조직도</div>
+          <div className="flex flex-row justify-between">
+            <h2>
+              <span className="text-[#8a8686]">메인 &gt;</span>{" "}
+              <span className="font-semibold text-[#20243f]">조직도</span>
+            </h2>
+            <h2 className="flex">
+              <span>
+                <CircleAlert className="text-gray-500 h-[20px]" />
+              </span>
+              <span className="text-gray-500 ml-2 text-[14px]">
+                업무 외 개인정보 이용 금지
+              </span>
+            </h2>
+          </div>
           <OrgChartModal
             setClick={(click) => (addNodeChildFunc = click)}
             onNodeClick={onNodeClick}

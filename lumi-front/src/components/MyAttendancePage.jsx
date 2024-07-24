@@ -12,7 +12,7 @@ import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, CircleAlert } from "lucide-react";
 import { fetchMyAttendance } from "../api/attendanceApi.js";
 import Button from "./ui/button.jsx";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -85,12 +85,19 @@ export default function MyAttendancePage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">내 근태 현황</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">내 근태 관리</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
         <div className="mx-16">

@@ -24,6 +24,7 @@ import emoji_person_in_bed from "../../assets/emoji_person_in_bed_.png";
 import { VacationRequestModal } from "./VacationRequest.jsx";
 import { fetchAllPTORecords } from "../../api/ptoApi.js";
 import { vacationCategoryEnums } from "../../enums/vacation.js";
+import { CircleAlert } from "lucide-react";
 
 export default function VacationPage() {
   const [vacation, setVacation] = useState([]);
@@ -157,47 +158,54 @@ export default function VacationPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between justify-items-center mt-2 mb-12">
-          <div className="flex items-center justify-center">
-            <div className={"text-2xl font-bold"}>내 휴가 관리</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">내 휴가 관리</span>
+          </h2>
 
-          <div className="flex flex-col items-center">
-            <div className="flex justify-evenly space-x-4 bg-white py-2.5 px-5 rounded-full">
-              {tabs.map((tab) => (
-                <div
-                  key={tab.id}
-                  onClick={() => {
-                    setLoading(true);
-                    setActiveTab(tab.id);
-                  }}
-                  className={`cursor-pointer px-4 py-2 rounded-full transition duration-300 ease-in-out ${
-                    activeTab === tab.id
-                      ? "bg-[#5d5bd4] text-white shadow-md font-medium"
-                      : "bg-white text-gray-600 font-medium"
-                  }`}
-                >
-                  <div className="flex items-center">
-                    {tab.label}
-                    {tab.count && (
-                      <span
-                        className={`ml-2 rounded-full px-2 py-1 text-xs transition duration-300 ease-in-out ${
-                          activeTab === tab.id
-                            ? "bg-yellow-500 text-white"
-                            : "bg-yellow-100 text-yellow-500"
-                        }`}
-                      >
-                        {tab.count}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className={"flex items-center justify-center"}></div>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
-
+        <div className="flex flex-col items-center">
+          <div className="flex justify-evenly space-x-4 bg-white py-2.5 px-5 rounded-full mb-4">
+            {tabs.map((tab) => (
+              <div
+                key={tab.id}
+                onClick={() => {
+                  setLoading(true);
+                  setActiveTab(tab.id);
+                }}
+                className={`cursor-pointer px-4 py-2 rounded-full transition duration-300 ease-in-out ${
+                  activeTab === tab.id
+                    ? "bg-[#5d5bd4] text-white shadow-md font-medium"
+                    : "bg-white text-gray-600 font-medium"
+                }`}
+              >
+                <div className="flex items-center">
+                  {tab.label}
+                  {tab.count && (
+                    <span
+                      className={`ml-2 rounded-full px-2 py-1 text-xs transition duration-300 ease-in-out ${
+                        activeTab === tab.id
+                          ? "bg-yellow-500 text-white"
+                          : "bg-yellow-100 text-yellow-500"
+                      }`}
+                    >
+                      {tab.count}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="mx-16">
           <div className="flex items-center justify-between">
             {isModalOpen && (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button.jsx";
-import { PlusIcon, WandSparkles } from "lucide-react";
+import { CircleAlert, PlusIcon, WandSparkles } from "lucide-react";
 import { SidebarProvider } from "../Sidebar.jsx";
 import Layout from "../Layout.jsx";
 import CustomSelectButton from "../ui/select.jsx";
@@ -101,19 +101,21 @@ function AdminRecruitmentPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">채용 관리</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">
-              {currentDate.toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </div>
-            <div>{`오늘은 ${["일", "월", "화", "수", "목", "금", "토"][currentDate.getDay()]}요일입니다.`}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">채용 관리</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
+
         {loading ? (
           <div
             className={
