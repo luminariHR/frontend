@@ -8,6 +8,7 @@ import { clockIn, clockOut, fetchMyAttendance } from "../api/attendanceApi.js";
 import { useRecoilValue } from "recoil";
 import { loggedInUserState } from "../state/userAtom.js";
 import { fetchSentRequest } from "../api/approvalApi.js";
+import { UserAvatar } from "./ui/avatar.jsx";
 
 const DashboardPage = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -20,6 +21,13 @@ const DashboardPage = () => {
   const [clickedClockOut, setClickedClockOut] = useState(false);
   const [difference, setDifference] = useState(null);
   const user = useRecoilValue(loggedInUserState);
+
+  const vacations = user.department
+    ? user.department.members.filter((member) => member.is_ooo)
+    : [];
+
+  // Counting the number of unread messages
+  const vacationCount = vacations.length;
 
   const calculateDifference = (t1, t2) => {
     if (t1 === null && t2 === null) {
@@ -151,19 +159,22 @@ const DashboardPage = () => {
           </div>
           <div className="flex flex-col justify-center items-center pb-3 w-full">
             <section className="flex">
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
-                <div className="flex h-8 items-center text-xs justify-between">
-                  <span className="">출퇴근 현황</span>
+              <div className="w-[300px] h-[150px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
+                <div className="flex justify-between">
+                  <div className="flex h-8 items-center text-xs justify-left">
+                    <span className="text-xl pr-2">🪪</span>
+                    <span className="text-md font-semibold">출퇴근 현황</span>
+                  </div>
                   <div className="text-xs font-semibold text-white">
                     <button
-                      className={`rounded-lg px-3 py-1 mr-1 ${clockedInTime === null ? "bg-secondary cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
+                      className={`rounded-lg px-3 py-1 mr-1 ${clockedInTime !== null || user.is_ooo ? "bg-gray-300 cursor-not-allowed" : "bg-secondary cursor-pointer"}`}
                       onClick={handleClockIn}
                       disabled={clockedInTime !== null}
                     >
                       출근
                     </button>
                     <button
-                      className={`rounded-lg px-3 py-1 ${clockedOutTime === null ? "bg-[#392323] cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
+                      className={`rounded-lg px-3 py-1 ${clockedOutTime === null && !user.is_ooo ? "bg-[#392323] cursor-pointer" : "bg-gray-300 cursor-not-allowed"}`}
                       onClick={handleClockOut}
                       disabled={clockedOutTime !== null}
                     >
@@ -171,20 +182,26 @@ const DashboardPage = () => {
                     </button>
                   </div>
                 </div>
-                <div className={"font-semibold"}>{difference}</div>
+                <div className={"text-xl font-semibold pt-2"}>{difference}</div>
                 {clockedOutTime ? (
-                  <div className={"text-sm"}>오늘도 수고하셨습니다!</div>
-                ) : null}
+                  <div className={"text-md pt-1"}>오늘 수고하셨습니다!</div>
+                ) : (
+                  <div className={"text-md pt-1"}>환영합니다!</div>
+                )}
               </div>
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
-                <div className="flex h-8 items-center text-xs justify-between">
-                  <span className="">연차 사용 계획일 알림</span>
+              <div className="w-[300px] h-[150px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
+                <div className="flex h-8 items-center text-xs justify-left">
+                  <span className="text-xl pr-2">⏰</span>
+                  <span className="text-md font-semibold">
+                    연차 사용 계획일 알림
+                  </span>
                 </div>
                 <div>금일 연차 촉진 알림이 없습니다.</div>
               </div>
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
-                <div className="flex h-8 items-center justify-between">
-                  <span className="text-xs">전자 결제 현황</span>
+              <div className="w-[300px] h-[150px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
+                <div className="flex h-8 items-center text-xs justify-left">
+                  <span className="text-xl pr-2">📄</span>
+                  <span className="text-md font-semibold">전자 결제 현황</span>
                 </div>
                 <div className="flex items-center gap-4">
                   <div>
@@ -201,23 +218,47 @@ const DashboardPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-[300px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
-                <div className="flex h-8 text-xs items-center justify-between">
-                  <span className="">팀원 근태 현황</span>
+              <div className="w-[300px] min-h-[150px] max-h-[225px] mr-6 p-5 bg-[#F8F8FF] shadow rounded-lg">
+                <div className="flex h-8 text-xs items-center justify-left">
+                  <span className="text-xl pr-2">🏖</span>
+                  <span className="text-md font-semibold ">
+                    {`팀원 휴가 현황️: ${vacationCount}명`}
+                  </span>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div>
-                    <p>휴가</p>
-                    <p>2</p>
-                  </div>
-                  <div>
-                    <p>출장</p>
-                    <p>2</p>
-                  </div>
-                  <div>
-                    <p>재택</p>
-                    <p>2</p>
-                  </div>
+                <div className="flex flex-col gap-2 mt-3 overflow-y-auto hide-scrollbar max-h-[125px]">
+                  {user.department ? (
+                    user.department.members.map((member, idx) => {
+                      if (member.is_ooo) {
+                        return (
+                          <div
+                            key={idx}
+                            className="pl-2 pb-2 flex items-center"
+                          >
+                            <div className="bg-transparent flex-shrink-0 overflow-hidden rounded-full mr-3 w-6 h-6">
+                              <UserAvatar
+                                userProfileImg={member.profile_image}
+                                userName={member.name}
+                              />
+                            </div>
+                            <div className="text-sm font-semibold">
+                              {`${member.name}`}
+                            </div>
+                            {user.id === member.id ? (
+                              <div
+                                className={
+                                  "text-xs ml-3 rounded-[8px] border-[1px] py-[2px] px-[5px] border-black font-semibold text-center inline-block"
+                                }
+                              >
+                                본인
+                              </div>
+                            ) : null}
+                          </div>
+                        );
+                      }
+                    })
+                  ) : (
+                    <div>아직 팀 배정을 받지 않았습니다.</div>
+                  )}
                 </div>
               </div>
             </section>
