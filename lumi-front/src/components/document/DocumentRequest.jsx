@@ -19,9 +19,9 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
   const [loading, setLoading] = useState(false);
 
   const categories = [
-    { id: 1, name: "onboarding_offboarding" },
-    { id: 2, name: "company_policies" },
-    { id: 3, name: "others" },
+    { id: "onboarding_offboarding", name: "신규 입사자 가이드" },
+    { id: "company_policies", name: "인사규정" },
+    { id: "others", name: "기타" },
   ];
 
   const onDrop = (acceptedFiles) => {
@@ -48,16 +48,16 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
       formData.append("file", selectedFile);
     }
     if (selectedCategory) {
-      formData.append("category", selectedCategory.name);
+      formData.append("category", selectedCategory.id);
     }
     setLoading(true);
     try {
       const response = await addDocument(formData);
-      console.log('API 응답:', response);
+      console.log("API 응답:", response);
       onRequestSubmit();
       onClose();
     } catch (error) {
-      console.error('문서 추가 중 에러 발생:', error);
+      console.error("문서 추가 중 에러 발생:", error);
     } finally {
       setLoading(false);
     }
@@ -91,29 +91,35 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
           <div className="flex-grow p-8 overflow-auto">
             <div className="overflow-y-auto max-h-full h-full flex flex-col justify-between hide-scrollbar">
               <div className="flex justify-between">
-                <h2 className="text-xl font-semibold">자료실 추가하기</h2>
+                <h2 className="text-xl font-semibold">자료 추가하기</h2>
               </div>
               <div>
-                <h3 className="text-l font-semibold">제목</h3>
-                <div>
-                  <input
-                    id="title"
-                    type="text"
-                    value={name}
-                    placeholder={"자료 제목을 적어주세요."}
-                    onChange={(newname) => setName(newname.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 mt-4 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    required
-                  />
+                <div className="mt-4">
+                  <h3 className="text-l font-semibold mb-2">제목</h3>
+                  <div>
+                    <input
+                      id="title"
+                      type="text"
+                      value={name}
+                      placeholder={"자료 제목을 적어주세요."}
+                      onChange={(newname) => setName(newname.target.value)}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 mb-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      required
+                    />
+                  </div>
                 </div>
-                <h3 className="text-l font-semibold">카테고리</h3>
-                <div>
-                  <CustomSelectButton
-                    onSelect={(selectedOption) => setSelectedCategory(selectedOption)}
-                    options={categories}
-                    selectedOption={selectedCategory}
-                    defaultText={"카테고리를 선택해주세요"}
-                  />
+                <div className="mb-8">
+                  <h3 className="text-l font-semibold mb-2">카테고리</h3>
+                  <div>
+                    <CustomSelectButton
+                      onSelect={(selectedOption) =>
+                        setSelectedCategory(selectedOption)
+                      }
+                      options={categories}
+                      selectedOption={selectedCategory}
+                      defaultText={"카테고리를 선택해주세요"}
+                    />
+                  </div>
                 </div>
               </div>
               <div>
@@ -235,7 +241,12 @@ export function DocumentRequestModal({ onClose, onRequestSubmit }) {
         )}
         {loading && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
-            <ClipLoader color={"#5d5bd4"} size={70} aria-label="Saving Spinner" data-testid="loader" />
+            <ClipLoader
+              color={"#5d5bd4"}
+              size={70}
+              aria-label="Saving Spinner"
+              data-testid="loader"
+            />
           </div>
         )}
       </div>

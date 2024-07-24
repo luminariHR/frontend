@@ -40,7 +40,7 @@ export default function DocumentPage() {
     setLoading(true);
     try {
       const data = await fetchAllDocument();
-      console.log('Fetched data:', data);
+      console.log("Fetched data:", data);
       if (Array.isArray(data)) {
         setDocuments(data);
       } else {
@@ -57,12 +57,10 @@ export default function DocumentPage() {
     fetchData();
   }, []);
 
-
-
   const handleDownloadClick = (fileUrl) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = fileUrl;
-    link.download = fileUrl.split('/').pop();
+    link.download = fileUrl.split("/").pop();
     link.click();
   };
 
@@ -75,12 +73,12 @@ export default function DocumentPage() {
               <>
                 <div className={"text-2xl font-bold"}>자료실</div>
               </>
-              ) : (
-                user?.is_hr_admin && (
-                  <>
-                    <div className={"text-2xl font-bold"}>자료실 관리</div>
-                  </>
-                )
+            ) : (
+              user?.is_hr_admin && (
+                <>
+                  <div className={"text-2xl font-bold"}>자료실 관리</div>
+                </>
+              )
             )}
           </div>
           <div className={"flex items-center justify-center"}>
@@ -90,7 +88,7 @@ export default function DocumentPage() {
                   text={"자료실 데이터 추가하기"}
                   size={"lg"}
                   variant={"teams"}
-                  leftIcon={<FilePlusIcon/>}
+                  leftIcon={<FilePlusIcon />}
                   addClass={"font-semibold"}
                   onClick={openModal}
                 />
@@ -129,7 +127,7 @@ export default function DocumentPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>이름</TableHead>
+                      <TableHead>제목</TableHead>
                       <TableHead>카테고리</TableHead>
                       <TableHead></TableHead>
                     </TableRow>
@@ -142,7 +140,13 @@ export default function DocumentPage() {
                         onClick={() => handleRowClick(item.id)}
                       >
                         <TableCell>{item.name}</TableCell>
-                        <TableCell>{item.category}</TableCell>
+                        <TableCell>
+                          {item.category === "onboarding_offboarding"
+                            ? "신규 입사자 가이드"
+                            : item.category === "company_policies"
+                              ? "인사규정"
+                              : "기타"}
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end">
                             <>
