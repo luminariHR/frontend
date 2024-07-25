@@ -38,7 +38,7 @@ const UserTabContent = ({ currentTab }) => {
   }, [currentTab]);
 
   useEffect(() => {
-    if (currentTab === 1) {
+    if (currentTab === 0) {
       setLoading(true);
       setError(null);
       axiosInstance.get('/mentorship/my-match/sessions/')
