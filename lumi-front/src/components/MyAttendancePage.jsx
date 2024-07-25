@@ -12,16 +12,17 @@ import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, CircleAlert } from "lucide-react";
 import { fetchMyAttendance } from "../api/attendanceApi.js";
 import Button from "./ui/button.jsx";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function MyAttendancePage() {
-  // todo 최초 fetch 후 저장해서 reload 되지 않게 해야 됨
   const [currentDate, setCurrentDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [attendance, setAttendance] = useState([]);
+  const [attendance, setAttendance] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleSearchButtonClick = async () => {
     const start = startDate.toISOString().split("T")[0];
@@ -55,6 +56,7 @@ export default function MyAttendancePage() {
       if (data) {
         setAttendance(data.data);
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -83,15 +85,22 @@ export default function MyAttendancePage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">내 근태 현황</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">내 근태 관리</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <label className="flex p-2 border rounded bg-white">
@@ -125,65 +134,88 @@ export default function MyAttendancePage() {
             </div>
           </div>
 
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>날짜</TableHead>
-                  <TableHead>상태</TableHead>
-                  <TableHead>출근 시각</TableHead>
-                  <TableHead>퇴근 시각</TableHead>
-                  <TableHead>근무 시간</TableHead>
-                  <TableHead>특이사항</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {attendance.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.date ? item.date : "-"}</TableCell>
-                    <TableCell>
-                      {item.is_late === true
-                        ? "지각"
-                        : item.is_early_leave === true
-                          ? "조퇴"
-                          : "-"}
-                    </TableCell>
-                    <TableCell>
-                      <Input
-                        value={
-                          item.clock_in
-                            ? item.clock_in.split("T")[1].slice(0, 8)
-                            : ""
-                        }
-                        disabled
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Input
-                        value={
-                          item.clock_out
-                            ? item.clock_out.split("T")[1].slice(0, 8)
-                            : ""
-                        }
-                        disabled
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {item.hours_worked
-                        ? `${Math.floor(item.hours_worked)}시간 ${Math.round((item.hours_worked - Math.floor(item.hours_worked)) * 60)}분`
-                        : "-"}
-                    </TableCell>
-                    <TableCell addClass="truncate">
-                      {item.clock_out_note
-                        ? item.clock_out_note.length > 30
-                          ? item.clock_out_note.slice(0, 30) + "..."
-                          : item.clock_out_note
-                        : "-"}
-                    </TableCell>
+          <div className="overflow-auto rounded-lg ">
+            {loading ? (
+              <div
+                className={
+                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                }
+              >
+                <ClipLoader
+                  color={"#5d5bd4"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>날짜</TableHead>
+                    <TableHead>상태</TableHead>
+                    <TableHead>출근 시각</TableHead>
+                    <TableHead>퇴근 시각</TableHead>
+                    <TableHead>근무 시간</TableHead>
+                    <TableHead>특이사항</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+
+                <TableBody>
+                  {attendance && attendance.length > 0 ? (
+                    attendance.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.date ? item.date : "-"}</TableCell>
+                        <TableCell>
+                          {item.is_late === true
+                            ? "지각"
+                            : item.is_early_leave === true
+                              ? "조퇴"
+                              : "-"}
+                        </TableCell>
+                        <TableCell>
+                          <Input
+                            value={
+                              item.clock_in
+                                ? item.clock_in.split("T")[1].slice(0, 8)
+                                : ""
+                            }
+                            disabled
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Input
+                            value={
+                              item.clock_out
+                                ? item.clock_out.split("T")[1].slice(0, 8)
+                                : ""
+                            }
+                            disabled
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {item.hours_worked
+                            ? `${Math.floor(item.hours_worked)}시간 ${Math.round((item.hours_worked - Math.floor(item.hours_worked)) * 60)}분`
+                            : "-"}
+                        </TableCell>
+                        <TableCell addClass="truncate">
+                          {item.clock_out_note
+                            ? item.clock_out_note.length > 30
+                              ? item.clock_out_note.slice(0, 30) + "..."
+                              : item.clock_out_note
+                            : "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <div className="bg-white p-8 text-gray-500">
+                      해당 기간 동안의 근태 기록이 없습니다.
+                    </div>
+                  )}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </div>
       </Layout>

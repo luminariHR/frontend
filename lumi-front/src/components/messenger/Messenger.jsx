@@ -320,7 +320,7 @@ const Messenger = () => {
 
   return (
     <>
-      <div className={`flex m-auto h-[80%]`}>
+      <div className={`flex m-auto h-[78vh]`}>
         <div className="w-[250px] py-5 px-4 bg-[#5d5bd4] shadow-lg rounded-l-2xl">
           <div className="border-b border-white pb-3 flex flex-col">
             <div className="flex items-center">
@@ -336,40 +336,42 @@ const Messenger = () => {
               onChange={(e) => setSearchTerm(e.target.value)} // 검색어 상태 업데이트
             />
           </div>
-          <div className="flex h-[500px] flex-col mt-3">
+          <div className="flex h-[58vh] flex-col mt-3">
             <h2 className="text-lg font-semibold mb-2 border-b border-white text-white">
               🏢 루미나리
             </h2>
-            {filteredUsers.map((user) => (
-              <div
-                className="group/user px-2 py-2 flex justify-between items-center relative text-white cursor-pointer hover:bg-gray-200 hover:text-black rounded-md"
-                key={user.id}
-              >
-                <div className={"flex items-center"}>
-                  <div className="bg-transparent flex-shrink-0 overflow-hidden rounded-full mr-2 w-6 h-6">
-                    <UserAvatar
-                      userProfileImg={user.profile_image}
-                      userName={user.name}
-                    />
+            <div className="overflow-y-auto hide-scrollbar">
+              {filteredUsers.map((user) => (
+                <div
+                  className="group/user px-2 py-2 flex justify-between items-center relative text-white cursor-pointer hover:bg-gray-200 hover:text-black rounded-md"
+                  key={user.id}
+                >
+                  <div className={"flex items-center"}>
+                    <div className="bg-transparent flex-shrink-0 overflow-hidden rounded-full mr-2 w-6 h-6">
+                      <UserAvatar
+                        userProfileImg={user.profile_image}
+                        userName={user.name}
+                      />
+                    </div>
+                    <div
+                      className="text-sm font-semibold"
+                      onClick={() => handleUserClick(user)}
+                    >
+                      {`${user.name} (${user.department ? user.department.name : "신입사원"})`}
+                    </div>
                   </div>
-                  <div
-                    className="text-sm font-semibold"
-                    onClick={() => handleUserClick(user)}
-                  >
-                    {`${user.name} (${user.department ? user.department.name : "신입사원"})`}
-                  </div>
+                  {user.is_ooo ? (
+                    <div
+                      className={
+                        "text-xs ml-3 rounded-[8px] border-[1px] py-[2px] px-[5px] border-white group-hover/user:border-black font-semibold text-center inline-block"
+                      }
+                    >
+                      휴가
+                    </div>
+                  ) : null}
                 </div>
-                {user.is_ooo ? (
-                  <div
-                    className={
-                      "text-xs ml-3 rounded-[8px] border-[1px] py-[2px] px-[5px] border-white group-hover/user:border-black font-semibold text-center inline-block"
-                    }
-                  >
-                    휴가
-                  </div>
-                ) : null}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
         <div className="w-[700px] p-5 bg-[#f8f8ff] shadow-lg border-r border-gray-200 flex flex-col">
@@ -456,7 +458,7 @@ const Messenger = () => {
           <div className="border-b border-gray-300 pb-3">
             <h2 className="text-lg font-semibold">채팅방</h2>
           </div>
-          <div className="flex flex-col h-[500px] overflow-y-auto mt-3">
+          <div className="flex flex-col h-[65vh] overflow-y-auto hide-scrollbar mt-3">
             {chatRooms.map((chatRoom) => (
               <p key={chatRoom.id} className="pt-2 text-sm font-semibold">
                 <button

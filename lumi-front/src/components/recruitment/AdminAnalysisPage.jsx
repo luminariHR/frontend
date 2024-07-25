@@ -11,6 +11,7 @@ import { SidebarProvider } from "../Sidebar.jsx";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "../ui/button.jsx";
 import { LoadingPage } from "../LoadingPage.jsx";
+import { CircleAlert } from "lucide-react";
 
 function AdminAnalysisPage() {
   const { posting_id, applicant_email } = useParams();
@@ -21,6 +22,7 @@ function AdminAnalysisPage() {
   const [jobTitle, setJobTitle] = useState("");
   const [applicantName, setApplicantName] = useState("");
   const [applicantPhone, setApplicantPhone] = useState("");
+  const [isDataFetched, setIsDataFetched] = useState(false);
 
   useEffect(() => {
     const getApplicantData = async () => {
@@ -52,12 +54,17 @@ function AdminAnalysisPage() {
           );
         }
         setApplicantAnswers(answers);
+        setIsDataFetched(true);
       } catch (error) {
+        alert("아직 자소서를 분석 중입니다.");
+        navigate("/admin/recruitment");
         console.error("Error fetching applicant data:", error);
       }
     };
-    getApplicantData();
-  }, [posting_id, applicant_email]);
+    if (!isDataFetched) {
+      getApplicantData();
+    }
+  }, [posting_id, applicant_email, isDataFetched]);
 
   const getCurrentDateString = () => {
     return currentDate.toLocaleDateString("ko-KR", {
@@ -96,16 +103,25 @@ function AdminAnalysisPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">자소서 AI 분석 결과</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 채용 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">
+              자소서 AI 분석 결과
+            </span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
-        <div className="relative bg-white overflow-hidden h-[770px] shadow rounded-lg">
-          <div className="absolute top-0 left-0 bottom-0 my-4 mr-4 overflow-y-auto">
+        <div className=" bg-white overflow-y-auto hide-scrollbar h-[770px] shadow rounded-lg">
+          <div className="my-4 mr-4 overflow-y-auto">
             <div className="bg-white p-6 rounded-lg">
               <div className="mb-1 font-semibold">
                 <p className="">{`${jobTitle} 부문`}</p>

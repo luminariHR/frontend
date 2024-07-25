@@ -20,6 +20,8 @@ import {
 import Button from "./ui/button.jsx";
 import { CustomModal2 } from "./ui/modal.jsx";
 import CustomSelectButton from "./ui/select.jsx";
+import ClipLoader from "react-spinners/ClipLoader";
+import { CircleAlert } from "lucide-react";
 
 export default function AdminDepartmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -31,6 +33,7 @@ export default function AdminDepartmentsPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newDepartmentName, setNewDepartmentName] = useState("");
   const [newDepartmentAddress, setNewDepartmentAddress] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const getDepartments = async () => {
     const data = await fetchDepartments();
@@ -62,6 +65,7 @@ export default function AdminDepartmentsPage() {
       if (data) {
         setDepartments(data.sort((a, b) => a.id - b.id));
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -137,69 +141,89 @@ export default function AdminDepartmentsPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">부서 관리</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-6">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 인사 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">부서 관리</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
-        <div className="">
+        <div className="mx-16">
           <div className="mb-3 flex items-center justify-end">
             <Button
               text={"부서 생성하기"}
-              variant={"solid"}
+              variant={"teams"}
               onClick={() => {
                 setIsCreateModalOpen(true);
               }}
             />
           </div>
 
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>번호</TableHead>
-                  <TableHead>부서명</TableHead>
-                  <TableHead>부서장</TableHead>
-                  <TableHead>상위부서</TableHead>
-                  <TableHead>주소</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {departments.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell>{item.id}</TableCell>
-                    <TableCell>{item.name ? item.name : "-"}</TableCell>
-                    <TableCell>{item.head ? item.head.name : "-"}</TableCell>
-                    <TableCell>
-                      {item.parent_department_id
-                        ? departments.find(
-                            (d) =>
-                              d.department_id === item.parent_department_id,
-                          ).name
-                        : "-"}
-                    </TableCell>
-                    <TableCell>{item.address ? item.address : "-"}</TableCell>
-                    <TableCell>
-                      <div className="w-full flex justify-end">
-                        <Button
-                          addClass="mr-2"
-                          size="sm"
-                          text="수정"
-                          variant={"primary"}
-                          onClick={() => handleOpenEditModal(item)}
-                        />
-                        {/* todo 부서삭제? */}
-                        <Button size="sm" text="삭제" />
-                      </div>
-                    </TableCell>
+          <div className="overflow-auto rounded-lg h-[63vh] hide-scrollbar">
+            {loading ? (
+              <div
+                className={
+                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                }
+              >
+                <ClipLoader
+                  color={"#5d5bd4"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>번호</TableHead>
+                    <TableHead>부서명</TableHead>
+                    <TableHead>부서장</TableHead>
+                    <TableHead>상위부서</TableHead>
+                    <TableHead>주소</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {departments.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>{item.name ? item.name : "-"}</TableCell>
+                      <TableCell>{item.head ? item.head.name : "-"}</TableCell>
+                      <TableCell>
+                        {item.parent_department_id
+                          ? departments.find(
+                              (d) =>
+                                d.department_id === item.parent_department_id,
+                            ).name
+                          : "-"}
+                      </TableCell>
+                      <TableCell>{item.address ? item.address : "-"}</TableCell>
+                      <TableCell>
+                        <div className="w-full flex justify-end">
+                          <Button
+                            addClass="mr-2"
+                            size="sm"
+                            text="수정"
+                            onClick={() => handleOpenEditModal(item)}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </div>
       </Layout>

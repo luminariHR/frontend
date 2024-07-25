@@ -11,16 +11,19 @@ import {
 import Layout from "./Layout";
 import { SidebarProvider } from "./Sidebar";
 import "react-datepicker/dist/react-datepicker.css";
-import { CalendarDays, Image, User } from "lucide-react";
 import Button from "./ui/button.jsx";
 import { fetchAllUsers } from "../api/userApi.js";
 import { useNavigate } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader.js";
+import { UserAvatar } from "./ui/avatar.jsx";
+import { CircleAlert } from "lucide-react";
 
 export default function AdminAttendancePage() {
   const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleRowClick = (id) => {
     navigate(`/admin/attendance/${id}`);
@@ -49,6 +52,7 @@ export default function AdminAttendancePage() {
       if (data) {
         setEmployees(data);
       }
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -77,16 +81,23 @@ export default function AdminAttendancePage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">근태 관리</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-6">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">전체 근태 관리</span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
-        <div className="">
-          <div className="mb-6">
+        <div className="mx-16">
+          <div className="mb-3">
             <Input
               placeholder="이름을 입력하세요."
               value={searchTerm}
@@ -94,57 +105,64 @@ export default function AdminAttendancePage() {
             />
           </div>
 
-          <div className="overflow-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>이름</TableHead>
-                  <TableHead></TableHead>
-                  <TableHead>직책</TableHead>
-                  <TableHead>부서</TableHead>
-                  <TableHead></TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {filteredEmployees.map((item) => (
-                  <TableRow key={item.id} addClass="cursor-default">
-                    <TableCell>
-                      {item.profile_image ? (
-                        <div className="flex">
-                          <img
-                            src={item.profile_image}
-                            className="h-6 w-6 mr-4"
-                            alt="profile-img"
-                          />
-                          <div>{item.name ? item.name : "-"}</div>
-                        </div>
-                      ) : (
-                        <div className="flex">
-                          <User
-                            strokeWidth={1}
-                            className="border border-gray-400 text-gray-400 rounded-full h-6 w-6 mr-4"
-                          />
-                          <div>{item.name ? item.name : "-"}</div>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{item.job_title}</TableCell>
-                    <TableCell>
-                      {item.department ? item.department.name : "-"}
-                    </TableCell>
-                    <TableCell addClass="flex justify-end">
-                      <Button
-                        text={"근태 기록 보기"}
-                        size="sm"
-                        onClick={() => handleRowClick(item.id)}
-                      />
-                    </TableCell>
+          <div className="overflow-auto rounded-lg">
+            {loading ? (
+              <div
+                className={
+                  "flex w-full justify-center items-center m-auto w-1/2 p-8"
+                }
+              >
+                <ClipLoader
+                  color={"#5d5bd4"}
+                  loading={loading}
+                  size={50}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>이름</TableHead>
+                    <TableHead></TableHead>
+                    <TableHead>직책</TableHead>
+                    <TableHead>부서</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+
+                <TableBody>
+                  {filteredEmployees.map((item) => (
+                    <TableRow key={item.id} addClass="cursor-default">
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className="h-6 w-6 mr-4">
+                            <UserAvatar
+                              userProfileImg={item.profile_image}
+                              userName={item.name}
+                            />
+                          </div>
+                          <div>{item.name ? item.name : "-"}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>{item.job_title}</TableCell>
+                      <TableCell>
+                        {item.department ? item.department.name : "-"}
+                      </TableCell>
+                      <TableCell addClass="flex justify-end">
+                        <Button
+                          text={"근태 기록 보기"}
+                          size="sm"
+                          onClick={() => handleRowClick(item.id)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </div>
       </Layout>

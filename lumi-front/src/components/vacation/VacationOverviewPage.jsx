@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CustomModal2 } from "../ui/modal.jsx";
 import VacationCalendar from "./VacationCalendar.jsx";
-import { Calendar } from "lucide-react";
+import { Calendar, CircleAlert } from "lucide-react";
 import Button from "../ui/button.jsx";
 import { fetchMonthlyView, fetchDailyView } from "../../api/ptoApi.js";
 import { UserAvatar } from "../ui/avatar.jsx";
@@ -108,37 +108,45 @@ export default function VacationPage() {
   return (
     <SidebarProvider>
       <Layout>
-        <div className="flex justify-between pb-3">
-          <div className="text-xl font-medium">사내 휴가자 현황</div>
-          <div className="flex flex-col text-xs items-end">
-            <div className="font-semibold">{getCurrentDateString()}</div>
-            <div>{getCurrentDayString()}</div>
-          </div>
+        <div className="flex flex-row justify-between mb-4">
+          <h2>
+            <span className="text-[#8a8686]">메인 &gt; 근태 관리 &gt;</span>{" "}
+            <span className="font-semibold text-[#20243f]">
+              사내 휴가자 현황
+            </span>
+          </h2>
+          <h2 className="flex">
+            <span>
+              <CircleAlert className="text-gray-500 h-[20px]" />
+            </span>
+            <span className="text-gray-500 ml-2 text-[14px]">
+              업무 외 개인정보 이용 금지
+            </span>
+          </h2>
         </div>
 
-        <div className="">
-          <div className="transition duration-300 ease-in-out">
-            <div className="relative overflow-auto rounded-lg">
-              <div className="flex item-center justify-center w-[900px] h-[600px] bg-white border-l-2 border-gray-300 rounded-r-xl shadow-lg ">
-                <div className="w-full relative">
-                  <VacationCalendar
-                    events={events}
-                    handleEventClick={handleEventClick}
-                    getThisMonthPtoList={getThisMonthPtoList}
+        <div className={"flex justify-center mx-16"}>
+          <div className="flex items-center justify-center p-5 w-[65vw] h-[78vh] bg-[#F8F8FF] shadow-xl rounded-xl">
+            <div
+              className="w-[60vw] h-[75vh] bg-[#F8F8FF]
+            border-gray-300 rounded-r-xl"
+            >
+              <VacationCalendar
+                events={events}
+                handleEventClick={handleEventClick}
+                getThisMonthPtoList={getThisMonthPtoList}
+              />
+              {loading && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <ClipLoader
+                    color={"#5d5bd4"}
+                    loading={loading}
+                    size={50}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
                   />
-                  {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <ClipLoader
-                        color={"#5d5bd4"}
-                        loading={loading}
-                        size={50}
-                        aria-label="Loading Spinner"
-                        data-testid="loader"
-                      />
-                    </div>
-                  )}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
