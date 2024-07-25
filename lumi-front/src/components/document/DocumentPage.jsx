@@ -75,7 +75,7 @@ export default function DocumentPage() {
         <div className="">
           <div className="flex flex-row justify-between mb-4">
             <h2>
-              <span className="text-[#8a8686]">메인 &gt; &gt;</span>{" "}
+              <span className="text-[#8a8686]">메인 &gt;</span>{" "}
               <span className="font-semibold text-[#20243f]">
                 {" "}
                 {user ? "자료실" : user?.is_hr_admin && "자료실 관리"}
