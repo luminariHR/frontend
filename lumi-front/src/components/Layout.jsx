@@ -92,15 +92,11 @@ const Layout = ({ children }) => {
             text={"멘토링"}
             hasSubmenu={true}
           >
-            <SidebarSubmenu text="매칭 전 멘토링" to={"/beforementoring"} />
+            <SidebarSubmenu text="내 멘토링 관리" to={"/aftermentoring"} />
             {user?.is_hr_admin && (
-              <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
+              <SidebarSubmenu text="파트너 관리" to={"/beforementoring"} />
             )}
 
-            <SidebarSubmenu text="매칭 후 멘토링" to={"/aftermentoring"} />
-            {user?.is_hr_admin && (
-              <SidebarSubmenu text="멘토링 관리" to={"/admin/mentoring"} />
-            )}
           </SidebarItem>
           <SidebarItem
             icon={<MessageCircle size={20} />}

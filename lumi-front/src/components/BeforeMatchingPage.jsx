@@ -7,7 +7,7 @@ import TabContent from './TabContent'; // 탭 내용 컴포넌트 import
 
 const BeforeMatchingPage = () => {
     const [currentTab, setCurrentTab] = useState(0);
-    const tabs = ['매칭완료','멘토','멘티', '매칭 대기', '파트너 활동'];
+    const tabs = ['매칭완료','멘토','멘티', '매칭 대기',];
 
     return (
         <SidebarProvider>
