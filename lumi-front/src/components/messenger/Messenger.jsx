@@ -320,7 +320,7 @@ const Messenger = () => {
 
   return (
     <>
-      <div className={`flex m-auto h-[80%]`}>
+      <div className={`flex m-auto h-[78vh]`}>
         <div className="w-[250px] py-5 px-4 bg-[#5d5bd4] shadow-lg rounded-l-2xl">
           <div className="border-b border-white pb-3 flex flex-col">
             <div className="flex items-center">
@@ -336,7 +336,7 @@ const Messenger = () => {
               onChange={(e) => setSearchTerm(e.target.value)} // 검색어 상태 업데이트
             />
           </div>
-          <div className="flex h-[500px] flex-col mt-3">
+          <div className="flex h-[58vh] flex-col mt-3">
             <h2 className="text-lg font-semibold mb-2 border-b border-white text-white">
               🏢 루미나리
             </h2>
