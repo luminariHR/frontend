@@ -458,7 +458,7 @@ const Messenger = () => {
           <div className="border-b border-gray-300 pb-3">
             <h2 className="text-lg font-semibold">채팅방</h2>
           </div>
-          <div className="flex flex-col h-[500px] overflow-y-auto mt-3">
+          <div className="flex flex-col h-[65vh] overflow-y-auto hide-scrollbar mt-3">
             {chatRooms.map((chatRoom) => (
               <p key={chatRoom.id} className="pt-2 text-sm font-semibold">
                 <button
