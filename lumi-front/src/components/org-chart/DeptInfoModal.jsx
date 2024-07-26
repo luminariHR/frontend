@@ -73,6 +73,15 @@ export default function DeptInfoModal({ isOpen, onClose, dept }) {
                     본인
                   </div>
                 ) : null}
+                {department.head.is_ooo ? (
+                  <div
+                    className={
+                      "text-sm ml-3 rounded-[8px] border-[1px] py-[2px] px-[10px] border-black font-bold text-center inline-block"
+                    }
+                  >
+                    휴가
+                  </div>
+                ) : null}
               </>
             ) : (
               <>
@@ -109,6 +118,15 @@ export default function DeptInfoModal({ isOpen, onClose, dept }) {
                         }
                       >
                         본인
+                      </div>
+                    ) : null}
+                    {member.is_ooo ? (
+                      <div
+                        className={
+                          "text-sm ml-3 rounded-[8px] border-[1px] py-[2px] px-[10px] border-black font-bold text-center inline-block"
+                        }
+                      >
+                        휴가
                       </div>
                     ) : null}
                   </div>
