@@ -263,6 +263,7 @@ const Messenger = () => {
     return user ? user.name : "나";
   };
 
+
   return (
     <>
       <div className={`flex m-auto h-[78vh]`}>
@@ -363,23 +364,34 @@ const Messenger = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`mb-2 ${message.user === loggedInUser.id ? "text-right" : "text-left"}`}
+                className={`mb-2 flex ${message.user === loggedInUser.id ? "flex-row-reverse text-right" : "flex-row text-left"}`}
               >
-                <div className="text-xs text-gray-500">
-                  {getUserName(message.user)}
+                {message.user !== loggedInUser.id && (
+                  <div className="h-10 mr-2">
+                    <UserAvatar userProfileImg={message.user?.profile_image} />
+                  </div>
+                )}
+                <div className={`flex flex-col ${message.user === loggedInUser.id ? "items-end" : "items-start"} relative`}>
+                  <div className="text-xs text-gray-500">
+                    {getUserName(message.user)}
+                  </div>
+                  <div>
+                  <span
+                    className={` text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? "bg-blue-100 rounded-l-full rounded-b-full" : "bg-gray-200 rounded-r-full rounded-b-full"}`}
+                  >
+                    {message.text}
+                  </span>
+                  <span className="text-xs text-gray-400 ml-2 ">
+                      {formatTime(message.time)}
+                   </span>
+                  </div>
                 </div>
-                <span className="text-xs text-gray-400">
-                  {formatTime(message.time)}
-                </span>
-                <span
-                  className={`ml-2 text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? "bg-blue-100 rounded-l-full rounded-b-full" : "bg-gray-200 rounded-r-full rounded-b-full"}`}
-                >
-                  {message.text}
-                </span>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
+
+
           <div className="mt-4 flex border-t border-gray-300 pt-2">
             <div className="flex-grow relative">
               <input
