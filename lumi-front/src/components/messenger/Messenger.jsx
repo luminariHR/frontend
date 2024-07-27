@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axiosInstance.js";
 import { useRecoilValue } from "recoil";
 import { LogOut, Mails, Plus, Send } from "lucide-react";
 import { loggedInUserState } from "../../state/userAtom.js";
@@ -25,18 +25,12 @@ const Messenger = () => {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await axios.get(
-        "https://dev.luminari.kro.kr/api/v1/accounts/",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await axiosInstance.get('/accounts/');
       const fetchedUsers = response.data.filter(
         (user) => user.id !== loggedInUser.id,
       );
       setUsers(fetchedUsers);
-      setFilteredUsers(fetchedUsers); // 초기 필터링 설정
+      setFilteredUsers(fetchedUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -44,13 +38,7 @@ const Messenger = () => {
 
   const fetchChatRooms = useCallback(async () => {
     try {
-      const token = localStorage.getItem("access_token");
-      const response = await axios.get(
-        "https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
+      const response = await axiosInstance.get('/messenger/chatrooms/');
       setChatRooms(
         response.data.filter((room) =>
           room.participants.includes(loggedInUser.id),
@@ -76,19 +64,11 @@ const Messenger = () => {
   const fetchChatRoom = useCallback(
     async (userId) => {
       try {
-        const response = await axios.post(
-          "https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/create_or_get_chat_room/",
-          {
-            participants: [loggedInUser.id, userId],
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          },
-        );
+        const response = await axiosInstance.post('/messenger/chatrooms/create_or_get_chat_room/', {
+          participants: [loggedInUser.id, userId],
+        });
         setChatRoomId(response.data.id);
-        await fetchChatRooms(); // Update chat rooms after creating a new chat room
+        await fetchChatRooms();
       } catch (error) {
         console.error("Error fetching chat room:", error);
       }
@@ -107,14 +87,7 @@ const Messenger = () => {
 
   const fetchMessages = useCallback(async (roomId) => {
     try {
-      const response = await axios.get(
-        `https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/${roomId}/get_chat_history/`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        },
-      );
+      const response = await axiosInstance.get(`/messenger/chatrooms/${roomId}/get_chat_history/`);
       setMessages(
         response.data.map((msg) => ({
           user: msg.sender,
@@ -161,7 +134,7 @@ const Messenger = () => {
             return [
               ...prevMessages,
               {
-                user: data.sender_id, // 여기서 sender_id를 사용
+                user: data.sender_id,
                 text: data.message,
                 time: timestamp,
               },
@@ -189,11 +162,7 @@ const Messenger = () => {
   const handleInputChange = (e) => setInput(e.target.value);
 
   const handleSendMessage = () => {
-    if (
-      input.trim() &&
-      chatRoomId &&
-      ws.current?.readyState === WebSocket.OPEN
-    ) {
+    if (input.trim() && chatRoomId && ws.current?.readyState === WebSocket.OPEN) {
       const messageData = {
         message: input,
         sender: loggedInUser.id,
@@ -215,15 +184,7 @@ const Messenger = () => {
   const handleLeave = async () => {
     if (chatRoomId) {
       try {
-        await axios.post(
-          `https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/${chatRoomId}/leave/`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          },
-        );
+        await axiosInstance.post(`/messenger/chatrooms/${chatRoomId}/leave/`);
         setChatRooms((prevChatRooms) =>
           prevChatRooms.filter((room) => room.id !== chatRoomId),
         );
@@ -239,20 +200,12 @@ const Messenger = () => {
   const handleInvite = async () => {
     if (chatRoomId && inviteUserId) {
       try {
-        await axios.post(
-          `https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/${chatRoomId}/invite/`,
-          {
-            user_id: inviteUserId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          },
-        );
+        await axiosInstance.post(`/messenger/chatrooms/${chatRoomId}/invite/`, {
+          user_id: inviteUserId,
+        });
         setInviteUserId(null);
         setIsInviteModalOpen(false);
-        await fetchChatRooms(); // Update chat rooms after inviting a user
+        await fetchChatRooms();
       } catch (error) {
         console.error("Error inviting user:", error);
       }
@@ -271,19 +224,11 @@ const Messenger = () => {
   const handleSaveChatRoomName = async () => {
     if (newChatRoomName.trim()) {
       try {
-        await axios.patch(
-          `https://dev.luminari.kro.kr/api/v1/messenger/chatrooms/${chatRoomId}/update/`,
-          {
-            name: newChatRoomName,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-          },
-        );
+        await axiosInstance.patch(`/messenger/chatrooms/${chatRoomId}/update/`, {
+          name: newChatRoomName,
+        });
         setIsEditingChatRoomName(false);
-        await fetchChatRooms(); // Refresh chat rooms after name change
+        await fetchChatRooms();
       } catch (error) {
         console.error("Error updating chat room name:", error);
       }
