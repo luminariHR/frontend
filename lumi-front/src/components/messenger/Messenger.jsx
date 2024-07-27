@@ -163,6 +163,7 @@ const Messenger = () => {
 
   const handleSendMessage = () => {
     if (input.trim() && chatRoomId && ws.current?.readyState === WebSocket.OPEN) {
+      const tempMessageId = new Date().getTime();
       const messageData = {
         message: input,
         sender: loggedInUser.id,
@@ -263,32 +264,33 @@ const Messenger = () => {
     return user ? user.name : "나";
   };
 
+
   return (
     <>
       <div className={`flex m-auto h-[78vh]`}>
-        <div className="w-[250px] py-5 px-4 bg-[#5d5bd4] shadow-lg rounded-l-2xl">
-          <div className="border-b border-white pb-3 flex flex-col">
+        <div className="w-[250px] py-5 px-4 bg-[#ECF6F5] shadow-2xl rounded-l-2xl">
+          <div className="pb-3 flex flex-col">
             <div className="flex items-center">
-              <Mails size={20} className="text-white" />
-              <span className="ml-2 text-sm font-semibold text-white">
+              <Mails size={20} className="text-black" />
+              <span className="ml-2 text-sm font-semibold text-black">
                 메신저
               </span>
             </div>
             <input
-              className="bg-[#f8f8ff] text-xs h-8 mt-2 px-2 placeholder-gray-600 border placeholder:font-bold border-white rounded-md"
+              className="bg-[#f8f8ff] text-xs h-8 mt-2 px-2 placeholder-gray-600 border placeholder:font-bold border-gray-300 rounded-md"
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)} // 검색어 상태 업데이트
             />
           </div>
           <div className="flex h-[58vh] flex-col mt-3">
-            <h2 className="text-lg font-semibold mb-2 border-b border-white text-white">
+            <h2 className="text-lg font-semibold mb-2 border-b-2 border-gray-300 text-black">
               🏢 루미나리
             </h2>
             <div className="overflow-y-auto hide-scrollbar">
               {filteredUsers.map((user) => (
                 <div
-                  className="group/user px-2 py-2 flex justify-between items-center relative text-white cursor-pointer hover:bg-gray-200 hover:text-black rounded-md"
+                  className="group/user px-2 py-2 flex justify-between items-center relative text-black cursor-pointer hover:bg-gray-200 hover:text-black rounded-md"
                   key={user.id}
                 >
                   <div className={"flex items-center"}>
@@ -299,7 +301,7 @@ const Messenger = () => {
                       />
                     </div>
                     <div
-                      className="text-sm font-semibold"
+                      className="text-sm font-normal"
                       onClick={() => handleUserClick(user)}
                     >
                       {`${user.name} (${user.department ? user.department.name : "신입사원"})`}
@@ -363,23 +365,34 @@ const Messenger = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`mb-2 ${message.user === loggedInUser.id ? "text-right" : "text-left"}`}
+                className={`mb-2 flex ${message.user === loggedInUser.id ? "flex-row-reverse text-right" : "flex-row text-left"}`}
               >
-                <div className="text-xs text-gray-500">
-                  {getUserName(message.user)}
+                {message.user !== loggedInUser.id && (
+                  <div className="h-10 mr-2">
+                    <UserAvatar userProfileImg={message.user?.profile_image} />
+                  </div>
+                )}
+                <div className={`flex flex-col ${message.user === loggedInUser.id ? "items-end" : "items-start"} relative`}>
+                  <div className="text-xs text-gray-500">
+                    {getUserName(message.user)}
+                  </div>
+                  <div>
+                  <span
+                    className={` text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? "bg-blue-100 rounded-l-full rounded-b-full" : "bg-gray-200 rounded-r-full rounded-b-full"}`}
+                  >
+                    {message.text}
+                  </span>
+                  <span className="text-xs text-gray-400 ml-2 ">
+                      {formatTime(message.time)}
+                   </span>
+                  </div>
                 </div>
-                <span className="text-xs text-gray-400">
-                  {formatTime(message.time)}
-                </span>
-                <span
-                  className={`ml-2 text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? "bg-blue-100 rounded-l-full rounded-b-full" : "bg-gray-200 rounded-r-full rounded-b-full"}`}
-                >
-                  {message.text}
-                </span>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
+
+
           <div className="mt-4 flex border-t border-gray-300 pt-2">
             <div className="flex-grow relative">
               <input
@@ -399,6 +412,7 @@ const Messenger = () => {
             </div>
           </div>
         </div>
+
         <div className="w-[250px] p-5 bg-[#f8f8ff] rounded-r-2xl">
           <div className="border-b border-gray-300 pb-3">
             <h2 className="text-lg font-semibold">채팅방</h2>
@@ -407,12 +421,12 @@ const Messenger = () => {
             {chatRooms.map((chatRoom) => (
               <p key={chatRoom.id} className="pt-2 text-sm font-semibold">
                 <button
-                  className={`w-full text-left p-2 rounded-lg ${chatRoom.id === chatRoomId ? "bg-[#5d5bd4] text-white" : " hover:bg-[#cecece]"}`}
+                  className={`w-full text-left p-2 rounded-lg ${chatRoom.id === chatRoomId ? "bg-[#ECF6F5] text-black" : " hover:bg-[#cecece]"}`}
                   onClick={() => handleChatRoomClick(chatRoom)}
                 >
                   <span>{chatRoom.name}</span>
                   <span className="px-4 text-xs font-light">
-                    {chatRoom.created_at.substring(0, 10)}
+                    {chatRoom.created_at.substring(5, 7)}월 {chatRoom.created_at.substring(8, 10)}일
                   </span>
                 </button>
               </p>

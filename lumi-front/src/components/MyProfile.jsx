@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import defaultprofile from "../assets/defaultprofile.png";
 import { LoadingPage } from "./LoadingPage.jsx";
+import { UserAvatar } from "./ui/avatar.jsx";
 
 const MyProfile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -282,12 +283,12 @@ const MyProfile = () => {
                     <div className="text-xl font-semibold">내 프로필</div>
                 </div>
                 <div className="flex flex-row">
-                    <div className="w-1/4 h-[550px] bg-[#f8f8ff]">
-                        <div className="flex justify-center items-center mx-4">
-                            <img
-                                src={`${profileData?.profile_image || defaultprofile}`}
-                                alt="Profile"
-                                className='mt-2 w-[250px] h-[250px] rounded-full'
+                    <div className="w-1/4 h-[600px] bg-[#f8f8ff]">
+                        <div className="flex justify-center items-center mx-4 h-[250px] mt-8">
+                            <UserAvatar
+                                userProfileImg={profileData.profile_image}
+                                userName={profileData.name} 
+                                size="40px"
                             /> 
                             {/*1300px * 1500px 사이의 가로세로 이미지가 예쁘게 잘나옴 */}
                         </div>
@@ -328,7 +329,7 @@ const MyProfile = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="w-3/4 h-[550px] bg-[#f8f8ff]">
+                    <div className="w-3/4 h-[600px] bg-[#f8f8ff]">
                         <div className="mt-4 flex items-center justify-start space-x-4">
                             <button
                                 onClick={() => handleButtonClick('Skills')}
