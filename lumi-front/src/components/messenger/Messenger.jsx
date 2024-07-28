@@ -25,7 +25,7 @@ const Messenger = () => {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const response = await axiosInstance.get('/accounts/');
+      const response = await axiosInstance.get("/accounts/");
       const fetchedUsers = response.data.filter(
         (user) => user.id !== loggedInUser.id,
       );
@@ -38,7 +38,7 @@ const Messenger = () => {
 
   const fetchChatRooms = useCallback(async () => {
     try {
-      const response = await axiosInstance.get('/messenger/chatrooms/');
+      const response = await axiosInstance.get("/messenger/chatrooms/");
       setChatRooms(
         response.data.filter((room) =>
           room.participants.includes(loggedInUser.id),
@@ -64,9 +64,12 @@ const Messenger = () => {
   const fetchChatRoom = useCallback(
     async (userId) => {
       try {
-        const response = await axiosInstance.post('/messenger/chatrooms/create_or_get_chat_room/', {
-          participants: [loggedInUser.id, userId],
-        });
+        const response = await axiosInstance.post(
+          "/messenger/chatrooms/create_or_get_chat_room/",
+          {
+            participants: [loggedInUser.id, userId],
+          },
+        );
         setChatRoomId(response.data.id);
         await fetchChatRooms();
       } catch (error) {
@@ -87,7 +90,9 @@ const Messenger = () => {
 
   const fetchMessages = useCallback(async (roomId) => {
     try {
-      const response = await axiosInstance.get(`/messenger/chatrooms/${roomId}/get_chat_history/`);
+      const response = await axiosInstance.get(
+        `/messenger/chatrooms/${roomId}/get_chat_history/`,
+      );
       setMessages(
         response.data.map((msg) => ({
           user: msg.sender,
@@ -130,7 +135,8 @@ const Messenger = () => {
               message.user === data.sender &&
               message.text === data.message,
           );
-          if (!messageExists) {
+          if (!messageExists && data.sender_id !== loggedInUser.id) {
+            // 새로 들어온 메세지 중 본인이 보낸 메세지는 제외
             return [
               ...prevMessages,
               {
@@ -162,12 +168,25 @@ const Messenger = () => {
   const handleInputChange = (e) => setInput(e.target.value);
 
   const handleSendMessage = () => {
-    if (input.trim() && chatRoomId && ws.current?.readyState === WebSocket.OPEN) {
-      const tempMessageId = new Date().getTime();
+    if (
+      input.trim() &&
+      chatRoomId &&
+      ws.current?.readyState === WebSocket.OPEN
+    ) {
+      // 메세지를 보내기 전에 먼저 화면에 렌더링
+      const currentTime = new Date();
+      setMessages([
+        ...messages,
+        {
+          user: loggedInUser.id,
+          text: input,
+          time: currentTime,
+        },
+      ]);
       const messageData = {
         message: input,
         sender: loggedInUser.id,
-        timestamp: new Date().toISOString(),
+        timestamp: currentTime.toISOString(),
       };
       console.log("Sending message:", messageData);
       ws.current.send(JSON.stringify(messageData));
@@ -225,9 +244,12 @@ const Messenger = () => {
   const handleSaveChatRoomName = async () => {
     if (newChatRoomName.trim()) {
       try {
-        await axiosInstance.patch(`/messenger/chatrooms/${chatRoomId}/update/`, {
-          name: newChatRoomName,
-        });
+        await axiosInstance.patch(
+          `/messenger/chatrooms/${chatRoomId}/update/`,
+          {
+            name: newChatRoomName,
+          },
+        );
         setIsEditingChatRoomName(false);
         await fetchChatRooms();
       } catch (error) {
@@ -263,7 +285,6 @@ const Messenger = () => {
     const user = users.find((user) => user.id === userId);
     return user ? user.name : "나";
   };
-
 
   return (
     <>
@@ -372,26 +393,27 @@ const Messenger = () => {
                     <UserAvatar userProfileImg={message.user?.profile_image} />
                   </div>
                 )}
-                <div className={`flex flex-col ${message.user === loggedInUser.id ? "items-end" : "items-start"} relative`}>
+                <div
+                  className={`flex flex-col ${message.user === loggedInUser.id ? "items-end" : "items-start"} relative`}
+                >
                   <div className="text-xs text-gray-500">
                     {getUserName(message.user)}
                   </div>
                   <div>
-                  <span
-                    className={` text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? "bg-blue-100 rounded-l-full rounded-b-full" : "bg-gray-200 rounded-r-full rounded-b-full"}`}
-                  >
-                    {message.text}
-                  </span>
-                  <span className="text-xs text-gray-400 ml-2 ">
+                    <span
+                      className={` text-sm font-medium inline-block p-2 ${message.user === loggedInUser.id ? "bg-blue-100 rounded-l-full rounded-b-full" : "bg-gray-200 rounded-r-full rounded-b-full"}`}
+                    >
+                      {message.text}
+                    </span>
+                    <span className="text-xs text-gray-400 ml-2 ">
                       {formatTime(message.time)}
-                   </span>
+                    </span>
                   </div>
                 </div>
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
-
 
           <div className="mt-4 flex border-t border-gray-300 pt-2">
             <div className="flex-grow relative">
@@ -426,7 +448,8 @@ const Messenger = () => {
                 >
                   <span>{chatRoom.name}</span>
                   <span className="px-4 text-xs font-light">
-                    {chatRoom.created_at.substring(5, 7)}월 {chatRoom.created_at.substring(8, 10)}일
+                    {chatRoom.created_at.substring(5, 7)}월{" "}
+                    {chatRoom.created_at.substring(8, 10)}일
                   </span>
                 </button>
               </p>
