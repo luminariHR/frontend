@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link as ScrollLink, Element } from "react-scroll";
-import mainlogo from "../assets/mainlogo.png";
+import mainlogo from "../assets/logo.png";
 import mainfooterlogo from "../assets/mainfooterlogo.png";
 import background from "../assets/introbackground.png";
 import {
