@@ -330,10 +330,11 @@ function MainPage() {
         {/*요소 4번 <footer> */}
       </Element>
       <footer className="bg-[#2d2d2d] text-white text-center py-4 flex items-center">
-        <img src={mainfooterlogo} className="h-[100px]" />
+        <img src={mainfooterlogo} className="h-[100px] whitespace-nowrap" />
         <p>&copy; 2024 LUMINARI. All Rights Reserved.</p>
-        <p className="ml-[300px]">KT 에이블스쿨 5기 5반 15조 화이팅🖐🏻</p>
-        <button className="border rounded-full px-4 py-2">
+        <p className="ml-[600px] whitespace-nowrap">KT 에이블스쿨 5기 5반 15조 화이팅🖐🏻</p>
+        <button className="border rounded-full px-4 py-2  whitespace-nowrap"
+        onClick={() => navigate("/developers")}>
           만든사람들 보러가기
         </button>
       </footer>

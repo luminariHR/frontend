@@ -3,7 +3,7 @@ import maincontent3 from '../../assets/maincontent3.png';
 
 const MainPageContent3 = () => {
   return (
-    <img src={maincontent3}/>
+    <img src={maincontent3} className='px-32'/>
   )
 }
 

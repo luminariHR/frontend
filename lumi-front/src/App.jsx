@@ -75,6 +75,9 @@ const DocumentDetails = React.lazy(
 const CareerMainPage = React.lazy(
   () => import("./components/CareerMainPage.jsx"),
 );
+const Egg = React.lazy(
+  () => import("./components/Egg.jsx"),
+);
 const ApplyPage = React.lazy(() => import("./components/ApplyPage.jsx"));
 function App() {
   return (
@@ -312,6 +315,14 @@ function App() {
             element={
               <Suspense fallback={<LoadingPage />}>
                 <ApplyPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/developers"
+            element={
+              <Suspense fallback={<LoadingPage />}>
+                <Egg />
               </Suspense>
             }
           />
