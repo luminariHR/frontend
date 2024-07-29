@@ -1,1 +1,0 @@
-import{j as e}from"./index-BvEyhJvC.js";function t(){return e.jsxs("div",{className:"flex flex-col items-center justify-center h-screen bg-gray-100",children:[e.jsx("h1",{className:"text-4xl font-bold mb-4",children:"플랫폼 서비스"}),e.jsx("p",{children:"환영합니다! 플랫폼 서비스를 이용할 수 있습니다."})]})}export{t as default};

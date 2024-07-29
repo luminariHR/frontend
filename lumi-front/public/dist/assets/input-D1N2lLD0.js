@@ -1,1 +1,0 @@
-import{j as p}from"./index-BvEyhJvC.js";const x=({type:t="text",placeholder:r,value:s,onChange:e,addClass:o,...n})=>p.jsx("input",{type:t,placeholder:r,value:s,onChange:e,className:`p-2 border rounded ${o}`,...n});export{x as I};
