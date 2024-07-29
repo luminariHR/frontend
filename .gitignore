@@ -9,7 +9,6 @@ lerna-debug.log*
 
 node_modules
 lumi-front/node_modules
-dist
 dist-ssr
 *.local
 bun.lockb
