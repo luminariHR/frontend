@@ -117,10 +117,24 @@ const DashboardPage = () => {
 
   const getCurrentDayString = () => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
+    const weekOfMonthStr = ["첫", "둘", "셋", "넷", "다섯"];
+    
+    const getWeekOfMonth = (date) => {
+      const firstDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      const firstDay = firstDate.getDay();
+  
+      {/*ISO 8601 표준식 참고해서 적음 (firstDate 월첫날, firstday 해당 첫번째 날 요일 두개를 사용해서 diff 로 첫시작날이 월요일이 아닐
+      경우 바꿔주는 역할*/}
+      const diff = (date.getDay() + 6) % 7 - (firstDay + 6) % 7;
+      const adjustedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - diff);
+  
+      const weekOfMonth = Math.ceil(adjustedDate.getDate() / 7);
+      return weekOfMonthStr[weekOfMonth - 1];
+    };
+  
+    const currentDate = new Date();
     const currentDay = days[currentDate.getDay()];
-    const weekOfMonthStr = ["첫", "둘", "셋", "넷"];
-    const weekOfMonth =
-      weekOfMonthStr[Math.ceil(currentDate.getDate() / 7) - 1];
+    const weekOfMonth = getWeekOfMonth(currentDate);
     return `오늘은 ${weekOfMonth}째주 ${currentDay}요일입니다.`;
   };
 
