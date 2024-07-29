@@ -1,0 +1,6 @@
+import{y as m,r as u,j as e,P as s}from"./index-BvEyhJvC.js";/**
+ * @license lucide-react v0.401.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const p=m("ChevronDown",[["path",{d:"m6 9 6 6 6-6",key:"qrunsl"}]]),o=({options:l,selectedOption:r,onSelect:i,defaultText:c})=>{const[a,n]=u.useState(!1),d=t=>{i(t),n(!1)};return e.jsxs("div",{className:"relative inline-block text-left w-full",children:[e.jsx("div",{className:"w-full",children:e.jsxs("button",{type:"button",className:"inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50",onClick:()=>n(!a),children:[r?r.name:c,e.jsx(p,{className:"w-4 h-4"})]})}),a&&e.jsx("div",{className:"max-h-[150px] overflow-y-auto origin-top-right absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5",children:e.jsx("div",{className:"py-1",children:l.map(t=>e.jsx("div",{onClick:()=>d(t),className:"block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer",children:t.name},t.id))})})]})};o.propTypes={options:s.array.isRequired,selectedOption:s.object,onSelect:s.func.isRequired,defaultText:s.string};const h=o;export{h as C};
